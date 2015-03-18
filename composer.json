@@ -9,12 +9,6 @@
             "name": "webware,Inc."
         }
     ],
-    "repositories": [
-        {
-            "type": "vcs",
-            "url": "https://github.com/shiroko/push-notificationhubs-rest-php"
-        }
-    ],
     "require": {
         "symfony/symfony": "~2.3",
 
@@ -23,12 +17,10 @@
         "sonata-project/admin-bundle": "dev-master",
 
         "friendsofsymfony/rest-bundle": "~1.1",
-        "nelmio/api-doc-bundle": "~2.4"
-    },
-    "require-dev": {
+        "nelmio/api-doc-bundle": "~2.4",
+
         "openpp/notificationhubs-rest-php": "dev-master"
     },
-    "minimum-stability": "dev",
     "autoload": {
         "psr-4": { "Openpp\\PushNotificationBundle\\": "" }
     }
