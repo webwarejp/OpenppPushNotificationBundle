@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="openpp.push_notification.admin.application" class="Openpp\PushNotificationBundle\Admin\ApplicationAdmin">
+            <tag name="sonata.admin" manager_type="orm" group="openpp.push_notification" label_catalogue="OpenppPushNotificationBundle" label="application" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument />
+            <argument>%openpp.push_notification.admin.applicaiton.entity%</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+
+            <call method="setTranslationDomain">
+                <argument>OpenppPushNotificationBundle</argument>
+            </call>
+
+        </service>
+
+        <service id="openpp.push_notification.admin.device" class="Openpp\PushNotificationBundle\Admin\DeviceAdmin">
+            <tag name="sonata.admin" manager_type="orm" group="openpp.push_notification" label_catalogue="OpenppPushNotificationBundle" label="device"  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument />
+            <argument>%openpp.push_notification.admin.device.entity%</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+
+            <call method="setTranslationDomain">
+                <argument>OpenppPushNotificationBundle</argument>
+            </call>
+
+        </service>
+
+        <service id="openpp.push_notification.admin.user" class="Openpp\PushNotificationBundle\Admin\UserAdmin">
+            <tag name="sonata.admin" manager_type="orm" group="openpp.push_notification" label_catalogue="OpenppPushNotificationBundle" label="user" label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument />
+            <argument>%openpp.push_notification.admin.user.entity%</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+
+            <call method="setTranslationDomain">
+                <argument>OpenppPushNotificationBundle</argument>
+            </call>
+        </service>
+
+        <service id="openpp.push_notification.admin.tag" class="Openpp\PushNotificationBundle\Admin\TagAdmin">
+            <tag name="sonata.admin" manager_type="orm" group="openpp.push_notification" label_catalogue="OpenppPushNotificationBundle" label="tag"  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
+            <argument />
+            <argument>%openpp.push_notification.admin.tag.entity%</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
+
+            <call method="setTranslationDomain">
+                <argument>OpenppPushNotificationBundle</argument>
+            </call>
+
+        </service>
+    </services>
+
+</container>

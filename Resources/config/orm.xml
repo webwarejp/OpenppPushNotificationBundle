@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="openpp.push_notification.manager.application.class">Openpp\PushNotificationBundle\Entity\ApplicationManager</parameter>
+        <parameter key="openpp.push_notification.manager.device.class">Openpp\PushNotificationBundle\Entity\DeviceManager</parameter>
+        <parameter key="openpp.push_notification.manager.user.class">Openpp\PushNotificationBundle\Entity\UserManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="openpp.push_notification.manager.application" class="%openpp.push_notification.manager.application.class%">
+            <argument type="service" id="doctrine" />
+            <argument>%openpp.push_notification.application.class%</argument>
+        </service>
+        <service id="openpp.push_notification.manager.device" class="%openpp.push_notification.manager.device.class%">
+            <argument type="service" id="doctrine" />
+            <argument>%openpp.push_notification.device.class%</argument>
+        </service>
+         <service id="openpp.push_notification.manager.user" class="%openpp.push_notification.manager.user.class%">
+            <argument type="service" id="doctrine" />
+            <argument>%openpp.push_notification.user.class%</argument>
+        </service>
+    </services>
+</container>

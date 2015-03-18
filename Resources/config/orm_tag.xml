@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="openpp.push_notification.manager.tag.class">Openpp\PushNotificationBundle\Entity\TagManager</parameter>
+    </parameters>
+
+    <services>
+        <service id="openpp.push_notification.manager.tag" class="%openpp.push_notification.manager.tag.class%">
+            <argument type="service" id="doctrine" />
+            <argument>%openpp.push_notification.tag.class%</argument>
+        </service>
+    </services>
+</container>

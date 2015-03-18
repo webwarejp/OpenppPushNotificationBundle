@@ -1,0 +1,287 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext"  original="file.ext">
+    <body>
+      <trans-unit id="0" resname="breadcrumb.link_dashboard">
+        <source>breadcrumb.link_dashboard</source>
+        <target>Dashboard</target>
+      </trans-unit>
+      <trans-unit id="1" resname="application">
+        <source>application</source>
+        <target>Applications</target>
+      </trans-unit>
+      <trans-unit id="2" resname="breadcrumb.link_application_list">
+        <source>breadcrumb.link_application_list</source>
+        <target>Applications List</target>
+      </trans-unit>
+      <trans-unit id="3" resname="breadcrumb.link_application_delete">
+        <source>breadcrumb.link_application_delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="4" resname="filter.label_name">
+        <source>filter.label_name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="5" resname="filter.label_description">
+        <source>filter.label_description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="6" resname="filter.label_hub_name">
+        <source>filter.label_hub_name</source>
+        <target>Hub Name</target>
+      </trans-unit>
+      <trans-unit id="7" resname="form.label_name">
+        <source>form.label_name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="8" resname="form.label_description">
+        <source>form.label_description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="9" resname="form.group_azure_label">
+        <source>form.group_azure_label</source>
+        <target>Microsoft Azure Notification Hub Configuration</target>
+      </trans-unit>
+      <trans-unit id="10" resname="form.label_hub_name">
+        <source>form.label_hub_name</source>
+        <target>Hub Name</target>
+      </trans-unit>
+      <trans-unit id="11" resname="form.label_connection_string">
+        <source>form.label_connection_string</source>
+        <target>Connection String</target>
+      </trans-unit>
+      <trans-unit id="12" resname="list.label_id">
+        <source>list.label_id</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="13" resname="list.label_name">
+        <source>list.label_name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="14" resname="list.label_description">
+        <source>list.label_description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="15" resname="list.label_hub_name">
+        <source>list.label_hub_name</source>
+        <target>Hub Name</target>
+      </trans-unit>
+      <trans-unit id="16" resname="list.label__action">
+        <source>list.label__action</source>
+        <target>Actions</target>
+      </trans-unit>
+      <trans-unit id="17" resname="show.label_id">
+        <source>show.label_id</source>
+        <target>ID</target>
+      </trans-unit>
+      <trans-unit id="18" resname="show.label_name">
+        <source>show.label_name</source>
+        <target>Name</target>
+      </trans-unit>
+      <trans-unit id="19" resname="show.label_description">
+        <source>show.label_description</source>
+        <target>Description</target>
+      </trans-unit>
+      <trans-unit id="20" resname="show.label_hub_name">
+        <source>show.label_hub_name</source>
+        <target>Hub Name</target>
+      </trans-unit>
+      <trans-unit id="21" resname="show.label_connection_string">
+        <source>show.label_connection_string</source>
+        <target>Connection String</target>
+      </trans-unit>
+      <trans-unit id="22" resname="show.label_created_at">
+        <source>show.label_created_at</source>
+        <target>Created At</target>
+      </trans-unit>
+      <trans-unit id="23" resname="show.label_updated_at">
+        <source>show.label_updated_at</source>
+        <target>Updated At</target>
+      </trans-unit>
+      <trans-unit id="30" resname="device">
+        <source>device</source>
+        <target>Devices</target>
+      </trans-unit>
+      <trans-unit id="31" resname="breadcrumb.link_device_list">
+        <source>breadcrumb.link_device_list</source>
+        <target>Devices List</target>
+      </trans-unit>
+      <trans-unit id="32" resname="breadcrumb.link_device_delete">
+        <source>breadcrumb.link_device_delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="33" resname="filter.label_application">
+        <source>filter.label_application</source>
+        <target>Application</target>
+      </trans-unit>
+      <trans-unit id="34" resname="filter.label_device_identifier">
+        <source>filter.label_device_identifier</source>
+        <target>Device Identifier</target>
+      </trans-unit>
+      <trans-unit id="35" resname="filter.label_token">
+        <source>filter.label_token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="36" resname="filter.label_type">
+        <source>filter.label_type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="37" resname="filter.label_registered_at">
+        <source>filter.label_registered_at</source>
+        <target>Registered At</target>
+      </trans-unit>
+      <trans-unit id="38" resname="filter.label_unregistered_at">
+        <source>filter.label_unregistered_at</source>
+        <target>Unregistered At</target>
+      </trans-unit>
+      <trans-unit id="39" resname="form.label_application">
+        <source>form.label_application</source>
+        <target>Application</target>
+      </trans-unit>
+      <trans-unit id="40" resname="form.label_user">
+        <source>form.label_user</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="41" resname="form.label_device_identifier">
+        <source>form.label_device_identifier</source>
+        <target>Device Identifier</target>
+      </trans-unit>
+      <trans-unit id="42" resname="form.label_type">
+        <source>form.label_type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="43" resname="form.label_token">
+        <source>form.label_token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="44" resname="form.label_registered_at">
+        <source>form.label_registered_at</source>
+        <target>Registered At</target>
+      </trans-unit>
+      <trans-unit id="45" resname="form.label_unregistered_at">
+        <source>form.label_unregistered_at</source>
+        <target>Unregistered At</target>
+      </trans-unit>
+      <trans-unit id="46" resname="list.label_application">
+        <source>list.label_application</source>
+        <target>Application</target>
+      </trans-unit>
+      <trans-unit id="47" resname="list.label_user">
+        <source>list.label_user</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="48" resname="list.label_device_identifier">
+        <source>list.label_device_identifier</source>
+        <target>Device Identifier</target>
+      </trans-unit>
+      <trans-unit id="49" resname="list.label_type">
+        <source>list.label_type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="50" resname="list.label_active">
+        <source>list.label_active</source>
+        <target>Active</target>
+      </trans-unit>
+      <trans-unit id="51" resname="list.label_token">
+        <source>list.label_token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="52" resname="list.label_registered_at">
+        <source>list.label_registered_at</source>
+        <target>Registered At</target>
+      </trans-unit>
+      <trans-unit id="53" resname="list.label_unregistered_at">
+        <source>list.label_unregistered_at</source>
+        <target>Unregistered At</target>
+      </trans-unit>
+      <trans-unit id="54" resname="show.label_application">
+        <source>show.label_application</source>
+        <target>Application</target>
+      </trans-unit>
+      <trans-unit id="55" resname="show.label_user">
+        <source>show.label_user</source>
+        <target>User</target>
+      </trans-unit>
+      <trans-unit id="56" resname="show.label_device_identifier">
+        <source>show.label_device_identifier</source>
+        <target>Device Identifier</target>
+      </trans-unit>
+      <trans-unit id="57" resname="show.label_type">
+        <source>show.label_type</source>
+        <target>Type</target>
+      </trans-unit>
+      <trans-unit id="58" resname="show.label_token">
+        <source>show.label_token</source>
+        <target>Token</target>
+      </trans-unit>
+      <trans-unit id="59" resname="show.label_registered_at">
+        <source>show.label_registered_at</source>
+        <target>Registered At</target>
+      </trans-unit>
+      <trans-unit id="60" resname="show.label_unregistered_at">
+        <source>show.label_unregistered_at</source>
+        <target>Unegistered At</target>
+      </trans-unit>
+      <trans-unit id="70" resname="user">
+        <source>user</source>
+        <target>Users</target>
+      </trans-unit>
+      <trans-unit id="71" resname="breadcrumb.link_user_list">
+        <source>breadcrumb.link_user_list</source>
+        <target>Users List</target>
+      </trans-unit>
+      <trans-unit id="72" resname="breadcrumb.link_user_delete">
+        <source>breadcrumb.link_user_delete</source>
+        <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="73" resname="filter.label_uid">
+        <source>filter.label_uid</source>
+        <target>UID</target>
+      </trans-unit>
+      <trans-unit id="74" resname="filter.label_badge">
+        <source>filter.label_badge</source>
+        <target>Badge</target>
+      </trans-unit>
+      <trans-unit id="75" resname="form.label_uid">
+        <source>form.label_uid</source>
+        <target>UID</target>
+      </trans-unit>
+      <trans-unit id="76" resname="form.label_badge">
+        <source>form.label_badge</source>
+        <target>Badge</target>
+      </trans-unit>
+      <trans-unit id="77" resname="list.label_uid">
+        <source>list.label_uid</source>
+        <target>UID</target>
+      </trans-unit>
+      <trans-unit id="78" resname="list.label_tags">
+        <source>list.label_tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="79" resname="show.label_uid">
+        <source>show.label_uid</source>
+        <target>UID</target>
+      </trans-unit>
+      <trans-unit id="80" resname="show.label_tags">
+        <source>show.label_tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="81" resname="show.label_badge">
+        <source>show.label_badge</source>
+        <target>Badge</target>
+      </trans-unit>
+      <trans-unit id="90" resname="tag">
+        <source>tag</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="91" resname="breadcrumb.link_tag_list">
+        <source>breadcrumb.link_tag_list</source>
+        <target>Tags List</target>
+      </trans-unit>
+      <trans-unit id="92" resname="breadcrumb.link_tag_delete">
+        <source>breadcrumb.link_tag_delete</source>
+        <target>Delete</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

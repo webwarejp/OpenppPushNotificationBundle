@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <services>
+        <service id="openpp.push_notification.consumer.push" class="Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer">
+            <tag name="sonata.notification.consumer" type="openpp.push_notification.push" />
+
+            <argument type="service" id="openpp.push_notification.push_service_manager" />
+        </service>
+    </services>
+</container>
