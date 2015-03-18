@@ -4,8 +4,8 @@ namespace Openpp\PushNotificationBundle\Pusher;
 
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\NotificationHubRest\NotificationHub;
-use Openpp\NotificationHubRest\Notification;
+use Openpp\NotificationHubsRest\NotificationHub;
+use Openpp\NotificationHubsRest\Notification;
 
 class AzurePusher extends AbstractPusher
 {
