@@ -9,9 +9,13 @@
             <argument type="service" id="openpp.push_notification.manager.application" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument type="service" id="openpp.push_notification.manager.user" />
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+            <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="openpp.push_notification.factory.notification" />
+            <argument type="service" id="openpp.push_notification.factory.registration" />
         </service>
+
+    <service id="openpp.push_notification.factory.notification" class="Openpp\NotificationHubsRest\Notification\NotificationFactory" />
+    <service id="openpp.push_notification.factory.registration" class="Openpp\NotificationHubsRest\Registration\RegistrationFactory" />
+
     </services>
 </container>

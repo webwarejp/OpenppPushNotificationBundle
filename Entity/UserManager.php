@@ -3,6 +3,7 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class UserManager extends BaseManager
 {

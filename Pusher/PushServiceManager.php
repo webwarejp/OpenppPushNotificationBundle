@@ -2,11 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
+use Symfony\Component\DependencyInjection\ContainerAware;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
-class PushServiceManager implements PushServiceManagerInterface, PusherInterface
+class PushServiceManager extends ContainerAware implements PushServiceManagerInterface
 {
     protected $tagManager;
     protected $defaultPusher;
@@ -29,13 +28,13 @@ class PushServiceManager implements PushServiceManagerInterface, PusherInterface
     /**
      * {@inheritdoc}
      */
-    public function push($application, $target, $message, array $options = array())
+    public function push($applicationName, $target, $message, array $options = array())
     {
         $this->tagManager->checkTagExpression($target);
 
         $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push_service', array(
-                'application' => $application,
+        $backend->createAndPublish('openpp.push_notification.push', array(
+                'application' => $applicationName,
                 'target'      => $target,
                 'message'     => $message,
                 'options'     => $options,
@@ -44,9 +43,17 @@ class PushServiceManager implements PushServiceManagerInterface, PusherInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function pushExecute($applicationName, $target, $message, array $options = array())
+    {
+        $this->getPusher()->push($applicationName, $target, $message, $options);
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function addTagToUser($application, $uid, $tag)
+    public function addTagToUser($applicationName, $uid, $tag)
     {
         $this->tagManager->checkTag($tag);
 
@@ -68,8 +75,8 @@ class PushServiceManager implements PushServiceManagerInterface, PusherInterface
         }
 
         $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push_service', array(
-                'application' => $application,
+        $backend->createAndPublish('openpp.push_notification.push', array(
+                'application' => $applicationName,
                 'uid'         => $uid,
                 'tag'         => $tag,
                 'operation'   => self::OPERATION_ADDTAGTOUSER,
@@ -77,15 +84,23 @@ class PushServiceManager implements PushServiceManagerInterface, PusherInterface
     }
 
     /**
+     * {@inheritDoc}
+     */
+    public function addTagToUserExecute($applicationName, $uid, $tag)
+    {
+        $this->getPusher()->addTagToUser($applicationName, $uid, $tag);
+    }
+
+    /**
      * {@inheritdoc}
      */
-    public function removeTagFromUser($application, $uid, $tag)
+    public function removeTagFromUser($applicationName, $uid, $tag)
     {
         $this->tagManager->checkTag($tag);
 
         $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push_service', array(
-                'application' => $application,
+        $backend->createAndPublish('openpp.push_notification.push', array(
+                'application' => $applicationName,
                 'uid'         => $uid,
                 'tag'         => $tag,
                 'operation'   => self::OPERATION_REMOVETAGFROMUSER,
@@ -95,25 +110,76 @@ class PushServiceManager implements PushServiceManagerInterface, PusherInterface
     /**
      * {@inheritDoc}
      */
-    public function sendNotification($application, $target, $message, array $options = array())
+    public function removeTagFromUserExecute($applicationName, $uid, $tag)
     {
-        $this->getPusher()->sendNotification($application, $target, $message, $options);
+        $this->getPusher()->removeTagFromUser($applicationName, $uid, $tag);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function addTagToUserExecute($application, $uid, $tag)
+    public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->getPusher()->addTagToUserExecute($application, $tag, $uid);
+        $backend = $this->container->get('sonata.notification.backend');
+        $backend->createAndPublish('openpp.push_notification.push', array(
+                'application'      => $applicationName,
+                'deviceIdentifier' => $deviceIdentifier,
+                'tags'             => $tags,
+                'operation'        => self::OPERATION_CREATE_REGISTRATION,
+        ));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function removeTagFromUserExecute($application, $uid, $tag)
+    public function createRegistrationExecute($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->getPusher()->removeTagFromUserExecute($app, $tag, $uid);
+        $this->getPusher()->createRegistration($applicationName, $deviceIdentifier, $tags);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
+    {
+        $backend = $this->container->get('sonata.notification.backend');
+        $backend->createAndPublish('openpp.push_notification.push', array(
+                'application'      => $applicationName,
+                'deviceIdentifier' => $deviceIdentifier,
+                'tags'             => $tags,
+                'operation'   => self::OPERATION_UPDATE_REGISTRATION,
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function updateRegistrationExecute($applicationName, $deviceIdentifier, array $tags)
+    {
+        $this->getPusher()->updateRegistration($applicationName, $deviceIdentifier, $tags);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
+    {
+        $backend = $this->container->get('sonata.notification.backend');
+        $backend->createAndPublish('openpp.push_notification.push', array(
+            'application'    => $applicationName,
+            'type'           => $type,
+            'registrationId' => $registrationId,
+            'eTag'           => $eTag,
+            'operation'      => self::OPERATION_DELETE_REGISTRATION,
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function deleteRegistrationExecute($applicationName, $type, $registrationId, $eTag)
+    {
+        $this->getPusher()->deleteRegistration($applicationName, $type, $registrationId, $eTag);
     }
 
     /**

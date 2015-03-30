@@ -4,7 +4,8 @@ namespace Openpp\PushNotificationBundle\Model;
 
 interface TagManagerInterface
 {
-    const BROADCAST_TAG = 'boradcast';
+    const BROADCAST_TAG = 'broadcast';
+    const UID_TAG_PREFIX = 'uid_';
 
     /**
      * Returns the tag's fully qualified class name.
@@ -69,18 +70,22 @@ interface TagManagerInterface
     public function isReservedTag($tag);
 
     /**
-     * Converts tag strings to the tag objects.
+     * Converts the array of tag names to the array of tag objects.
      *
-     * @param string $tags
-     * @param boolean $create create if it does not exist
+     * @param string  $tags
+     * @param boolean $creation create if it does not exist
+     *
+     * @return array array of TagInterface
      */
-    public function getTagObjects($tags, $create);
+    public function getTagObjects($tags, $creation);
 
     /**
-     * Converts a tag string to the tag object.
+     * Converts a tag name to the tag object.
      *
-     * @param string $tag
-     * @param boolean $create create if it does not exist
+     * @param string  $tag
+     * @param boolean $creation create if it does not exist
+     * 
+     * @return TagInterface
      */
-    public function getTagObject($tag, $create);
+    public function getTagObject($tag, $creation);
 }

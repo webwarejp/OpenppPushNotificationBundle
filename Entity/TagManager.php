@@ -3,6 +3,7 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Openpp\PushNotificationBundle\Model\TagManager as BaseManager;
+use Doctrine\Common\Persistence\ObjectManager;
 
 class TagManager extends BaseManager
 {

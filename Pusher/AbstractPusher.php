@@ -7,8 +7,9 @@ use Symfony\Component\DependencyInjection\ContainerAware;
 use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\UserManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 
-abstract class AbstractPusher extends ContainerAware implements PusherInterface
+abstract class AbstractPusher implements PusherInterface
 {
     /**
      * @var ApplicationManagerInterface
@@ -25,47 +26,75 @@ abstract class AbstractPusher extends ContainerAware implements PusherInterface
     protected $userManager;
 
     /**
+     * @var DeviceManagerInterface
+     */
+    protected $deviceManager;
+
+    /**
      * Constructor
      *
      * @param ApplicationManagerInterface  $applicationManager
      * @param TagManagerInterface          $tagManager
      * @param UserManagerInterface         $userManager
+     * @param DeviceManagerInterface       $deviceManager
      */
-    public function __construct(ApplicationManagerInterface $applicationManager, TagManagerInterface $tagManager, UserManagerInterface $userManager)
+    public function __construct(ApplicationManagerInterface $applicationManager, TagManagerInterface $tagManager, UserManagerInterface $userManager, DeviceManagerInterface $deviceManager)
     {
         $this->applicationManager = $applicationManager;
         $this->tagManager         = $tagManager;
         $this->userManager        = $userManager;
+        $this->deviceManager      = $deviceManager;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function addTagToUserExecute($application, $uid, $tag)
+    public function addTagToUser($applicationName, $uid, $tag)
     {
-        $applicationObject = $this->applicationManager->findApplicationByName($application);
-        if (!$applicationObject) {
-            throw new ApplicationNotFoundException($application . ' is not found.');
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException($applicationName . ' is not found.');
         }
 
-        $tagObjects = $this->tagManager->getTagObjects($tags, true);
+        $tagObjects = $this->tagManager->getTagObjects($tag, true);
 
-        $this->userManager->addTagToUser($applicationObject, $uid, $tagObjects);
+        $this->userManager->addTagToUser($application, $uid, $tagObjects);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeTagFromUserExecute(ApplicationInterface $application, $uid, $tag)
+    public function removeTagFromUser($applicationName, $uid, $tag)
     {
-        $applicationObject = $this->applicationManager->findApplicationByName($application);
-        if (!$applicationObject) {
-            throw new ApplicationNotFoundException($application . ' is not found.');
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException($applicationName . ' is not found.');
         }
 
-        $tagObjects = $this->tagManager->getTagObjects($tags, false);
+        $tagObjects = $this->tagManager->getTagObjects($tag, false);
 
-        $this->userManager->removeTagFromUser($applicationObject, $uid, $tagObjects);
+        $this->userManager->removeTagFromUser($application, $uid, $tagObjects);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function createRegistration($applicationName, $deviceIdentifier, array $tags)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
+    {
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
+    {
     }
 
     /**

@@ -26,6 +26,16 @@ class Device implements DeviceInterface
     protected $token;
 
     /**
+     * @var string
+     */
+    protected $registrationId;
+
+    /**
+     * @var string
+     */
+    protected $eTag;
+
+    /**
      * @var \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
     protected $application;
@@ -101,6 +111,38 @@ class Device implements DeviceInterface
     public function setToken($token)
     {
         $this->token = $token;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getRegistrationId()
+    {
+        return $this->registrationId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setRegistrationId($registrationId)
+    {
+        $this->registrationId = $registrationId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getETag()
+    {
+        return $this->eTag;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setETag($eTag)
+    {
+        $this->eTag = $eTag;
     }
 
     /**

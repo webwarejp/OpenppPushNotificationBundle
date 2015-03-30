@@ -11,8 +11,8 @@ abstract class TagManager implements TagManagerInterface
     const MAX_TAGS_WITH_VALIOUS_OPERATORS = 6;
 
     protected $reservedTags = array(
-            self::BROADCAST_TAG,
-            'uid_',
+        self::BROADCAST_TAG,
+        self::UID_TAG_PREFIX,
     );
 
     protected $reservedTagPatterns;
@@ -24,12 +24,23 @@ abstract class TagManager implements TagManagerInterface
     {
         $this->reservedTagPatterns = array();
         foreach ($this->reservedTags as $tag) {
-            if (preg_match('/_$', $tag)) {
-                $this->reservedTagPatterns[] = '^' . $tag;
+            if (preg_match('/_$/', $tag)) {
+                $this->reservedTagPatterns[] = '/^' . $tag . '/';
             } else {
-                $this->reservedTagPatterns[] = '^' . $tag . '$';
+                $this->reservedTagPatterns[] = '/^' . $tag . '$/';
             }
         }
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function createTag()
+    {
+        $class = $this->getClass();
+        $tag = new $class;
+
+        return $tag;
     }
 
     /**
@@ -54,13 +65,11 @@ abstract class TagManager implements TagManagerInterface
             $tags[] = $str;
         }
 
-        foreach ($tags as $tag) {
-            $this->checkTag($tag);
-        }
+        $this->checkTag($tags);
 
         $orOnly = true;
         if (preg_match_all('/(&&|\|\||!)/', $expression, $operators)) {
-            if (in_array('&&', $operators) || in_array('!', $operators)) {
+            if (in_array('&&', $operators[0]) || in_array('!', $operators[0])) {
                 $orOnly = false;
             }
         }
@@ -98,7 +107,7 @@ abstract class TagManager implements TagManagerInterface
             throw new InvalidTagExpressionException('A tag can be up to 120 characters: '.$tag);
         }
 
-        if (!preg_match('/[a-zA-Z0-1_@#\.:\-]+/', $tag)) {
+        if (!preg_match('/^[a-zA-Z0-9_@#\.:\-]+$/', $tag)) {
             throw new InvalidTagExpressionException("A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: ".$tag);
         }
     }
@@ -121,13 +130,13 @@ abstract class TagManager implements TagManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function getTagObjects($tags, $create = true)
+    public function getTagObjects($tags, $creation = true)
     {
         if (is_array($tags)) {
             $objects = array();
 
             foreach ($tags as $tag) {
-                $object = $this->getTagObject($tag, $create);
+                $object = $this->getTagObject($tag, $creation);
                 if ($object) {
                     $objects[] = $object;
                 }
@@ -136,17 +145,17 @@ abstract class TagManager implements TagManagerInterface
             return $objects;
         }
 
-        return $this->getTagObject($tag, $create);
+        return $this->getTagObject($tag, $creation);
     }
 
     /**
      * {@inheritDoc}
      */
-    public function getTagObject($tag, $create = true)
+    public function getTagObject($tag, $creation = true)
     {
         $object = $this->findTagByName($tag);
 
-        if (!$object && $create) {
+        if (!$object && $creation) {
             $object = $this->createTag();
             $object->setName($tag);
         }

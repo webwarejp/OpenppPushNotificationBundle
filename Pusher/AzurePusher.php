@@ -2,28 +2,59 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
+use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\Model\UserManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\NotificationHubsRest\NotificationHub;
-use Openpp\NotificationHubsRest\Notification;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\NotificationHubsRest\NotificationHub\NotificationHub;
+use Openpp\NotificationHubsRest\Notification\NotificationFactory;
+use Openpp\NotificationHubsRest\Registration\RegistrationFactory;
+use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
 
+/**
+ * 
+ * @author shiroko@webware.co.jp
+ *
+ */
 class AzurePusher extends AbstractPusher
 {
     protected $hubs;
+    protected $notificationFactory;
+    protected $registrationFactory;
+
+    /**
+     * Constructor
+     *
+     * @param ApplicationManagerInterface $applicationManager
+     * @param TagManagerInterface $tagManager
+     * @param UserManagerInterface $userManager
+     * @param NotificationFactory $notificationFactory
+     * @param RegistrationFactory $registrationFactory
+     */
+    public function __construct(ApplicationManagerInterface $applicationManager, TagManagerInterface $tagManager, UserManagerInterface $userManager, DeviceManagerInterface $deviceManager, NotificationFactory $notificationFactory, RegistrationFactory $registrationFactory)
+    {
+        $this->notificationFactory = $notificationFactory;
+        $this->registrationFactory = $registrationFactory;
+
+        parent::__construct($applicationManager, $tagManager, $userManager, $deviceManager);
+    }
 
     /**
      * {@inheritdoc}
      */
-    public function sendNotification(ApplicationInterface $application, $target, $message, array $options = array())
+    public function push($applicationName, $target, $message, array $options = array())
     {
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException($applicationName . ' is not found.');
+        }
+
         $notifications = $this->createNotifications($application, $target, $message, $options);
 
         foreach ($notifications as $notification) {
-            if (!$target || TagManagerInterface::BROADCAST_TAG === $target) {
-                $this->getHub($application)->broadcastNotification($notification);
-            } else {
-                $this->getHub($application)->sendNotification($notification, $target);
-            }
+            $this->getHub($application)->sendNotification($notification);
         }
     }
 
@@ -57,14 +88,16 @@ class AzurePusher extends AbstractPusher
     {
         $notifications = array();
 
+        if (TagManagerInterface::BROADCAST_TAG === $target) {
+            $target = '';
+        }
+
         if ($this->hasAndroidTarget($application, $target)) {
-            $message = '{"data":{"msg":'.$message.'}}';
-            $notifications[] = new Notification("gcm", $message);
+            $notifications[] = $this->notificationFactory->createNotification('gcm', $message, $options, $target);
         }
 
         if ($this->hasIOSTarget($application, $target)) {
-            $alert = '{"aps":{"alert":'.$message.'}}';
-            $notifications[] = new Notification("apple", $alert);
+            $notifications[] = $this->notificationFactory->createNotification('apple', $message, $options, $target);
         }
 
         return $notifications;
@@ -73,16 +106,77 @@ class AzurePusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function addTagToUserExecute($application, $uid, $tag)
+    public function createRegistration($applicationName, DeviceInterface $device, array $tags)
     {
-        parent::addTagToUserExecute($application, $uid, $tag);
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException($applicationName . ' is not found.');
+        }
+
+        $type = $device->getType() === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+
+        $registration = $this->registrationFactory->createRegistration($type);
+        $registration->setToken($device->getToken());
+        if (!empty($tags)) {
+            $registration->setTags($tags);
+        }
+
+        $result = $this->getHub($application)->createRegistration($registration);
+
+        $device->setRegistrationId($result['RegistrationId']);
+        $device->setETag($result['ETag']);
+        $this->deviceManager->saveDevice($device);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function removeTagFromUserExecute($application, $uid, $tag)
+    public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        parent::removeTagFromUser($application, $uid, $tag);
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');
+        }
+
+        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
+        if (!$device) {
+            throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
+        }
+
+        $type = $device->getType() === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+
+        $registration = $this->registrationFactory->createRegistration($type);
+        $registration->setToken($device->getToken())
+                     ->setRegistrationId($device->getRegistrationId())
+                     ->setETag($device->getETag());
+
+        if (!empty($tags)) {
+            $registration->setTags($tags);
+        }
+
+        $result = $this->getHub($application)->updateRegistration($registration);
+
+        $device->setRegistrationId($result['RegistrationId']);
+        $device->setETag($result['ETag']);
+        $this->deviceManager->saveDevice($device);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
+    {
+        $application = $this->applicationManager->findApplicationByName($applicationName);
+        if (!$application) {
+            throw new ApplicationNotFoundException($applicationName . ' is not found.');
+        }
+
+        $deviceType = $type === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+
+        $registration = $this->registrationFactory->createRegistration($deviceType);
+        $registration->setRegistrationId($registrationId)
+                     ->setETag($eTag);
+
+        $this->getHub($application)->deleteRegistration($registration);
     }
 }

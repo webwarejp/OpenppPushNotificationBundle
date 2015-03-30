@@ -14,72 +14,100 @@ interface DeviceInterface
     const TYPE_IOS     = 1;
 
     /**
-     * Returns the device identifier
+     * Returns the device identifier.
      *
      * @return string
      */
     public function getDeviceIdentifier();
 
     /**
-     * Sets the device identifier
+     * Sets the device identifier.
      *
      * @param string $deviceIdentifier
      */
     public function setDeviceIdentifier($deviceIdentifier);
 
     /**
-     * Returns the type (Android or iOS)
+     * Returns the type (Android or iOS).
      *
      * @return integer
      */
     public function getType();
 
     /**
-     * Sets the type (Android or iOS)
+     * Sets the type (Android or iOS).
      *
      * @param integer $type
      */
     public function setType($type);
 
     /**
-     * Returns the GCM Registered ID or APNS Device Token
+     * Returns the GCM Registered ID or APNS Device Token.
      *
      * @return string
      */
     public function getToken();
 
     /**
-     * Sets the GCM Registered ID or APNS Device Token
+     * Sets the GCM Registered ID or APNS Device Token.
      *
      * @param string $token
      */
     public function setToken($token);
 
     /**
-     * Returns the application
+     * Returns the registration ID related to the push service.
      *
-     * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
+     * @return string
+     */
+    public function getRegistrationId();
+
+    /**
+     * Sets the registration ID related to the push service.
+     *
+     * @param string $registrationId
+     */
+    public function setRegistrationId($registrationId);
+
+    /**
+     * Returns the ETag related to the push service.
+     *
+     * @return string
+     */
+    public function getETag();
+
+    /**
+     * Sets the ETag related to the push service.
+     *
+     * @param string $eTag
+     */
+    public function setETag($eTag);
+
+    /**
+     * Returns the application.
+     *
+     * @return ApplicationInterface
      */
     public function getApplication();
 
     /**
-     * Sets the application
+     * Sets the application.
      *
-     * @param \Openpp\PushNotificationBundle\Model\ApplicationInterface $application
+     * @param ApplicationInterface $application
      */
     public function setApplication(ApplicationInterface $application);
 
     /**
-     * Returns the user
+     * Returns the user.
      *
-     * @return \Openpp\PushNotificationBundle\Model\UserInterface
+     * @return UserInterface
      */
     public function getUser();
 
     /**
-     * Sets the user
+     * Sets the user.
      *
-     * @param \Openpp\PushNotificationBundle\Model\UserInterface $user
+     * @param UserInterface $user
      */
     public function setUser(UserInterface $user);
 
@@ -91,21 +119,21 @@ interface DeviceInterface
     public function getRegisteredAt();
 
     /**
-     * Sets the registration date
+     * Sets the registration date.
      *
      * @param \DateTime $registeredAt
      */
     public function setRegisteredAt(\DateTime $registeredAt);
 
     /**
-     * Returns the unregistration date
+     * Returns the unregistration date.
      *
      * @return \Datetime
      */
     public function getUnregisteredAt();
 
     /**
-     * Sets the unregistration date
+     * Sets the unregistration date.
      *
      * @param \DateTime $unregisteredAt
      */
