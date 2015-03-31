@@ -13,7 +13,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 class User implements UserInterface
 {
     /**
-     * @var \Openpp\PushNotificationBundle\Model\ApplicationInterface
+     * @var ApplicationInterface
      */
     protected $application;
 

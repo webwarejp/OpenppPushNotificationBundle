@@ -41,7 +41,7 @@ interface UserInterface
     /**
      * Returns the devices
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getDevices();
 
@@ -76,7 +76,7 @@ interface UserInterface
     /**
      * Returns the tags
      *
-     * @return ArrayCollection
+     * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getTags();
 
