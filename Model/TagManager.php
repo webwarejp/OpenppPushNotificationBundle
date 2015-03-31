@@ -145,7 +145,9 @@ abstract class TagManager implements TagManagerInterface
             return $objects;
         }
 
-        return $this->getTagObject($tag, $creation);
+        $object = $this->getTagObject($tags, $creation);
+
+        return $object ? array($object) : null;
     }
 
     /**

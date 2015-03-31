@@ -72,7 +72,7 @@ interface TagManagerInterface
     /**
      * Converts the array of tag names to the array of tag objects.
      *
-     * @param string  $tags
+     * @param string|array  $tags
      * @param boolean $creation create if it does not exist
      *
      * @return array array of TagInterface

@@ -81,7 +81,10 @@ class TargetEventSubscriber implements EventSubscriber
             }
         } else if ($entity instanceof DeviceInterface) {
             if ($args->hasChangedField('token')) {
-                $this->getPushServiceManager()->updateRegistration($application->getName(), $entity->getDeviceIdentifier(), $tags);
+                $uidTag = TagManagerInterface::UID_TAG_PREFIX . $entity->getUser()->getUid();
+                $tags = $this->toTagNameArray($entity->getUser()->getTags());
+                $tags = empty($tags) ? array($uidTag) : $tags + array($uidTag);
+                $this->getPushServiceManager()->updateRegistration($entity->getApplication()->getName(), $entity->getDeviceIdentifier(), $tags);
             }
         }
     }

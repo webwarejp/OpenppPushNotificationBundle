@@ -9,6 +9,6 @@ abstract class ApplicationManager implements ApplicationManagerInterface
      */
     public function findApplicationByName($name)
     {
-        return $this->findUserBy(array('name' => $name));
+        return $this->findApplicationBy(array('name' => $name));
     }
 }

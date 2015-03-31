@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class DeviceManager extends BaseManager
 {
     protected $objectManager;
+    protected $repository;
     protected $class;
 
     /**

@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class TagManager extends BaseManager
 {
     protected $objectManager;
+    protected $repository;
     protected $class;
 
     /**
@@ -15,7 +16,6 @@ class TagManager extends BaseManager
      *
      * @param ObjectManager $om
      * @param string $class
-     * @param array $definedTags
      */
     public function __construct(ObjectManager $om, $class)
     {

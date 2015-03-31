@@ -126,7 +126,7 @@ class AzurePusher extends AbstractPusher
 
         $device->setRegistrationId($result['RegistrationId']);
         $device->setETag($result['ETag']);
-        $this->deviceManager->saveDevice($device);
+        $this->deviceManager->updateDevice($device);
     }
 
     /**
@@ -159,7 +159,7 @@ class AzurePusher extends AbstractPusher
 
         $device->setRegistrationId($result['RegistrationId']);
         $device->setETag($result['ETag']);
-        $this->deviceManager->saveDevice($device);
+        $this->deviceManager->updateDevice($device);
     }
 
     /**

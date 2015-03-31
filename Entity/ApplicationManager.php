@@ -7,6 +7,7 @@ use Openpp\PushNotificationBundle\Model\ApplicationManager as BaseManager;
 class ApplicationManager extends BaseManager
 {
     protected $objectManager;
+    protected $repository;
     protected $class;
 
     /**

@@ -62,7 +62,7 @@ interface ApplicationInterface
     /**
      * Sets the hub name of Notification Hub.
      *
-     * @param string $connectionString
+     * @param string $hubName
      */
     public function setHubName($hubName);
 

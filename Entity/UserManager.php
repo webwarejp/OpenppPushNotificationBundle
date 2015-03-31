@@ -8,6 +8,7 @@ use Doctrine\Common\Persistence\ObjectManager;
 class UserManager extends BaseManager
 {
     protected $objectManager;
+    protected $repository;
     protected $class;
 
     /**

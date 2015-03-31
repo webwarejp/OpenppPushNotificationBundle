@@ -21,7 +21,7 @@ class PushNotificationConsumer implements ConsumerInterface
     /**
      * Constructor
      *
-     * @param PusherInterface $pusher
+     * @param PushServiceManagerInterface $pushServiceManager
      */
     public function __construct(PushServiceManagerInterface $pushServiceManager)
     {
