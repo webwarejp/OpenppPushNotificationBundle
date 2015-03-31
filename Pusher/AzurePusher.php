@@ -12,6 +12,7 @@ use Openpp\NotificationHubsRest\NotificationHub\NotificationHub;
 use Openpp\NotificationHubsRest\Notification\NotificationFactory;
 use Openpp\NotificationHubsRest\Registration\RegistrationFactory;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
+use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 
 /**
  * 
