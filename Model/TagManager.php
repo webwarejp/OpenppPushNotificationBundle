@@ -134,15 +134,12 @@ abstract class TagManager implements TagManagerInterface
     {
         $objects = array();
 
-        if (is_array($tags)) {
-            foreach ($tags as $tag) {
-                $object = $this->getTagObject($tag, $creation);
-                if ($object) {
-                    $objects[] = $object;
-                }
-            }
-        } else {
-            $object = $this->getTagObject($tags, $creation);
+        if (!is_array($tags)) {
+           $tags = array($tags); 
+        }
+
+        foreach ($tags as $tag) {
+            $object = $this->getTagObject($tag, $creation);
             if ($object) {
                 $objects[] = $object;
             }

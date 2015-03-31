@@ -8,6 +8,7 @@ use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 
 abstract class AbstractPusher implements PusherInterface
 {

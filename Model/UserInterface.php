@@ -13,14 +13,14 @@ interface UserInterface
     /**
      * Returns the application
      *
-     * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
+     * @return ApplicationInterface
      */
     public function getApplication();
 
     /**
      * Sets the application
      *
-     * @param \Openpp\PushNotificationBundle\Model\ApplicationInterface $application
+     * @param ApplicationInterface $application
      */
     public function setApplication(ApplicationInterface $application);
 
@@ -48,14 +48,14 @@ interface UserInterface
     /**
      * Adds the device
      *
-     * @param \Openpp\PushNotificationBundle\Model\DeviceInterface $device
+     * @param DeviceInterface $device
      */
     public function addDevice(DeviceInterface $device);
 
     /**
      * Removes the device
      *
-     * @param \Openpp\PushNotificationBundle\Model\DeviceInterface $device
+     * @param DeviceInterface $device
      */
     public function removeDevice(DeviceInterface $device);
 
