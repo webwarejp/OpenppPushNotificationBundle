@@ -40,7 +40,7 @@ class Application implements ApplicationInterface
     protected $gcmApiKey;
     */
     /**
-     * @var array
+     * @var ArrayCollection
      */
     protected $users;
 
@@ -59,7 +59,7 @@ class Application implements ApplicationInterface
      */
     public function __construct()
     {
-        $this->users   = new ArrayCollection();
+        $this->users = new ArrayCollection();
     }
 
     /**

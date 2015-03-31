@@ -23,7 +23,7 @@ interface ApplicationManagerInterface
      * Finds one application by the given criteria.
      *
      * @param array $criteria
-
+     *
      * @return ApplicationInterface or null
      */
     public function findApplicationBy(array $criteria);

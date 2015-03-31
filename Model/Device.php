@@ -102,7 +102,7 @@ class Device implements DeviceInterface
      */
     public function getToken()
     {
-       return $this->token; 
+        return $this->token; 
     }
 
     /**

@@ -34,7 +34,7 @@ class Configuration implements ConfigurationInterface
                     ->defaultValue('orm')
                     ->validate()
                         ->ifNotInArray($supportedManagerTypes)
-                        ->thenInvalid('The db_driver %s is not supported. Please choose one of '.json_encode($supportedManagerTypes))
+                        ->thenInvalid('The db_driver %s is not supported. Please choose one of ' . json_encode($supportedManagerTypes))
                     ->end()
                 ->end()
                 ->arrayNode('class')

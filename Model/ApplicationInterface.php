@@ -69,7 +69,7 @@ interface ApplicationInterface
     /**
      * Returns the users.
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getUsers();
 

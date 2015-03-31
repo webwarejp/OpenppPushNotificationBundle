@@ -104,11 +104,11 @@ abstract class TagManager implements TagManagerInterface
      */
     public function checkSingleTag($tag) {
         if (self::MAX_TAG_LENGTH < strlen($tag)) {
-            throw new InvalidTagExpressionException('A tag can be up to 120 characters: '.$tag);
+            throw new InvalidTagExpressionException('A tag can be up to 120 characters: ' . $tag);
         }
 
         if (!preg_match('/^[a-zA-Z0-9_@#\.:\-]+$/', $tag)) {
-            throw new InvalidTagExpressionException("A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: ".$tag);
+            throw new InvalidTagExpressionException("A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: " . $tag);
         }
     }
 
@@ -132,22 +132,23 @@ abstract class TagManager implements TagManagerInterface
      */
     public function getTagObjects($tags, $creation = true)
     {
-        if (is_array($tags)) {
-            $objects = array();
+        $objects = array();
 
+        if (is_array($tags)) {
             foreach ($tags as $tag) {
                 $object = $this->getTagObject($tag, $creation);
                 if ($object) {
                     $objects[] = $object;
                 }
             }
-
-            return $objects;
+        } else {
+            $object = $this->getTagObject($tags, $creation);
+            if ($object) {
+                $objects[] = $object;
+            }
         }
 
-        $object = $this->getTagObject($tags, $creation);
-
-        return $object ? array($object) : null;
+        return $objects;
     }
 
     /**

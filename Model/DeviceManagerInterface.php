@@ -50,7 +50,7 @@ interface DeviceManagerInterface
      * Finds one device by the given criteria.
      *
      * @param array $criteria
-    
+     *
      * @return DeviceInterface or null
      */
     public function findDeviceBy(array $criteria);

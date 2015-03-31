@@ -23,12 +23,12 @@ class User implements UserInterface
     protected $uid;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     protected $devices;
 
     /**
-     * @var array
+     * @var ArrayCollection
      */
     protected $tags;
 

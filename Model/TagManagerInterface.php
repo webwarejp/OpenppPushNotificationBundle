@@ -20,23 +20,23 @@ interface TagManagerInterface
      * @param string $name
      *
      * @return TagInterface or null
-    */
+     */
     public function findTagByName($name);
 
     /**
      * Finds one tag by the given criteria.
      *
      * @param array $criteria
-    
+     *
      * @return TagInterface or null
-    */
+     */
     public function findTagBy(array $criteria);
 
     /**
      * Returns an empty tag instance
      *
      * @return TagInterface
-    */
+     */
     public function createTag();
 
     /**
@@ -85,7 +85,7 @@ interface TagManagerInterface
      * @param string  $tag
      * @param boolean $creation create if it does not exist
      * 
-     * @return TagInterface
+     * @return TagInterface|null
      */
     public function getTagObject($tag, $creation);
 }

@@ -41,7 +41,7 @@ interface UserInterface
     /**
      * Returns the devices
      *
-     * @return \Openpp\PushNotificationBundle\Model\DeviceInterface
+     * @return ArrayCollection
      */
     public function getDevices();
 
@@ -76,7 +76,7 @@ interface UserInterface
     /**
      * Returns the tags
      *
-     * @return array
+     * @return ArrayCollection
      */
     public function getTags();
 

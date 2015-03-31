@@ -31,7 +31,7 @@ interface UserManagerInterface
      * Finds one user by the given criteria.
      *
      * @param array $criteria
-    
+     *
      * @return UserInterface or null
      */
     public function findUserBy(array $criteria);

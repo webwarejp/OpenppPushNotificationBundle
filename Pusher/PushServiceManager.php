@@ -14,7 +14,7 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
     /**
      * Constructor
      *
-     * @param PusherInterface $tagManager
+     * @param TagManagerInterface $tagManager
      * @param PusherInterface $defaultPusher
      * @param PusherInterface $fallbackPusher
      */
@@ -65,7 +65,7 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
             }
 
             $tag = array_values($tag);
-            if (!$tag) {
+            if (empty($tag)) {
                 return;
             }
         } else {

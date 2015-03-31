@@ -10,9 +10,9 @@ namespace Openpp\PushNotificationBundle\Pusher;
  */
 interface PushServiceManagerInterface
 {
-    const OPERATION_PUSH               = 'push';
-    const OPERATION_ADDTAGTOUSER      = 'addTag';
-    const OPERATION_REMOVETAGFROMUSER = 'removeTag';
+    const OPERATION_PUSH                = 'push';
+    const OPERATION_ADDTAGTOUSER        = 'addTag';
+    const OPERATION_REMOVETAGFROMUSER   = 'removeTag';
     const OPERATION_CREATE_REGISTRATION = 'createRegistration';
     const OPERATION_UPDATE_REGISTRATION = 'updateRegistration';
     const OPERATION_DELETE_REGISTRATION = 'deleteRegistration';

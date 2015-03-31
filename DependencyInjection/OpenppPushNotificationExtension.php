@@ -25,7 +25,7 @@ class OpenppPushNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $bundles = $container->getParameter('kernel.bundles');
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('orm_tag.xml');
         $loader->load('push_service_manager.xml');
 
@@ -57,15 +57,15 @@ class OpenppPushNotificationExtension extends Extension
     {
         // manager configuration
         $container->setParameter('openpp.push_notification.application.class', $config['class']['application']);
-        $container->setParameter('openpp.push_notification.device.class',  $config['class']['device']);
-        $container->setParameter('openpp.push_notification.tag.class',  $config['class']['tag']);
-        $container->setParameter('openpp.push_notification.user.class',  $config['class']['user']);
+        $container->setParameter('openpp.push_notification.device.class', $config['class']['device']);
+        $container->setParameter('openpp.push_notification.tag.class', $config['class']['tag']);
+        $container->setParameter('openpp.push_notification.user.class', $config['class']['user']);
 
         // admin configuration
         $container->setParameter('openpp.push_notification.admin.applicaiton.entity', $config['class']['application']);
-        $container->setParameter('openpp.push_notification.admin.device.entity',  $config['class']['device']);
-        $container->setParameter('openpp.push_notification.admin.tag.entity',  $config['class']['tag']);
-        $container->setParameter('openpp.push_notification.admin.user.entity',  $config['class']['user']);
+        $container->setParameter('openpp.push_notification.admin.device.entity', $config['class']['device']);
+        $container->setParameter('openpp.push_notification.admin.tag.entity', $config['class']['tag']);
+        $container->setParameter('openpp.push_notification.admin.user.entity', $config['class']['user']);
     }
 
     /**
@@ -78,8 +78,7 @@ class OpenppPushNotificationExtension extends Extension
             $container->getDefinition('openpp.push_notification.push_service_manager')
                 ->replaceArgument(1, new Reference($config['service']))
                 ->replaceArgument(2, null);
-        }
-        else {
+        } else {
             $container->getDefinition('openpp.push_notification.push_service_manager')
                 ->replaceArgument(1, null)
                 ->replaceArgument(2, null);
