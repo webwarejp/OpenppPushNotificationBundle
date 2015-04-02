@@ -155,7 +155,6 @@ class DeviceController
         $user = $this->userManager->findUserByUid($application, $uid);
 
         if (is_null($user)) {
-            throw new \Exception('no user.');
             $user = $this->userManager->createUser();
         }
 
