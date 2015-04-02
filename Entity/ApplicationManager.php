@@ -2,6 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Entity;
 
+use Doctrine\Common\Persistence\ObjectManager;
 use Openpp\PushNotificationBundle\Model\ApplicationManager as BaseManager;
 
 class ApplicationManager extends BaseManager

@@ -44,13 +44,13 @@ class PushNotificationConsumer implements ConsumerInterface
                 $this->pushServiceManager->pushExecute($application, $target, $message, $options);
                 break;
 
-            case PushServiceManagerInterface::OPERATION_ADDTAGSTOUSER:
+            case PushServiceManagerInterface::OPERATION_ADDTAGTOUSER:
                 $uid = $event->getMessage()->getValue('uid');
                 $tag = $event->getMessage()->getValue('tag');
                 $this->pushServiceManager->addTagToUserExecute($application, $uid, $tag);
                 break;
 
-            case PushServiceManagerInterface::OPERATION_REMOVETAGSFROMUSER:
+            case PushServiceManagerInterface::OPERATION_REMOVETAGFROMUSER:
                 $uid = $event->getMessage()->getValue('uid');
                 $tag = $event->getMessage()->getValue('tag');
                 $this->pushServiceManager->removeTagFromUserExecute($application, $uid, $tag);

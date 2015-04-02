@@ -6,9 +6,10 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\LifecycleEventArgs;
 use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
+use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
 /**
  * 
@@ -119,11 +120,11 @@ class TargetEventSubscriber implements EventSubscriber
     /**
      * Converts the array of tag objects to the array of tag names.
      *
-     * @param array $tags
+     * @param mixed $tags
      *
      * @return array array of tag names
      */
-    protected function toTagNameArray(array $tags)
+    protected function toTagNameArray($tags)
     {
         $array = array();
         foreach ($tags as $tag) {

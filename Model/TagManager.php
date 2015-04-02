@@ -135,7 +135,7 @@ abstract class TagManager implements TagManagerInterface
         $objects = array();
 
         if (!is_array($tags)) {
-           $tags = array($tags); 
+            $tags = array($tags); 
         }
 
         foreach ($tags as $tag) {

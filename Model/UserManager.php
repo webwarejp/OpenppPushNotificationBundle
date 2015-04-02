@@ -18,7 +18,7 @@ abstract class UserManager implements UserManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function findUserByUid($application, $uid)
+    public function findUserByUid(ApplicationInterface $application, $uid)
     {
         $this->findUserBy(array('application' => $application, 'uid' => $uid));
     }

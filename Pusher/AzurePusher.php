@@ -107,11 +107,16 @@ class AzurePusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function createRegistration($applicationName, DeviceInterface $device, array $tags)
+    public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
         $application = $this->applicationManager->findApplicationByName($applicationName);
         if (!$application) {
             throw new ApplicationNotFoundException($applicationName . ' is not found.');
+        }
+
+        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
+        if (!$device) {
+            throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
         }
 
         $type = $device->getType() === DeviceInterface::TYPE_IOS ? "apple" : "gcm";

@@ -2,8 +2,9 @@
 
 namespace Openpp\PushNotificationBundle\Entity;
 
-use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
 use Doctrine\Common\Persistence\ObjectManager;
+use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
 
 class DeviceManager extends BaseManager
 {
