@@ -30,7 +30,9 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
      */
     public function push($applicationName, $target, $message, array $options = array())
     {
-        $this->tagManager->checkTagExpression($target);
+        if ($target != '') {
+            $this->tagManager->checkTagExpression($target);
+        }
 
         $backend = $this->container->get('sonata.notification.backend');
         $backend->createAndPublish('openpp.push_notification.push', array(

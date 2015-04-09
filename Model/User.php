@@ -205,7 +205,7 @@ class User implements UserInterface
      */
     public function getDeviceByIdentifier($deviceIdentifier)
     {
-        $p = function($key, $element) use ($deviceIdentifier) {
+        $p = function($element) use ($deviceIdentifier) {
             return $element->getDeviceIdentifier() == $deviceIdentifier;
         };
 

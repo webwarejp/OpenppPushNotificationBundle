@@ -5,8 +5,7 @@ namespace Openpp\PushNotificationBundle\Controller\Api;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\Controller\Annotations\Route;
-use FOS\RestBundle\Controller\Annotations\View;
+use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
@@ -51,13 +50,11 @@ class DeviceController
      *  section="Openpp Push Notifications (GCM)"
      * )
      *
-     * @Post("/device/android/register")
-     * @Route(requirements={"_format"="json"})
+     * @Post("/device/android/register", defaults={"_format"="json"})
      * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the Android device.", strict=true)
      * @RequestParam(name="registration_id", description="The registration id returned from GCM", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
-     * @View()
      */
     public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
@@ -66,7 +63,9 @@ class DeviceController
         $registrationId   = $paramFetcher->get('registration_id');
         $uid              = $paramFetcher->get('uid');
 
-        return $this->registerDevice($applicationName, $deviceIdentifier, $registrationId, $uid, DeviceInterface::TYPE_ANDROID);
+        return $this->createView(
+            $this->registerDevice($applicationName, $deviceIdentifier, $registrationId, $uid, DeviceInterface::TYPE_ANDROID)
+        );
     }
 
     /**
@@ -75,13 +74,11 @@ class DeviceController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/register")
-     * @Route(requirements={"_format"="json"})
+     * @Post("/device/ios/register", requirements={"_format"="json"})
      * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      * @RequestParam(name="device_token", description="The device token returned from Apple.", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
-     * @View()
      */
     public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
@@ -90,7 +87,9 @@ class DeviceController
         $deviceToken      = $paramFetcher->get('device_token');
         $uid              = $paramFetcher->get('uid');
 
-        return $this->registerDevice($applicationName, $deviceIdentifier, $deviceToken, $uid, DeviceInterface::TYPE_IOS);
+        return $this->createView(
+            $this->registerDevice($applicationName, $deviceIdentifier, $deviceToken, $uid, DeviceInterface::TYPE_IOS)
+        );
     }
 
     /**
@@ -99,18 +98,18 @@ class DeviceController
      *  section="Openpp Push Notifications (GCM)"
      * )
      *
-     * @Post("/device/android/unregister")
-     * @Route(requirements={"_format"="json"})
+     * @Post("/device/android/unregister", requirements={"_format"="json"})
      * @RequestParam(name="application_name", description="The name of the application unregistering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the Android device.", strict=true)
-     * @View()
      */
     public function unregisterDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
         $applicationName = $paramFetcher->get('application_name');
         $deviceIdentifier = $paramFetcher->get('device_identifier');
 
-        return $this->unregisterDevice($applicationName, $deviceIdentifier);
+        return $this->createView(
+            $this->unregisterDevice($applicationName, $deviceIdentifier)
+        );
     }
 
     /**
@@ -119,18 +118,18 @@ class DeviceController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/register")
-     * @Route(requirements={"_format"="json"})
+     * @Post("/device/ios/register", requirements={"_format"="json"})
      * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
-     * @View()
      */
     public function unregisterDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
         $applicationName = $paramFetcher->get('application_name');
         $deviceIdentifier = $paramFetcher->get('device_identifier');
 
-        return $this->unregisterDevice($applicationName, $deviceIdentifier);
+        return $this->createView(
+            $this->unregisterDevice($applicationName, $deviceIdentifier)
+        );
     }
 
     /**
@@ -142,7 +141,9 @@ class DeviceController
      * @param string  $uid
      * @param integer $type
      *
-     * @return NULL
+     * @throws ApplicationNotFoundException
+     *
+     * @return multitype:boolean
      */
     protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $type)
     {
@@ -155,13 +156,13 @@ class DeviceController
         $user = $this->userManager->findUserByUid($application, $uid);
 
         if (is_null($user)) {
-            $user = $this->userManager->createUser();
+            $user = $this->userManager->create();
         }
 
         $device = $user->getDeviceByIdentifier($deviceIdentifier);
 
         if (is_null($device)) {
-            $device = $this->deviceManager->createDevice();
+            $device = $this->deviceManager->create();
         }
 
         $device->setApplication($application);
@@ -178,7 +179,7 @@ class DeviceController
         $user->addDevice($device);
         $application->addUser($user);
 
-        $this->deviceManager->updateDevice($device);
+        $this->deviceManager->save($device);
 
         return array('registered' => true);
     }
@@ -189,7 +190,9 @@ class DeviceController
      * @param string $applicationName
      * @param string $deviceIdentifier
      *
-     * @return NULL
+     * @throws ApplicationNotFoundException
+     *
+     * @return multitype:boolean
      */
     protected function unregisterDevice($applicationName, $deviceIdentifier)
     {
@@ -204,9 +207,18 @@ class DeviceController
         if (!is_null($device)) {
             $device->setUnregisteredAt(new \Datetime());
             $device->getUser()->setBadge(0);
-            $this->deviceManager->updateDevice($device);
+            $this->deviceManager->save($device);
         }
 
         return array('unregistered' => true);
+    }
+
+    protected function createView($data)
+    {
+        $view = View::create();
+        $view->setData($data)
+             ->setFormat('json');
+
+        return $view;
     }
 }

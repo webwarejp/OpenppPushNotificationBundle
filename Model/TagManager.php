@@ -35,7 +35,7 @@ abstract class TagManager implements TagManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function createTag()
+    public function create()
     {
         $class = $this->getClass();
         $tag = new $class;
@@ -48,7 +48,7 @@ abstract class TagManager implements TagManagerInterface
      */
     public function findTagByName($name)
     {
-        $this->findTagBy(array('name' => $name));
+        return $this->findTagBy(array('name' => $name));
     }
 
     /**
@@ -156,7 +156,7 @@ abstract class TagManager implements TagManagerInterface
         $object = $this->findTagByName($tag);
 
         if (!$object && $creation) {
-            $object = $this->createTag();
+            $object = $this->create();
             $object->setName($tag);
         }
 

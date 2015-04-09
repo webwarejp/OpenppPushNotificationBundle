@@ -38,7 +38,7 @@ class DeviceManager extends BaseManager
     /**
      * {@inheritDoc}
      */
-    public function deleteDevice(DeviceInterface $device)
+    public function delete(DeviceInterface $device)
     {
         $this->objectManager->remove($device);
         $this->objectManager->flush();
@@ -47,7 +47,7 @@ class DeviceManager extends BaseManager
     /**
      * {@inheritDoc}
      */
-    public function updateDevice(DeviceInterface $device, $andFlush = true)
+    public function save(DeviceInterface $device, $andFlush = true)
     {
         $this->objectManager->persist($device);
         if ($andFlush) {

@@ -16,7 +16,7 @@ interface DeviceManagerInterface
      *
      * @return DeviceInterface
      */
-    public function createDevice();
+    public function create();
 
     /**
      * Deletes a device.
@@ -25,16 +25,16 @@ interface DeviceManagerInterface
      *
      * @return void
      */
-    public function deleteDevice(DeviceInterface $device);
+    public function delete(DeviceInterface $device);
 
     /**
-     * Updates a device.
+     * Saves a device.
      *
      * @param DeviceInterface $device
      *
      * @return void
      */
-    public function updateDevice(DeviceInterface $device);
+    public function save(DeviceInterface $device);
 
     /**
      * Finds one device by its identifier and application.

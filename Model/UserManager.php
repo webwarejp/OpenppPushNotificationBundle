@@ -7,7 +7,7 @@ abstract class UserManager implements UserManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function createUser()
+    public function create()
     {
         $class = $this->getClass();
         $user = new $class;
@@ -20,7 +20,7 @@ abstract class UserManager implements UserManagerInterface
      */
     public function findUserByUid(ApplicationInterface $application, $uid)
     {
-        $this->findUserBy(array('application' => $application, 'uid' => $uid));
+        return $this->findUserBy(array('application' => $application, 'uid' => $uid));
     }
 
     /**

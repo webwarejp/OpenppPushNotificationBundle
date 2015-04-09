@@ -41,7 +41,7 @@ interface UserManagerInterface
      *
      * @return UserInterface
      */
-    public function createUser();
+    public function create();
 
     /**
      * Adds the tag(s) to user.

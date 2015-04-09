@@ -37,7 +37,7 @@ interface TagManagerInterface
      *
      * @return TagInterface
      */
-    public function createTag();
+    public function create();
 
     /**
      * Check tag expressions.

@@ -7,7 +7,7 @@ abstract class DeviceManager implements DeviceManagerInterface
     /**
      * {@inheritDoc}
      */
-    public function createDevice()
+    public function create()
     {
         $class = $this->getClass();
         $device = new $class;
