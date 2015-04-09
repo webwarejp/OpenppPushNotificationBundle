@@ -31,7 +31,7 @@ abstract class UserManager implements UserManagerInterface
         $user = $this->findUserByUid($application, $uid);
 
         if (!$user) {
-            $user = $this->createUser();
+            $user = $this->create();
             $user->setApplication($application);
             $user->setUid($uid);
         }
