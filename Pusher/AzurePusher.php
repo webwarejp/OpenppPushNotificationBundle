@@ -97,7 +97,7 @@ class AzurePusher extends AbstractPusher
         }
 
         if (is_string($message)) {
-            $massage = array('message' => $message);
+            $message = array('message' => $message);
         } else if (!is_array($message)) {
             throw new \InvalidArgumentException('Invalid message type.');
         }
