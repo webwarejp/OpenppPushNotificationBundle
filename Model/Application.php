@@ -32,6 +32,16 @@ class Application implements ApplicationInterface
      */
     protected $hubName;
 
+    /**
+     * @var string
+     */
+    protected $apnsTemplate;
+
+    /**
+     * @var string
+     */
+    protected $gcmTemplate;
+
     /* TODO: impelement it.
     protected $apnsCertificate;
 
@@ -124,6 +134,38 @@ class Application implements ApplicationInterface
     public function setHubName($hubName)
     {
         $this->hubName = $hubName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApnsTemplate()
+    {
+        return $this->apnsTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setApnsTemplate($apnsTemplate)
+    {
+        $this->apnsTemplate = $apnsTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getGcmTemplate()
+    {
+        return $this->gcmTemplate;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setGcmTemplate($gcmTemplate)
+    {
+        $this->gcmTemplate = $gcmTemplate;
     }
 
     /* TODO: implement it.

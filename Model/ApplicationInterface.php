@@ -67,6 +67,34 @@ interface ApplicationInterface
     public function setHubName($hubName);
 
     /**
+     * Returns the Apns Template for the Notification Hub.
+     *
+     * @return string
+     */
+    public function getApnsTemplate();
+
+    /**
+     * Sets the Apns Template for the Notification Hub.
+     *
+     * @param string $apnsTemplate
+     */
+    public function setApnsTemplate($apnsTemplate);
+
+    /**
+     * Returns the Apns Template for the Notification Hub.
+     *
+     * @return string
+     */
+    public function getGcmTemplate();
+
+    /**
+     * Sets the GCM Template for the Notification Hub.
+     *
+     * @param string $gcmTemplate
+     */
+    public function setGcmTemplate($gcmTemplate);
+
+    /**
      * Returns the users.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection

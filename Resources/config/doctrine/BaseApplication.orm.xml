@@ -6,6 +6,8 @@
         <field name="description"      type="string" column="description"       length="255" nullable="true" />
         <field name="connectionString" type="string" column="connection_string" length="255" nullable="true" />
         <field name="hubName"          type="string" column="hub_name"          length="255" nullable="true" />
+        <field name="apnsTemplate"     type="string" column="apns_template"     length="500" nullable="true" />
+        <field name="gcmTemplate"      type="string" column="gcm_template"      length="500" nullable="true" />
 
         <field name="createdAt"    type="datetime"   column="created_at" />
         <field name="updatedAt"    type="datetime"   column="updated_at" />

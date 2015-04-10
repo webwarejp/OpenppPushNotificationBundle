@@ -21,6 +21,9 @@ use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
  */
 class AzurePusher extends AbstractPusher
 {
+    const APNS_TEMPLATE_DEFAULT = '{“aps”:{“alert”:”$(message)”}}';
+    const GCM_TEMPLATE_DEFAULT  = '{“data”:{“message”:”$(message)”}}';
+
     protected $hubs;
     protected $notificationFactory;
     protected $registrationFactory;
@@ -93,13 +96,13 @@ class AzurePusher extends AbstractPusher
             $target = '';
         }
 
-        if ($this->hasAndroidTarget($application, $target)) {
-            $notifications[] = $this->notificationFactory->createNotification('gcm', $message, $options, $target);
+        if (is_string($message)) {
+            $massage = array('message' => $message);
+        } else if (!is_array($message)) {
+            throw new \InvalidArgumentException('Invalid message type.');
         }
 
-        if ($this->hasIOSTarget($application, $target)) {
-            $notifications[] = $this->notificationFactory->createNotification('apple', $message, $options, $target);
-        }
+        $notifications[] = $this->notificationFactory->createNotification('template', $message, $options, $target);
 
         return $notifications;
     }
@@ -119,10 +122,18 @@ class AzurePusher extends AbstractPusher
             throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
         }
 
-        $type = $device->getType() === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+        if ($device->getType() === DeviceInterface::TYPE_IOS) {
+            $type = "apple";
+            $template = $application->getApnsTemplate() ? $application->getApnsTemplate() : self::APNS_TEMPLATE_DEFAULT;
+        } else {
+            $type = "gcm";
+            $template = $application->getGcmTemplate() ? $application->getGcmTemplate() : self::GCM_TEMPLATE_DEFAULT;
+        }
 
         $registration = $this->registrationFactory->createRegistration($type);
-        $registration->setToken($device->getToken());
+        $registration->setToken($device->getToken())
+                     ->setTemplate($template);
+
         if (!empty($tags)) {
             $registration->setTags($tags);
         }
@@ -149,10 +160,17 @@ class AzurePusher extends AbstractPusher
             throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
         }
 
-        $type = $device->getType() === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+        if ($device->getType() === DeviceInterface::TYPE_IOS) {
+            $type = "apple";
+            $template = $application->getApnsTemplate() ? $application->getApnsTemplate() : self::APNS_TEMPLATE_DEFAULT;
+        } else {
+            $type = "gcm";
+            $template = $application->getGcmTemplate() ? $application->getGcmTemplate() : self::GCM_TEMPLATE_DEFAULT;
+        }
 
         $registration = $this->registrationFactory->createRegistration($type);
         $registration->setToken($device->getToken())
+                     ->setTemplate($template)
                      ->setRegistrationId($device->getRegistrationId())
                      ->setETag($device->getETag());
 

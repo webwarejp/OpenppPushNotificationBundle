@@ -50,51 +50,67 @@
         <source>form.label_connection_string</source>
         <target>Connection String</target>
       </trans-unit>
-      <trans-unit id="12" resname="list.label_id">
+      <trans-unit id="12" resname="form.label_apns_template">
+        <source>form.label_apns_template</source>
+        <target>APNS Template</target>
+      </trans-unit>
+      <trans-unit id="13" resname="form.label_gcm_template">
+        <source>form.label_gcm_template</source>
+        <target>GCM Template</target>
+      </trans-unit>
+      <trans-unit id="14" resname="list.label_id">
         <source>list.label_id</source>
         <target>ID</target>
       </trans-unit>
-      <trans-unit id="13" resname="list.label_name">
+      <trans-unit id="15" resname="list.label_name">
         <source>list.label_name</source>
         <target>Name</target>
       </trans-unit>
-      <trans-unit id="14" resname="list.label_description">
+      <trans-unit id="16" resname="list.label_description">
         <source>list.label_description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="15" resname="list.label_hub_name">
+      <trans-unit id="17" resname="list.label_hub_name">
         <source>list.label_hub_name</source>
         <target>Hub Name</target>
       </trans-unit>
-      <trans-unit id="16" resname="list.label__action">
+      <trans-unit id="18" resname="list.label__action">
         <source>list.label__action</source>
         <target>Actions</target>
       </trans-unit>
-      <trans-unit id="17" resname="show.label_id">
+      <trans-unit id="19" resname="show.label_id">
         <source>show.label_id</source>
         <target>ID</target>
       </trans-unit>
-      <trans-unit id="18" resname="show.label_name">
+      <trans-unit id="20" resname="show.label_name">
         <source>show.label_name</source>
         <target>Name</target>
       </trans-unit>
-      <trans-unit id="19" resname="show.label_description">
+      <trans-unit id="21" resname="show.label_description">
         <source>show.label_description</source>
         <target>Description</target>
       </trans-unit>
-      <trans-unit id="20" resname="show.label_hub_name">
+      <trans-unit id="22" resname="show.label_hub_name">
         <source>show.label_hub_name</source>
         <target>Hub Name</target>
       </trans-unit>
-      <trans-unit id="21" resname="show.label_connection_string">
+      <trans-unit id="23" resname="show.label_connection_string">
         <source>show.label_connection_string</source>
         <target>Connection String</target>
       </trans-unit>
-      <trans-unit id="22" resname="show.label_created_at">
+      <trans-unit id="24" resname="show.label_apns_template">
+        <source>show.label_apns_template</source>
+        <target>APNS Template</target>
+      </trans-unit>
+      <trans-unit id="25" resname="show.label_gcm_template">
+        <source>show.label_gcm_template</source>
+        <target>GCM Template</target>
+      </trans-unit>
+      <trans-unit id="26" resname="show.label_created_at">
         <source>show.label_created_at</source>
         <target>Created At</target>
       </trans-unit>
-      <trans-unit id="23" resname="show.label_updated_at">
+      <trans-unit id="27" resname="show.label_updated_at">
         <source>show.label_updated_at</source>
         <target>Updated At</target>
       </trans-unit>

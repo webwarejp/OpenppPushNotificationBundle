@@ -55,6 +55,8 @@ class ApplicationAdmin extends Admin
         $formMapper->with($this->trans('form.group_azure_label'))
                 ->add('hubName')
                 ->add('connectionString')
+                ->add('apnsTemplate')
+                ->add('gcmTemplate')
             ->end()
         ;
     }
@@ -70,6 +72,8 @@ class ApplicationAdmin extends Admin
             ->add('description')
             ->add('hubName')
             ->add('connectionString')
+            ->add('apnsTemplate')
+            ->add('gcmTemplate')
             ->add('createdAt')
             ->add('updatedAt')
         ;
