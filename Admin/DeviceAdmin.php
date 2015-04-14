@@ -77,6 +77,8 @@ class DeviceAdmin extends Admin
             ->add('deviceIdentifier')
             ->add('type')
             ->add('token')
+            ->add('registrationId')
+            ->add('eTag')
             ->add('registeredAt')
             ->add('unregisteredAt')
             ->add('createdAt')

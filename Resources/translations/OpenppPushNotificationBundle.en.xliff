@@ -230,11 +230,19 @@
         <source>show.label_token</source>
         <target>Token</target>
       </trans-unit>
-      <trans-unit id="59" resname="show.label_registered_at">
+      <trans-unit id="59" resname="show.label_registration_id">
+        <source>show.label_registration_id</source>
+        <target>Registration ID</target>
+      </trans-unit>
+      <trans-unit id="60" resname="show.label_e_tag">
+        <source>show.label_e_tag</source>
+        <target>ETag</target>
+      </trans-unit>
+      <trans-unit id="61" resname="show.label_registered_at">
         <source>show.label_registered_at</source>
         <target>Registered At</target>
       </trans-unit>
-      <trans-unit id="60" resname="show.label_unregistered_at">
+      <trans-unit id="62" resname="show.label_unregistered_at">
         <source>show.label_unregistered_at</source>
         <target>Unegistered At</target>
       </trans-unit>
