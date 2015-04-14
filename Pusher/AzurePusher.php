@@ -21,8 +21,8 @@ use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
  */
 class AzurePusher extends AbstractPusher
 {
-    const APNS_TEMPLATE_DEFAULT = '{“aps”:{“alert”:”$(message)”}}';
-    const GCM_TEMPLATE_DEFAULT  = '{“data”:{“message”:”$(message)”}}';
+    const APNS_TEMPLATE_DEFAULT = '{"aps":{"alert":"$(message)"}}';
+    const GCM_TEMPLATE_DEFAULT  = '{"data":{"message":"$(message)"}}';
 
     protected $hubs;
     protected $notificationFactory;
