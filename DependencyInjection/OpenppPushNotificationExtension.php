@@ -101,6 +101,7 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName'     => 'users',
             'targetEntity'  => $config['class']['user'],
             'cascade'       => array(
+                'remove',
                 'persist',
             ),
             'mappedBy'      => 'application',
@@ -111,7 +112,6 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName'     => 'application',
             'targetEntity'  => $config['class']['application'],
             'cascade'       => array(
-                'remove',
                 'persist',
             ),
             'inversedBy'    => 'users',
@@ -129,6 +129,7 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName'     => 'devices',
             'targetEntity'  => $config['class']['device'],
             'cascade'       => array(
+                'remove',
                 'persist',
             ),
             'mappedBy'      => 'user',
@@ -139,7 +140,6 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName'     => 'user',
             'targetEntity'  => $config['class']['user'],
             'cascade'       => array(
-                'remove',
                 'persist',
             ),
             'inversedBy'    => 'devices',
@@ -152,12 +152,11 @@ class OpenppPushNotificationExtension extends Extension
             'orphanRemoval' => false,
         ));
 
-        // One-To-One Unidirectional for Application and Device
-        $collector->addAssociation($config['class']['device'], 'mapOneToOne', array(
+        // Many-To-One Unidirectional for Application and Device
+        $collector->addAssociation($config['class']['device'], 'mapManyToOne', array(
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],
             'cascade' => array(
-                'remove',
                 'persist',
             ),
             'joinColumns'   =>  array(
@@ -166,6 +165,7 @@ class OpenppPushNotificationExtension extends Extension
                     'referencedColumnName' => 'id',
                 ),
             ),
+            'orphanRemoval' => false,
         ));
 
         // Many-To-Many Unidirectional for User and Tag
@@ -173,7 +173,7 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName' => 'tags',
             'targetEntity' => $config['class']['tag'],
             'cascade' => array(
-                1 => 'persist',
+                'persist',
             ),
             'joinTable' => array(
                 'name' => 'push__user_tag',
@@ -190,6 +190,7 @@ class OpenppPushNotificationExtension extends Extension
                     ),
                 ),
             ),
+            'orphanRemoval' => false,
         ));
     }
 }
