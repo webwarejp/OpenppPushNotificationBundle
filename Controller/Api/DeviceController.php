@@ -12,6 +12,7 @@ use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
+use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
 class DeviceController
 {
@@ -31,17 +32,24 @@ class DeviceController
     protected $userManager;
 
     /**
+     * @var TagManagerInterface
+     */
+    protected $tagManager;
+
+    /**
      * Constructor
      *
      * @param ApplicationManagerInterface $applicationManager
      * @param DeviceManagerInterface $deviceManager
      * @param UserManagerInterface $userManager
+     * @param TagManagerInterface $tagManager
      */
-    public function __construct(ApplicationManagerInterface $applicationManager, DeviceManagerInterface $deviceManager, UserManagerInterface $userManager)
+    public function __construct(ApplicationManagerInterface $applicationManager, DeviceManagerInterface $deviceManager, UserManagerInterface $userManager, TagManagerInterface $tagManager)
     {
         $this->applicationManager = $applicationManager;
         $this->deviceManager      = $deviceManager;
         $this->userManager        = $userManager;
+        $this->tagManager         = $tagManager;
     }
 
     /**
@@ -177,6 +185,22 @@ class DeviceController
 
         $device->setUser($user);
         $user->addDevice($device);
+
+        if ($type == DeviceInterface::TYPE_ANDROID) {
+            $tagName = 'android';
+        } else {
+            $tagName = 'ios';
+        }
+
+        $tag = $this->tagManager->findTagByName($tagName);
+
+        if (is_null($tag)) {
+            $tag = $this->tagManager->create();
+            $tag->setName($tagName);
+        }
+
+        $user->addTag($tag);
+
         $application->addUser($user);
 
         $this->deviceManager->save($device);

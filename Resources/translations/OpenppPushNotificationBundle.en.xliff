@@ -270,27 +270,31 @@
         <source>form.label_uid</source>
         <target>UID</target>
       </trans-unit>
-      <trans-unit id="76" resname="form.label_badge">
+      <trans-unit id="76" resname="form.label_tags">
+        <source>form.label_tags</source>
+        <target>Tags</target>
+      </trans-unit>
+      <trans-unit id="77" resname="form.label_badge">
         <source>form.label_badge</source>
         <target>Badge</target>
       </trans-unit>
-      <trans-unit id="77" resname="list.label_uid">
+      <trans-unit id="78" resname="list.label_uid">
         <source>list.label_uid</source>
         <target>UID</target>
       </trans-unit>
-      <trans-unit id="78" resname="list.label_tags">
+      <trans-unit id="79" resname="list.label_tags">
         <source>list.label_tags</source>
         <target>Tags</target>
       </trans-unit>
-      <trans-unit id="79" resname="show.label_uid">
+      <trans-unit id="80" resname="show.label_uid">
         <source>show.label_uid</source>
         <target>UID</target>
       </trans-unit>
-      <trans-unit id="80" resname="show.label_tags">
+      <trans-unit id="81" resname="show.label_tags">
         <source>show.label_tags</source>
         <target>Tags</target>
       </trans-unit>
-      <trans-unit id="81" resname="show.label_badge">
+      <trans-unit id="82" resname="show.label_badge">
         <source>show.label_badge</source>
         <target>Badge</target>
       </trans-unit>
