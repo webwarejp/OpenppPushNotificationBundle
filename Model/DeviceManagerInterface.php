@@ -31,10 +31,11 @@ interface DeviceManagerInterface
      * Saves a device.
      *
      * @param DeviceInterface $device
+     * @param boolean $andFlush
      *
      * @return void
      */
-    public function save(DeviceInterface $device);
+    public function save(DeviceInterface $device, $andFlush);
 
     /**
      * Finds one device by its identifier and application.
@@ -45,6 +46,16 @@ interface DeviceManagerInterface
      * @return DeviceInterface or null
      */
     public function findDeviceByIdentifier(ApplicationInterface $application, $deviceIdentifier);
+
+    /**
+     * Finds one device by its token and application.
+     *
+     * @param ApplicationInterface $application
+     * @param string $token
+     *
+     * @return DeviceInterface or null
+     */
+    public function findDeviceByToken(ApplicationInterface $application, $deviceIdentifier);
 
     /**
      * Finds one device by the given criteria.

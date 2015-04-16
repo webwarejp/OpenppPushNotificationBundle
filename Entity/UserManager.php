@@ -4,6 +4,7 @@ namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ObjectManager;
 use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
+use Openpp\PushNotificationBundle\Model\UserInterface;
 
 class UserManager extends BaseManager
 {
@@ -32,6 +33,17 @@ class UserManager extends BaseManager
     public function getClass()
     {
         return $this->class;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function save(UserInterface $user, $andFlush = true)
+    {
+        $this->objectManager->persist($user);
+        if ($andFlush) {
+            $this->objectManager->flush();
+        }
     }
 
     /**

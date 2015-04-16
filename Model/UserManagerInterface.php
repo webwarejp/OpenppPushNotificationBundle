@@ -44,6 +44,15 @@ interface UserManagerInterface
     public function create();
 
     /**
+     * Saves a user.
+     *
+     * @param UserInterface $user
+     *
+     * @return void
+     */
+    public function save(UserInterface $user, $andFlush);
+
+    /**
      * Adds the tag(s) to user.
      *
      * @param ApplicationInterface $application

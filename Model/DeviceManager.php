@@ -22,4 +22,12 @@ abstract class DeviceManager implements DeviceManagerInterface
     {
         return $this->findDeviceBy(array('application' => $application, 'deviceIdentifier' => $deviceIdentifier));
     }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findDeviceByToken(ApplicationInterface $application, $token)
+    {
+        return $this->findDeviceBy(array('application' => $application, 'token' => $token));
+    }
 }

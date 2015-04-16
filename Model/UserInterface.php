@@ -98,6 +98,17 @@ interface UserInterface
      * Gets a device by its identifier.
      *
      * @param string $deviceIdentifier
+     *
+     * @return DeviceInterface
      */
     public function getDeviceByIdentifier($deviceIdentifier);
+
+    /**
+     * Gets a device by its token.
+     *
+     * @param string $token
+     *
+     * @return DeviceInterface
+     */
+    public function getDeviceByToken($token);
 }

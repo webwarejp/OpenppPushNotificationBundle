@@ -14,6 +14,11 @@ use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
+/**
+ *
+ * @author shiroko@webware.co.jp
+ *
+ */
 class DeviceController
 {
     /**
@@ -167,10 +172,17 @@ class DeviceController
             $user = $this->userManager->create();
         }
 
-        $device = $user->getDeviceByIdentifier($deviceIdentifier);
+        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
         if (is_null($device)) {
-            $device = $this->deviceManager->create();
+            // This implementation is assumed that the device identifier is device's AdvertisingID.
+            // So, the device identifier may be changed.
+            // Let us search the device by the token.
+            $device = $this->deviceManager->findDeviceByToken($application, $token);
+
+            if (is_null($device)) {
+                $device = $this->deviceManager->create();
+            }
         }
 
         $device->setApplication($application);

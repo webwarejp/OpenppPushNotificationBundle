@@ -218,6 +218,23 @@ class User implements UserInterface
     }
 
     /**
+     * {@inheritdoc}
+     */
+    public function getDeviceByToken($token)
+    {
+        $p = function($element) use ($token) {
+            return $element->getToken() == $token;
+        };
+
+        $devices = $this->devices->filter($p);
+        if ($devices) {
+            return $devices[0];
+        }
+
+        return null;
+    }
+
+    /**
      * Returns a string representation
      *
      * @return string
