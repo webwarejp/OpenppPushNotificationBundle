@@ -205,10 +205,7 @@ class DeviceController
         $device->setUnregisteredAt(null);
 
         if (null !== $locationLatitude && null !== $locationLongitude) {
-            $location = new Point();
-            $location->setLatitude($locationLatitude);
-            $location->setLongitude($locationLongitude);
-            $device->setLocation($location);
+            $device->setLocation(new Point($locationLatitude, $locationLongitude));
         }
 
         $user->setApplication($application);

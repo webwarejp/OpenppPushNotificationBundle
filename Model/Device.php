@@ -163,7 +163,7 @@ class Device implements DeviceInterface
      */
     public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location)
     {
-        $this->location = location;
+        $this->location = $location;
     }
 
     /**
