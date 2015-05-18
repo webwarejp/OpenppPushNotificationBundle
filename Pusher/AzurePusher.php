@@ -112,37 +112,7 @@ class AzurePusher extends AbstractPusher
      */
     public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
-
-        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
-        if (!$device) {
-            throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
-        }
-
-        if ($device->getType() === DeviceInterface::TYPE_IOS) {
-            $type = "apple";
-            $template = $application->getApnsTemplate() ? $application->getApnsTemplate() : self::APNS_TEMPLATE_DEFAULT;
-        } else {
-            $type = "gcm";
-            $template = $application->getGcmTemplate() ? $application->getGcmTemplate() : self::GCM_TEMPLATE_DEFAULT;
-        }
-
-        $registration = $this->registrationFactory->createRegistration($type);
-        $registration->setToken($device->getToken())
-                     ->setTemplate($template);
-
-        if (!empty($tags)) {
-            $registration->setTags($tags);
-        }
-
-        $result = $this->getHub($application)->createRegistration($registration);
-
-        $device->setRegistrationId($result['RegistrationId']);
-        $device->setETag($result['ETag']);
-        $this->deviceManager->save($device);
+        $this->updateRegistration($applicationName, $deviceIdentifier, $tags);
     }
 
     /**
@@ -178,7 +148,11 @@ class AzurePusher extends AbstractPusher
             $registration->setTags($tags);
         }
 
-        $result = $this->getHub($application)->updateRegistration($registration);
+        if (null === $device->getRegistrationId() || null === $device->getETag()) {
+            $result = $this->getHub($application)->createRegistration($registration);
+        } else {
+            $result = $this->getHub($application)->updateRegistration($registration);
+        }
 
         $device->setRegistrationId($result['RegistrationId']);
         $device->setETag($result['ETag']);
