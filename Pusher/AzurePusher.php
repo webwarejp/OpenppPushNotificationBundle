@@ -86,7 +86,7 @@ class AzurePusher extends AbstractPusher
      * @param string $message
      * @param array $options
      *
-     * @return Notification
+     * @return \Openpp\NotificationHubsRest\Notification\NotificationInterface[]
      */
     protected function createNotifications(ApplicationInterface $application, $target, $message, array $options)
     {

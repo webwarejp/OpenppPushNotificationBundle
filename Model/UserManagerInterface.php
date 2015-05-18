@@ -50,7 +50,7 @@ interface UserManagerInterface
      *
      * @return void
      */
-    public function save(UserInterface $user, $andFlush);
+    public function save(UserInterface $user, $andFlush = true);
 
     /**
      * Adds the tag(s) to user.

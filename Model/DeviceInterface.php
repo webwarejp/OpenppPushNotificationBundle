@@ -84,6 +84,20 @@ interface DeviceInterface
     public function setETag($eTag);
 
     /**
+     * Returns the device's location.
+     *
+     * @return \CrEOF\Spatial\PHP\Types\Geometry\Point
+     */
+    public function getLocation();
+
+    /**
+     * Sets the device's location.
+     *
+     * @param \CrEOF\Spatial\PHP\Types\Geometry\Point $location
+     */
+    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location);
+
+    /**
      * Returns the application.
      *
      * @return ApplicationInterface

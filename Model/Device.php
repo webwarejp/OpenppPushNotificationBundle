@@ -36,6 +36,11 @@ class Device implements DeviceInterface
     protected $eTag;
 
     /**
+     * @var \CrEOF\Spatial\PHP\Types\Geometry\Point
+     */
+    protected $location;
+
+    /**
      * @var \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
     protected $application;
@@ -143,6 +148,22 @@ class Device implements DeviceInterface
     public function setETag($eTag)
     {
         $this->eTag = $eTag;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLocation()
+    {
+        return $this->location;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location)
+    {
+        $this->location = location;
     }
 
     /**

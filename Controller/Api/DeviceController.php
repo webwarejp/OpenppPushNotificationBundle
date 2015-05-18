@@ -13,6 +13,8 @@ use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Symfony\Component\Security\Core\Exception\AccessDeniedException;
+use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
 /**
  *
@@ -68,16 +70,20 @@ class DeviceController
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the Android device.", strict=true)
      * @RequestParam(name="registration_id", description="The registration id returned from GCM", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
+     * @RequestParam(name="location_latitude", description="The latitude of device's location", strict=false)
+     * @RequestParam(name="location_longitude", description="The longitude of device's location", strict=false)
      */
     public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
-        $applicationName  = $paramFetcher->get('application_name');
-        $deviceIdentifier = $paramFetcher->get('device_identifier');
-        $registrationId   = $paramFetcher->get('registration_id');
-        $uid              = $paramFetcher->get('uid');
+        $applicationName   = $paramFetcher->get('application_name');
+        $deviceIdentifier  = $paramFetcher->get('device_identifier');
+        $registrationId    = $paramFetcher->get('registration_id');
+        $uid               = $paramFetcher->get('uid');
+        $locationLatitude  = $paramFetcher->get('location_latitude');
+        $locationLongitude = $paramFetcher->get('location_longitude');
 
         return $this->createView(
-            $this->registerDevice($applicationName, $deviceIdentifier, $registrationId, $uid, DeviceInterface::TYPE_ANDROID)
+            $this->registerDevice($applicationName, $deviceIdentifier, $registrationId, $uid, $locationLatitude, $locationLongitude, DeviceInterface::TYPE_ANDROID)
         );
     }
 
@@ -92,6 +98,8 @@ class DeviceController
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      * @RequestParam(name="device_token", description="The device token returned from Apple.", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
+     * @RequestParam(name="location_latitude", description="The latitude of device's location", strict=false)
+     * @RequestParam(name="location_longitude", description="The longitude of device's location", strict=false)
      */
     public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
@@ -99,9 +107,11 @@ class DeviceController
         $deviceIdentifier = $paramFetcher->get('device_identifier');
         $deviceToken      = $paramFetcher->get('device_token');
         $uid              = $paramFetcher->get('uid');
+        $locationLatitude  = $paramFetcher->get('location_latitude');
+        $locationLongitude = $paramFetcher->get('location_longitude');
 
         return $this->createView(
-            $this->registerDevice($applicationName, $deviceIdentifier, $deviceToken, $uid, DeviceInterface::TYPE_IOS)
+            $this->registerDevice($applicationName, $deviceIdentifier, $deviceToken, $uid, $locationLatitude, $locationLongitude, DeviceInterface::TYPE_IOS)
         );
     }
 
@@ -153,12 +163,14 @@ class DeviceController
      * @param string  $token
      * @param string  $uid
      * @param integer $type
+     * @param float   $locationLatitude
+     * @param float   $locationLongitude
      *
      * @throws ApplicationNotFoundException
      *
      * @return multitype:boolean
      */
-    protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $type)
+    protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type)
     {
         $application = $this->applicationManager->findApplicationByName($applicationName);
 
@@ -191,6 +203,13 @@ class DeviceController
         $device->setType($type);
         $device->setRegisteredAt(new \Datetime());
         $device->setUnregisteredAt(null);
+
+        if (null !== $locationLatitude && null !== $locationLongitude) {
+            $location = new Point();
+            $location->setLatitude($locationLatitude);
+            $location->setLongitude($locationLongitude);
+            $device->setLocation($location);
+        }
 
         $user->setApplication($application);
         $user->setUid($uid);
