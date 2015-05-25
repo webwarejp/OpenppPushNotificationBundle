@@ -310,6 +310,110 @@
         <source>breadcrumb.link_tag_delete</source>
         <target>Delete</target>
       </trans-unit>
+      <trans-unit id="100" resname="condition">
+        <source>condition</source>
+        <target>Conditions</target>
+      </trans-unit>
+      <trans-unit id="101" resname="breadcrumb.link_condition_list">
+        <source>breadcrumb.link_condition_list</source>
+        <target>Conditions List</target>
+      </trans-unit>
+      <trans-unit id="102" resname="filter.label_message">
+        <source>filter.label_message</source>
+        <target>Message</target>
+      </trans-unit>
+      <trans-unit id="103" resname="filter.label_tag_expression">
+        <source>filter.label_tag_expression</source>
+        <target>Tag Expression</target>
+      </trans-unit>
+      <trans-unit id="104" resname="filter.label_enable">
+        <source>filter.label_enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="105" resname="form.label_message">
+        <source>form.label_message</source>
+        <target>Message</target>
+      </trans-unit>
+      <trans-unit id="106" resname="form.label_tag_expression">
+        <source>form.label_tag_expression</source>
+        <target>Tag Expression</target>
+      </trans-unit>
+      <trans-unit id="107" resname="form.label_area">
+        <source>form.label_area</source>
+        <target>Area</target>
+      </trans-unit>
+      <trans-unit id="108" resname="form.label_start_date">
+        <source>form.label_start_date</source>
+        <target>Start Date</target>
+      </trans-unit>
+      <trans-unit id="109" resname="form.label_end_date">
+        <source>form.label_end_date</source>
+        <target>End Date</target>
+      </trans-unit>
+      <trans-unit id="110" resname="form.label_interval">
+        <source>form.label_interval</source>
+        <target>Interval</target>
+      </trans-unit>
+      <trans-unit id="111" resname="form.label_specific_dates">
+        <source>form.label_specific_dates</source>
+        <target>Specific Dates</target>
+      </trans-unit>
+      <trans-unit id="112" resname="form.label_enable">
+        <source>form.label_enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="113" resname="list.label_enable">
+        <source>list.label_enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="114" resname="list.label_enable">
+        <source>list.label_enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="115" resname="list.label_created_at">
+        <source>list.label_created_at</source>
+        <target>Created At</target>
+      </trans-unit>
+      <trans-unit id="116" resname="list.label_updated_at">
+        <source>list.label_updated_at</source>
+        <target>Updated At</target>
+      </trans-unit>
+      <trans-unit id="117" resname="show.label_message">
+        <source>show.label_message</source>
+        <target>Message</target>
+      </trans-unit>
+      <trans-unit id="118" resname="show.label_tag_expression">
+        <source>show.label_tag_expression</source>
+        <target>Tag Expression</target>
+      </trans-unit>
+      <trans-unit id="119" resname="show.label_area">
+        <source>show.label_area</source>
+        <target>Area</target>
+      </trans-unit>
+      <trans-unit id="120" resname="show.label_start_date">
+        <source>show.label_start_date</source>
+        <target>Start Date</target>
+      </trans-unit>
+      <trans-unit id="121" resname="show.label_end_date">
+        <source>show.label_end_date</source>
+        <target>End Date</target>
+      </trans-unit>
+      <trans-unit id="122" resname="show.label_interval">
+        <source>show.label_interval</source>
+        <target>Interval</target>
+      </trans-unit>
+      <trans-unit id="123" resname="show.label_specific_dates">
+        <source>show.label_specific_dates</source>
+        <target>Specific Dates</target>
+      </trans-unit>
+      <trans-unit id="124" resname="show.label_enable">
+        <source>show.label_enable</source>
+        <target>Enable</target>
+      </trans-unit>
+      <trans-unit id="125" resname="breadcrumb.link_condition_delete">
+        <source>breadcrumb.link_condition_delete</source>
+        <target>Delete</target>
+      </trans-unit>
     </body>
   </file>
 </xliff>

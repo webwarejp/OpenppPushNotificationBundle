@@ -60,12 +60,14 @@ class OpenppPushNotificationExtension extends Extension
         $container->setParameter('openpp.push_notification.device.class', $config['class']['device']);
         $container->setParameter('openpp.push_notification.tag.class', $config['class']['tag']);
         $container->setParameter('openpp.push_notification.user.class', $config['class']['user']);
+        $container->setParameter('openpp.push_notification.condition.class', $config['class']['condition']);
 
         // admin configuration
         $container->setParameter('openpp.push_notification.admin.applicaiton.entity', $config['class']['application']);
         $container->setParameter('openpp.push_notification.admin.device.entity', $config['class']['device']);
         $container->setParameter('openpp.push_notification.admin.tag.entity', $config['class']['tag']);
         $container->setParameter('openpp.push_notification.admin.user.entity', $config['class']['user']);
+        $container->setParameter('openpp.push_notification.admin.condition.entity', $config['class']['condition']);
     }
 
     /**
@@ -188,6 +190,22 @@ class OpenppPushNotificationExtension extends Extension
                         'name' => 'tag_id',
                         'referencedColumnName' => 'id',
                     ),
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
+        // Many-To-One Unidirectional for Application and Condition
+        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', array(
+            'fieldName' => 'application',
+            'targetEntity' => $config['class']['application'],
+            'cascade' => array(
+                'remove',
+            ),
+            'joinColumns'   =>  array(
+                array(
+                    'name'  => 'application_id',
+                    'referencedColumnName' => 'id',
                 ),
             ),
             'orphanRemoval' => false,

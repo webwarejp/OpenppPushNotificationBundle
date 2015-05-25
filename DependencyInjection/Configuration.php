@@ -44,6 +44,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('device')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\Device')->end()
                         ->scalarNode('tag')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\Tag')->end()
                         ->scalarNode('user')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\User')->end()
+                        ->scalarNode('condition')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\Condition')->end()
                     ->end()
                 ->end()
             ->end();
