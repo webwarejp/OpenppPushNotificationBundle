@@ -20,7 +20,7 @@
         "nelmio/api-doc-bundle": "~2.4",
         "creof/doctrine2-spatial": "dev-master",
 
-        "openpp/notificationhubs-rest-php": "dev-master"
+        "openpp/notificationhubs-rest-php": "dev-master",
         "openpp/map-bundle": "dev-master"
     },
     "autoload": {
