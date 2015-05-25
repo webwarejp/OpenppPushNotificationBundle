@@ -125,7 +125,7 @@ interface ConditionInterface
     /**
      * Returns the specific dates.
      *
-     * @return string[]
+     * @return \Datetime[]
      */
     public function getSpecificDates();
 
