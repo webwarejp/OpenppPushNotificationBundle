@@ -70,7 +70,8 @@ class TargetEventSubscriber implements EventSubscriber
         $entity = $args->getEntity();
 
         if ($entity instanceof UserInterface) {
-            if (!empty($entity->getDevices())) {
+            $devices = $entity->getDevices();
+            if (!empty($devices)) {
                 $application = $entity->getApplication();
                 $uidTag = TagManagerInterface::UID_TAG_PREFIX . $entity->getUid();
                 $tags = $this->toTagNameArray($entity->getTags());
