@@ -18,5 +18,11 @@
                 <argument type="service" id="service_container" />
             </call>
         </service>
+
+        <service id="openpp.push_notification.task.condition" class="Openpp\PushNotificationBundle\Task\ConditionTask">
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
+        </service>
     </services>
 </container>

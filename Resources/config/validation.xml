@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<constraint-mapping xmlns="http://symfony.com/schema/dic/constraint-mapping"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://symfony.com/schema/dic/constraint-mapping
+        http://symfony.com/schema/dic/services/constraint-mapping-1.0.xsd">
+
+    <class name="Openpp\PushNotificationBundle\Model\Condition">
+        <property name="application">
+            <constraint name="NotNull" />
+        </property>
+        <getter property="periodicSettingValid">
+            <constraint name="True">
+                <option name="message">The periodic setting is mandatory start date and period type.</option>
+            </constraint>
+        </getter>
+        <getter property="endDateValid">
+            <constraint name="True">
+                <option name="message">The end date is invalid.</option>
+            </constraint>
+        </getter>
+    </class>
+</constraint-mapping>

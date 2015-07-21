@@ -7,6 +7,8 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Openpp\PushNotificationBundle\Model\Condition;
+use Sonata\AdminBundle\Route\RouteCollection;
 
 class ConditionAdmin extends Admin
 {
@@ -18,9 +20,10 @@ class ConditionAdmin extends Admin
         $datagridMapper
             ->add('application')
             ->add('name')
+            ->add('enable')
             ->add('message')
             ->add('tagExpression')
-            ->add('enable')
+            ->add('timeType', 'doctrine_orm_choice', array(), 'choice', array('choices' => Condition::getTimeTypeChoices()))
         ;
     }
 
@@ -33,8 +36,9 @@ class ConditionAdmin extends Admin
             ->add('name')
             ->add('application')
             ->add('enable', null, array('editable' => true))
-            ->add('createdAt')
-            ->add('updatedAt')
+            ->add('message', 'html', array('truncate' => array('length' => 10)))
+            ->add('tagExpression', 'html', array('truncate' => array('length' => 10)))
+            ->add('timeType', 'choice', array('choices' => Condition::getTimeTypeChoices()))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),
@@ -51,16 +55,59 @@ class ConditionAdmin extends Admin
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->add('name')
-            ->add('application', 'sonata_type_model_list')
-            ->add('message')
-            ->add('tagExpression')
-            ->add('startDate', 'sonata_type_datetime_picker', array('required' => false))
-            ->add('endDate', 'sonata_type_datetime_picker', array('required' => false))
-            ->add('interval')
-            ->add('specificDates')
-            ->add('area', 'openpp_type_map_geometry', array('required' => false))
-            ->add('enable')
+            ->with('form.group_general', array('class' => 'col-md-6'))
+                ->add('name')
+                ->add('application', 'sonata_type_model_list')
+                ->add('message')
+                ->add('enable')
+                ->add('tagExpression')
+            ->end()
+            ->with('form.group_time', array('class' => 'col-md-6'))
+                ->add('timeType', 'sonata_type_choice_field_mask', array(
+                    'required' => false,
+                    'choices' => Condition::getTimeTypeChoices(),
+                    'map' => array(
+                        Condition::TIME_TYPE_NONE => array(),
+                        Condition::TIME_TYPE_SPECIFIC => array('specificDates'),
+                        Condition::TIME_TYPE_PERIODIC => array('startDate', 'endDate', 'IntervalType'),
+                    ),
+                ))
+                ->add('specificDates', 'sonata_type_native_collection', array(
+                    'type' => 'sonata_type_datetime_picker',
+                    'allow_add' => true,
+                    'allow_delete' => true,
+                    'by_reference' => false,
+                    'required' => false,
+                    'options' => array(
+                        'dp_use_seconds' => false,
+                    ),
+                ))
+                ->add('startDate', 'sonata_type_datetime_picker', array(
+                    'required' => false,
+                    'dp_use_seconds' => false,
+                    'dp_language' => 'ja',
+                ))
+                ->add('endDate', 'sonata_type_datetime_picker', array(
+                    'required' => false,
+                    'dp_use_seconds' => false,
+                ))
+                ->add('IntervalType', 'choice', array(
+                    'expanded' => true,
+                    'required' => false,
+                    'choices' => Condition::getIntervalTypeChoices(),
+                    'placeholder' => false,
+                    'label' => false,
+                ))
+/* TODO:
+                ->add('intervalTime', 'choice', array(
+                    'required' => false,
+                    'choices' => $this->getHourChoices(),
+                ))
+*/
+            ->end()
+            ->with('form.group_location', array('class' => 'col-md-12'))
+                ->add('area', 'openpp_type_map_geometry', array('required' => false))
+            ->end()
         ;
     }
 
@@ -86,4 +133,15 @@ class ConditionAdmin extends Admin
 
         ;
     }
+
+    protected function configureRoutes(RouteCollection $collection)
+    {
+        $collection->remove('show');
+    }
+/*
+    private function getHourChoices()
+    {
+        return range(0, 23);
+    }
+*/
 }

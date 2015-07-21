@@ -9,10 +9,37 @@ namespace Openpp\PushNotificationBundle\Model;
  */
 class Condition implements ConditionInterface
 {
+    const INTERVAL_TYPE_HOURLY  = 1;
+    const INTERVAL_TYPE_DAILY   = 2;
+    const INTERVAL_TYPE_WEEKLY  = 3;
+    const INTERVAL_TYPE_MONTHLY = 4;
+
+    const TIME_TYPE_NONE = 0;
+    const TIME_TYPE_SPECIFIC = 1;
+    const TIME_TYPE_PERIODIC = 2;
+
+    protected static $intervalTypeChoices = array(
+        self::INTERVAL_TYPE_HOURLY => 'hourly',
+        self::INTERVAL_TYPE_DAILY  => 'daily',
+        self::INTERVAL_TYPE_WEEKLY => 'weekly',
+        self::INTERVAL_TYPE_MONTHLY => 'monthly'
+    );
+
+    protected static $timeTypeChoices = array(
+        self::TIME_TYPE_NONE     => 'None',
+        self::TIME_TYPE_SPECIFIC => 'Specific Dates',
+        self::TIME_TYPE_PERIODIC => 'Periodic'
+    );
+
     /**
      * @var string
      */
     protected $name;
+
+    /**
+     * @var boolean
+     */
+    protected $enable;
 
     /**
      * @var \Openpp\PushNotificationBundle\Model\ApplicationInterface
@@ -30,9 +57,14 @@ class Condition implements ConditionInterface
     protected $tagExpression;
 
     /**
-     * @var \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
+     * @var integer
      */
-    protected $area;
+    protected $timeType;
+
+    /**
+     * @var \Datetime[]
+     */
+    protected $specificDates;
 
     /**
      * @var \Datetime
@@ -45,19 +77,19 @@ class Condition implements ConditionInterface
     protected $endDate;
 
     /**
-     * @var string
+     * @var integer
      */
-    protected $interval;
+    protected $intervalType;
 
     /**
-     * @var \Datetime[]
+     * @var integer
      */
-    protected $specificDates;
+    protected $intervalTime;
 
     /**
-     * @var boolean
+     * @var \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
      */
-    protected $enable;
+    protected $area;
 
     /**
      * @var \Datetime
@@ -68,6 +100,14 @@ class Condition implements ConditionInterface
      * @var \Datetime
      */
     protected $updatedAt;
+
+    /**
+     * Constructor
+     */
+    public function __construct()
+    {
+        $this->setEnable(true);
+    }
 
     /**
      * {@inheritdoc}
@@ -83,6 +123,22 @@ class Condition implements ConditionInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function isEnable()
+    {
+        return $this->enable;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setEnable($enable)
+    {
+        $this->enable = $enable;
     }
 
     /**
@@ -133,20 +189,14 @@ class Condition implements ConditionInterface
         $this->tagExpression = $tagExpression;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getArea()
+    public function getTimeType()
     {
-        return $this->area;
+        return $this->timeType;
     }
 
-    /**
-     * {@inheritdoc}
-     */
-    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area)
+    public function setTimeType($timeType)
     {
-        $this->area = $area;
+        $this->timeType = $timeType;
     }
 
     /**
@@ -162,7 +212,7 @@ class Condition implements ConditionInterface
      */
     public function setStartDate(\DateTime $startDate = null)
     {
-        $this->startDate = $startDate;
+        $this->startDate = $startDate ? new \DateTime($startDate->format('Y-m-d H:i')) : null;
     }
 
     /**
@@ -178,23 +228,39 @@ class Condition implements ConditionInterface
      */
     public function setEndDate(\DateTime $endDate = null)
     {
-        $this->endDate = $endDate;
+        $this->endDate = $endDate ? new \DateTime($endDate->format('Y-m-d H:i')) : null;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function getInterval()
+    public function getIntervalType()
     {
-        return $this->interval;
+        return $this->intervalType;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setInerval($interval)
+    public function setIntervalType($intervalType)
     {
-        $this->interval = $interval;
+        $this->intervalType = $intervalType;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIntervalTime()
+    {
+        return $this->intervalTime;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIntervalTime($intervalTime)
+    {
+        $this->intervalTime = $intervalTime;
     }
 
     /**
@@ -210,23 +276,28 @@ class Condition implements ConditionInterface
      */
     public function setSpecificDates(array $specificDates)
     {
-        $this->specificDates = $specificDates;
+        $dates = array();
+        foreach ($specificDates as $date) {
+            $dates[] = new \DateTime($date->format('Y-m-d H:i'));
+        }
+
+        $this->specificDates = $dates;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function isEnable()
+    public function getArea()
     {
-        return $this->enable;
+        return $this->area;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setEnable($enable)
+    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area)
     {
-        $this->enable = $enable;
+        $this->area = $area;
     }
 
     /**
@@ -277,5 +348,91 @@ class Condition implements ConditionInterface
     public function __toString()
     {
         return $this->name;
+    }
+
+    /**
+     * Returns the interval type choices.
+     *
+     * @return array
+     */
+    public static function getTimeTypeChoices()
+    {
+        return self::$timeTypeChoices;
+    }
+
+    /**
+     * Returns the interval type choices.
+     *
+     * @return array
+     */
+    public static function getIntervalTypeChoices()
+    {
+        return self::$intervalTypeChoices;
+    }
+
+    /**
+     * Returns the DateInterval instance according to this interval type.
+     *
+     * @return \DateInterval
+     */
+    public function getDateInterval()
+    {
+        switch ($this->getIntervalType()) {
+            case self::INTERVAL_TYPE_HOURLY:
+                $interval = new \DateInterval('PT1H');
+                break;
+            case self::INTERVAL_TYPE_DAILY:
+                $interval = new \DateInterval('P1D');
+                break;
+            case self::INTERVAL_TYPE_WEEKLY:
+                $interval = new \DateInterval('P1W');
+                break;
+            case self::INTERVAL_TYPE_MONTHLY:
+                $interval = new \DateInterval('P1M');
+                break;
+            default:
+                $interval = null;
+                break;
+        }
+
+        return $interval;
+    }
+
+    /**
+     * Returns whether the periodic setting is valid.
+     *
+     * @return boolean
+     */
+    public function isPeriodicSettingValid()
+    {
+        if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
+            if (!$this->getStartDate() && !$this->getEndDate() && !$this->getIntervalType()) {
+                return true;
+            }
+            if (!$this->getStartDate()) {
+                return false;
+            }
+            if (!$this->getIntervalType()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether the endDate is valid.
+     *
+     * @return boolean
+     */
+    public function isEndDateValid()
+    {
+        if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
+            if ($this->getStartDate() && $this->getEndDate() && $this->getStartDate() > $this->getEndDate()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

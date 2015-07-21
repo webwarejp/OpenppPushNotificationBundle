@@ -25,6 +25,20 @@ interface ConditionInterface
     public function setName($name);
 
     /**
+     * Returns whether this condition is enabled.
+     *
+     * @return boolean
+     */
+    public function isEnable();
+
+    /**
+     * Sets whether this condition is enabled.
+     *
+     * @param boolean $enable
+    */
+    public function setEnable($enable);
+
+    /**
      * Returns the application.
      *
      * @return ApplicationInterface
@@ -67,20 +81,6 @@ interface ConditionInterface
     public function setTagExpression($tagExpression);
 
     /**
-     * Returns the area.
-     *
-     * @return \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
-     */
-    public function getArea();
-
-    /**
-     * Sets the area.
-     *
-     * @param \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area
-     */
-    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area);
-
-    /**
      * Returns the start date.
      *
      * @return \DateTime
@@ -88,39 +88,53 @@ interface ConditionInterface
     public function getStartDate();
 
     /**
-     * Sets the start date.
+     * Sets the start datetime.
      *
      * @param \DateTime $startDate
      */
     public function setStartDate(\DateTime $startDate = null);
 
     /**
-     * Returns the end date.
+     * Returns the end datetime.
      *
      * @return \DateTime
      */
     public function getEndDate();
 
     /**
-     * Sets the end date.
+     * Sets the end datetime.
      *
      * @param \DateTime $endDate
      */
     public function setEndDate(\DateTime $endDate = null);
 
     /**
+     * Returns the interval type.
+     *
+     * @return integer
+     */
+    public function getIntervalType();
+
+    /**
+     * Sets the interval type.
+     *
+     * @param integer
+    */
+    public function setIntervalType($intervalType);
+
+    /**
      * Returns the interval.
      *
-     * @return string
+     * @return integer
      */
-    public function getInterval();
+    public function getIntervalTime();
 
     /**
      * Sets the interval.
      *
-     * @param string $interval
+     * @param integer
      */
-    public function setInerval($interval);
+    public function setIntervalTime($intervalTime);
 
     /**
      * Returns the specific dates.
@@ -137,16 +151,16 @@ interface ConditionInterface
     public function setSpecificDates(array $specificDates);
 
     /**
-     * Returns whether this condition is enabled.
+     * Returns the area.
      *
-     * @return boolean
+     * @return \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
      */
-    public function isEnable();
+    public function getArea();
 
     /**
-     * Sets whether this condition is enabled.
+     * Sets the area.
      *
-     * @param boolean $enable
-     */
-    public function setEnable($enable);
+     * @param \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area
+    */
+    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area);
 }
