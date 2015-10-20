@@ -10,7 +10,7 @@
         }
     ],
     "require": {
-        "symfony/symfony": "~2.3",
+        "symfony/symfony": "~2.7",
 
         "sonata-project/easy-extends-bundle": "~2.1",
         "sonata-project/notification-bundle": "~2.2,>2.2.4",
@@ -20,8 +20,8 @@
         "nelmio/api-doc-bundle": "~2.4",
         "creof/doctrine2-spatial": "dev-master",
 
-        "openpp/notificationhubs-rest-php": "dev-master",
-        "openpp/map-bundle": "dev-master"
+        "openpp/notificationhubs-rest-php": "~0.2",
+        "openpp/map-bundle": "~0.2"
     },
     "autoload": {
         "psr-4": { "Openpp\\PushNotificationBundle\\": "" }
