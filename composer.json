@@ -10,15 +10,15 @@
         }
     ],
     "require": {
-        "symfony/symfony": "~2.7",
+        "symfony/symfony": "~2.8",
 
-        "sonata-project/easy-extends-bundle": "~2.1",
-        "sonata-project/notification-bundle": "~2.2,>2.2.4",
-        "sonata-project/admin-bundle": "dev-master",
+        "sonata-project/easy-extends-bundle": "^2.1",
+        "sonata-project/notification-bundle": "^3.0",
+        "sonata-project/admin-bundle": "^3.0",
 
-        "friendsofsymfony/rest-bundle": "~1.1",
-        "nelmio/api-doc-bundle": "~2.4",
-        "creof/doctrine2-spatial": "dev-master",
+        "friendsofsymfony/rest-bundle": "~1.7",
+        "nelmio/api-doc-bundle": "^2.4",
+        "creof/doctrine2-spatial": "^0.1",
 
         "openpp/notificationhubs-rest-php": "~0.2",
         "openpp/map-bundle": "~0.2"
