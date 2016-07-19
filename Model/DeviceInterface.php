@@ -128,7 +128,7 @@ interface DeviceInterface
     /**
      * Returns the registration date
      *
-     * @return \Datetime
+     * @return \DateTime
      */
     public function getRegisteredAt();
 
@@ -142,7 +142,7 @@ interface DeviceInterface
     /**
      * Returns the unregistration date.
      *
-     * @return \Datetime
+     * @return \DateTime
      */
     public function getUnregisteredAt();
 

@@ -16,7 +16,7 @@ class Tag implements TagInterface
     protected $name;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $createdAt;
 

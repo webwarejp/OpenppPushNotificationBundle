@@ -2,6 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
+use Openpp\MapBundle\Model\CircleInterface;
 /**
  * 
  * @author shiroko@webware.co.jp
@@ -9,15 +10,6 @@ namespace Openpp\PushNotificationBundle\Model;
  */
 class Condition implements ConditionInterface
 {
-    const INTERVAL_TYPE_HOURLY  = 1;
-    const INTERVAL_TYPE_DAILY   = 2;
-    const INTERVAL_TYPE_WEEKLY  = 3;
-    const INTERVAL_TYPE_MONTHLY = 4;
-
-    const TIME_TYPE_NONE = 0;
-    const TIME_TYPE_SPECIFIC = 1;
-    const TIME_TYPE_PERIODIC = 2;
-
     protected static $intervalTypeChoices = array(
         self::INTERVAL_TYPE_HOURLY => 'hourly',
         self::INTERVAL_TYPE_DAILY  => 'daily',
@@ -62,17 +54,17 @@ class Condition implements ConditionInterface
     protected $timeType;
 
     /**
-     * @var \Datetime[]
+     * @var \DateTime[]
      */
     protected $specificDates;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $startDate;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $endDate;
 
@@ -87,9 +79,9 @@ class Condition implements ConditionInterface
     protected $intervalTime;
 
     /**
-     * @var \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
+     * @var \Openpp\MapBundle\Model\CircleInterface
      */
-    protected $area;
+    protected $areaCircle;
 
     /**
      * @var \Datetime
@@ -189,11 +181,17 @@ class Condition implements ConditionInterface
         $this->tagExpression = $tagExpression;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function getTimeType()
     {
         return $this->timeType;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setTimeType($timeType)
     {
         $this->timeType = $timeType;
@@ -287,17 +285,17 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function getArea()
+    public function getAreaCircle()
     {
-        return $this->area;
+        return $this->areaCircle;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area)
+    public function setAreaCircle(CircleInterface $areaCircle)
     {
-        $this->area = $area;
+        $this->areaCircle = $areaCircle;
     }
 
     /**
@@ -373,7 +371,7 @@ class Condition implements ConditionInterface
     /**
      * Returns the DateInterval instance according to this interval type.
      *
-     * @return \DateInterval
+     * @return \DateInterval|null
      */
     public function getDateInterval()
     {

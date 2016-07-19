@@ -2,6 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
+use Openpp\MapBundle\Model\CircleInterface;
 /**
  * ConditionInterface
  *
@@ -10,6 +11,15 @@ namespace Openpp\PushNotificationBundle\Model;
  */
 interface ConditionInterface
 {
+    const INTERVAL_TYPE_HOURLY  = 1;
+    const INTERVAL_TYPE_DAILY   = 2;
+    const INTERVAL_TYPE_WEEKLY  = 3;
+    const INTERVAL_TYPE_MONTHLY = 4;
+
+    const TIME_TYPE_NONE = 0;
+    const TIME_TYPE_SPECIFIC = 1;
+    const TIME_TYPE_PERIODIC = 2;
+
     /**
      * Returns this condition's name.
      *
@@ -81,6 +91,20 @@ interface ConditionInterface
     public function setTagExpression($tagExpression);
 
     /**
+     * Returns the time type.
+     *
+     * @return integer
+     */
+    public function getTimeType();
+
+    /**
+     * Sets the time type.
+     *
+     * @param integer $timeType
+     */
+    public function setTimeType($timeType);
+
+    /**
      * Returns the start date.
      *
      * @return \DateTime
@@ -139,7 +163,7 @@ interface ConditionInterface
     /**
      * Returns the specific dates.
      *
-     * @return \Datetime[]
+     * @return \DateTime[]
      */
     public function getSpecificDates();
 
@@ -151,16 +175,23 @@ interface ConditionInterface
     public function setSpecificDates(array $specificDates);
 
     /**
-     * Returns the area.
+     * Returns the periodic interval
      *
-     * @return \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface
+     * @return \DateInterval
      */
-    public function getArea();
+    public function getDateInterval();
 
     /**
-     * Sets the area.
+     * Returns the circle area.
      *
-     * @param \CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area
+     * @return CircleInterface
+     */
+    public function getAreaCircle();
+
+    /**
+     * Sets the circle area.
+     *
+     * @param CircleInterface $area
     */
-    public function setArea(\CrEOF\Spatial\PHP\Types\Geometry\GeometryInterface $area);
+    public function setAreaCircle(CircleInterface $areaCenter);
 }

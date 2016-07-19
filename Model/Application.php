@@ -55,12 +55,12 @@ class Application implements ApplicationInterface
     protected $users;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $createdAt;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $updatedAt;
 

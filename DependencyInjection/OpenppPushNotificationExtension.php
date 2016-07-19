@@ -78,12 +78,12 @@ class OpenppPushNotificationExtension extends Extension
     {
         if ($config['consumer']) {
             $container->getDefinition('openpp.push_notification.push_service_manager')
-                ->replaceArgument(1, new Reference($config['service']))
-                ->replaceArgument(2, null);
+                ->replaceArgument(2, new Reference($config['service']))
+                ->replaceArgument(3, null);
         } else {
             $container->getDefinition('openpp.push_notification.push_service_manager')
-                ->replaceArgument(1, null)
-                ->replaceArgument(2, null);
+                ->replaceArgument(2, null)
+                ->replaceArgument(3, null);
         }
     }
 
@@ -205,6 +205,23 @@ class OpenppPushNotificationExtension extends Extension
             'joinColumns'   =>  array(
                 array(
                     'name'  => 'application_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
+        // One-To-One, Unidirectional Condition and Circle
+        $collector->addAssociation($config['class']['condition'], 'mapOneToOne', array(
+            'fieldName' => 'areaCircle',
+            'targetEntity' => $config['class']['areaCircle'],
+            'cascade' => array(
+                'persist',
+                'remove',
+            ),
+            'joinColumns'   =>  array(
+                array(
+                    'name'  => 'area_circle_id',
                     'referencedColumnName' => 'id',
                 ),
             ),

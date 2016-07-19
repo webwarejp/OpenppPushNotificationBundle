@@ -23,6 +23,7 @@
          <service id="openpp.push_notification.manager.user" class="%openpp.push_notification.manager.user.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />
             <argument>%openpp.push_notification.user.class%</argument>
+            <argument>%openpp.push_notification.device.class%</argument>
         </service>
          <service id="openpp.push_notification.manager.condition" class="%openpp.push_notification.manager.condition.class%">
             <argument type="service" id="doctrine.orm.entity_manager" />

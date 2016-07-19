@@ -10,19 +10,16 @@
 
     <services>
         <service id="openpp.push_notification.push_service_manager" class="%openpp.push_notification.push_service_manager.class%">
+            <argument type="service" id="sonata.notification.backend" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument />
             <argument />
-
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
         </service>
 
         <service id="openpp.push_notification.task.condition" class="Openpp\PushNotificationBundle\Task\ConditionTask">
-            <call method="setContainer">
-                <argument type="service" id="service_container" />
-            </call>
+            <argument type="service" id="openpp.push_notification.manager.condition" />
+            <argument type="service" id="openpp.push_notification.push_service_manager" />
+            <argument type="service" id="openpp.push_notification.manager.user" />
         </service>
     </services>
 </container>

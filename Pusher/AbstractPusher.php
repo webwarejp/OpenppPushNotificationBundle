@@ -2,14 +2,13 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
-
 use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 
 abstract class AbstractPusher implements PusherInterface
 {

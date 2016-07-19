@@ -161,7 +161,7 @@ class Device implements DeviceInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location)
+    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location = null)
     {
         $this->location = $location;
     }

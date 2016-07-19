@@ -2,10 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Controller\Api;
 
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\Post;
-use FOS\RestBundle\View\View;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
@@ -13,15 +13,15 @@ use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
-use Symfony\Component\Security\Core\Exception\AccessDeniedException;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+
 
 /**
  *
  * @author shiroko@webware.co.jp
  *
  */
-class DeviceController
+class DeviceController extends FOSRestController
 {
     /**
      * @var ApplicationManagerInterface
@@ -75,15 +75,14 @@ class DeviceController
      */
     public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
-        $applicationName   = $paramFetcher->get('application_name');
-        $deviceIdentifier  = $paramFetcher->get('device_identifier');
-        $registrationId    = $paramFetcher->get('registration_id');
-        $uid               = $paramFetcher->get('uid');
-        $locationLatitude  = $paramFetcher->get('location_latitude');
-        $locationLongitude = $paramFetcher->get('location_longitude');
-
-        return $this->createView(
-            $this->registerDevice($applicationName, $deviceIdentifier, $registrationId, $uid, $locationLatitude, $locationLongitude, DeviceInterface::TYPE_ANDROID)
+        return $this->registerDevice(
+            $paramFetcher->get('application_name'),
+            $paramFetcher->get('device_identifier'),
+            $paramFetcher->get('registration_id'),
+            $paramFetcher->get('uid'),
+            $paramFetcher->get('location_latitude'),
+            $paramFetcher->get('location_longitude'),
+            DeviceInterface::TYPE_ANDROID
         );
     }
 
@@ -103,15 +102,14 @@ class DeviceController
      */
     public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
-        $applicationName  = $paramFetcher->get('application_name');
-        $deviceIdentifier = $paramFetcher->get('device_identifier');
-        $deviceToken      = $paramFetcher->get('device_token');
-        $uid              = $paramFetcher->get('uid');
-        $locationLatitude  = $paramFetcher->get('location_latitude');
-        $locationLongitude = $paramFetcher->get('location_longitude');
-
-        return $this->createView(
-            $this->registerDevice($applicationName, $deviceIdentifier, $deviceToken, $uid, $locationLatitude, $locationLongitude, DeviceInterface::TYPE_IOS)
+        return $this->registerDevice(
+            $paramFetcher->get('application_name'),
+            $paramFetcher->get('device_identifier'),
+            $paramFetcher->get('device_token'),
+            $paramFetcher->get('uid'),
+            $paramFetcher->get('location_latitude'),
+            $paramFetcher->get('location_longitude'),
+            DeviceInterface::TYPE_IOS
         );
     }
 
@@ -127,11 +125,9 @@ class DeviceController
      */
     public function unregisterDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
-        $applicationName = $paramFetcher->get('application_name');
-        $deviceIdentifier = $paramFetcher->get('device_identifier');
-
-        return $this->createView(
-            $this->unregisterDevice($applicationName, $deviceIdentifier)
+        return $this->unregisterDevice(
+            $paramFetcher->get('application_name'),
+            $paramFetcher->get('device_identifier')
         );
     }
 
@@ -147,11 +143,9 @@ class DeviceController
      */
     public function unregisterDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
-        $applicationName = $paramFetcher->get('application_name');
-        $deviceIdentifier = $paramFetcher->get('device_identifier');
-
-        return $this->createView(
-            $this->unregisterDevice($applicationName, $deviceIdentifier)
+        return $this->unregisterDevice(
+            $paramFetcher->get('application_name'),
+            $paramFetcher->get('device_identifier')
         );
     }
 
@@ -201,7 +195,7 @@ class DeviceController
         $device->setDeviceIdentifier($deviceIdentifier);
         $device->setToken($token);
         $device->setType($type);
-        $device->setRegisteredAt(new \Datetime());
+        $device->setRegisteredAt(new \DateTime());
         $device->setUnregisteredAt(null);
 
         if (null !== $locationLatitude && null !== $locationLongitude) {
@@ -214,20 +208,23 @@ class DeviceController
         $device->setUser($user);
         $user->addDevice($device);
 
+        $tagNames = array();
         if ($type == DeviceInterface::TYPE_ANDROID) {
-            $tagName = 'android';
+            $tagNames[] = 'android';
         } else {
-            $tagName = 'ios';
+            $tagNames[] = 'ios';
         }
+        $tagNames[] = $user->getUidTag();
 
-        $tag = $this->tagManager->findTagByName($tagName);
+        foreach ($tagNames as $tagName) {
+            $tag = $this->tagManager->findTagByName($tagName);
 
-        if (is_null($tag)) {
-            $tag = $this->tagManager->create();
-            $tag->setName($tagName);
+            if (is_null($tag)) {
+                $tag = $this->tagManager->create();
+                $tag->setName($tagName);
+            }
+            $user->addTag($tag);
         }
-
-        $user->addTag($tag);
 
         $application->addUser($user);
 
@@ -257,20 +254,11 @@ class DeviceController
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
         if (!is_null($device)) {
-            $device->setUnregisteredAt(new \Datetime());
+            $device->setUnregisteredAt(new \DateTime());
             $device->getUser()->setBadge(0);
             $this->deviceManager->save($device);
         }
 
         return array('unregistered' => true);
-    }
-
-    protected function createView($data)
-    {
-        $view = View::create();
-        $view->setData($data)
-             ->setFormat('json');
-
-        return $view;
     }
 }

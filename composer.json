@@ -1,29 +1,32 @@
 {
-    "name": "openpp/push-notification-bundle",
-    "type": "symfony-bundle",
-    "description": "Symfony OpenppPushNotificationBundle",
-    "keywords": ["push", "notification", "openpp", "azure"],
-    "license": "MIT",
-    "authors": [
-        {
-            "name": "webware,Inc."
-        }
-    ],
-    "require": {
-        "symfony/symfony": "~2.8",
-
-        "sonata-project/easy-extends-bundle": "^2.1",
-        "sonata-project/notification-bundle": "^3.0",
-        "sonata-project/admin-bundle": "^3.0",
-
-        "friendsofsymfony/rest-bundle": "~1.7",
-        "nelmio/api-doc-bundle": "^2.4",
-        "creof/doctrine2-spatial": "^0.1",
-
-        "openpp/notificationhubs-rest-php": "~0.2",
-        "openpp/map-bundle": "~0.2"
-    },
-    "autoload": {
-        "psr-4": { "Openpp\\PushNotificationBundle\\": "" }
-    }
+	"name" : "openpp/push-notification-bundle",
+	"type" : "symfony-bundle",
+	"description" : "Symfony OpenppPushNotificationBundle",
+	"keywords" : [
+		"push",
+		"notification",
+		"openpp",
+		"azure"
+	],
+	"license" : "MIT",
+	"authors" : [{
+			"name" : "webware,Inc."
+		}
+	],
+	"require" : {
+		"symfony/symfony" : "~2.8",
+		"sonata-project/easy-extends-bundle" : "^2.1",
+		"sonata-project/notification-bundle" : "^3.0",
+		"sonata-project/admin-bundle" : "^3.0",
+		"friendsofsymfony/rest-bundle" : "~1.7",
+		"nelmio/api-doc-bundle" : "^2.4",
+		"creof/doctrine2-spatial" : "dev-master",
+		"openpp/notificationhubs-rest-php" : "~0.5",
+		"openpp/map-bundle" : "~0.4"
+	},
+	"autoload" : {
+		"psr-4" : {
+			"Openpp\\PushNotificationBundle\\" : ""
+		}
+	}
 }

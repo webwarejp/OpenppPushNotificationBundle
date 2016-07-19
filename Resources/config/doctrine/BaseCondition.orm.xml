@@ -12,7 +12,6 @@
         <field name="endDate"          type="datetime" column="end_date"                       nullable="true" />
         <field name="intervalType"     type="smallint" column="interval_type"                  nullable="true" />
         <field name="intervalTime"     type="smallint" column="interval_time"                  nullable="true" />
-        <field name="area"             type="geometry" column="area"                           nullable="true" />
 
         <field name="createdAt"    type="datetime"   column="created_at" />
         <field name="updatedAt"    type="datetime"   column="updated_at" />

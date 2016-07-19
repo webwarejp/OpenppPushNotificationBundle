@@ -106,7 +106,10 @@ class ConditionAdmin extends Admin
 */
             ->end()
             ->with('form.group_location', array('class' => 'col-md-12'))
-                ->add('area', 'openpp_type_map_geometry', array('required' => false))
+                ->add('areaCircle', 'openpp_type_map_geometry_circle', array(
+                    'required' => false,
+                    'label' => false
+                ))
             ->end()
         ;
     }
@@ -130,7 +133,6 @@ class ConditionAdmin extends Admin
             ->add('enable')
             ->add('createdAt')
             ->add('updatedAt')
-
         ;
     }
 

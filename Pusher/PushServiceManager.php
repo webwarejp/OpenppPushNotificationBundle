@@ -2,11 +2,15 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Sonata\NotificationBundle\Backend\BackendInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
-class PushServiceManager extends ContainerAware implements PushServiceManagerInterface
+
+class PushServiceManager implements PushServiceManagerInterface
 {
+    const TYPE_NAME = 'openpp.push_notification.push';
+
+    protected $backend;
     protected $tagManager;
     protected $defaultPusher;
     protected $fallbackPusher;
@@ -18,8 +22,13 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
      * @param PusherInterface $defaultPusher
      * @param PusherInterface $fallbackPusher
      */
-    public function __construct(TagManagerInterface $tagManager, PusherInterface $defaultPusher, PusherInterface $fallbackPusher = null)
-    {
+    public function __construct(
+        BackendInterface    $backend,
+        TagManagerInterface $tagManager,
+        PusherInterface     $defaultPusher,
+        PusherInterface     $fallbackPusher = null
+    ) {
+        $this->backend        = $backend;
         $this->tagManager     = $tagManager;
         $this->defaultPusher  = $defaultPusher;
         $this->fallbackPusher = $fallbackPusher;
@@ -34,13 +43,12 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
             $this->tagManager->checkTagExpression($target);
         }
 
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
-                'application' => $applicationName,
-                'target'      => $target,
-                'message'     => $message,
-                'options'     => $options,
-                'operation'   => self::OPERATION_PUSH,
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application' => $applicationName,
+            'target'      => $target,
+            'message'     => $message,
+            'options'     => $options,
+            'operation'   => self::OPERATION_PUSH,
         ));
     }
 
@@ -76,12 +84,11 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
             }
         }
 
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
-                'application' => $applicationName,
-                'uid'         => $uid,
-                'tag'         => $tag,
-                'operation'   => self::OPERATION_ADDTAGTOUSER,
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application' => $applicationName,
+            'uid'         => $uid,
+            'tag'         => $tag,
+            'operation'   => self::OPERATION_ADDTAGTOUSER,
         ));
     }
 
@@ -100,12 +107,11 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
     {
         $this->tagManager->checkTag($tag);
 
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
-                'application' => $applicationName,
-                'uid'         => $uid,
-                'tag'         => $tag,
-                'operation'   => self::OPERATION_REMOVETAGFROMUSER,
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application' => $applicationName,
+            'uid'         => $uid,
+            'tag'         => $tag,
+            'operation'   => self::OPERATION_REMOVETAGFROMUSER,
         ));
     }
 
@@ -122,12 +128,11 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
      */
     public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
-                'application'      => $applicationName,
-                'deviceIdentifier' => $deviceIdentifier,
-                'tags'             => $tags,
-                'operation'        => self::OPERATION_CREATE_REGISTRATION,
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application'      => $applicationName,
+            'deviceIdentifier' => $deviceIdentifier,
+            'tags'             => $tags,
+            'operation'        => self::OPERATION_CREATE_REGISTRATION,
         ));
     }
 
@@ -144,12 +149,11 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
      */
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
-                'application'      => $applicationName,
-                'deviceIdentifier' => $deviceIdentifier,
-                'tags'             => $tags,
-                'operation'   => self::OPERATION_UPDATE_REGISTRATION,
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application'      => $applicationName,
+            'deviceIdentifier' => $deviceIdentifier,
+            'tags'             => $tags,
+            'operation'   => self::OPERATION_UPDATE_REGISTRATION,
         ));
     }
 
@@ -166,8 +170,7 @@ class PushServiceManager extends ContainerAware implements PushServiceManagerInt
      */
     public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
     {
-        $backend = $this->container->get('sonata.notification.backend');
-        $backend->createAndPublish('openpp.push_notification.push', array(
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
             'application'    => $applicationName,
             'type'           => $type,
             'registrationId' => $registrationId,

@@ -2,15 +2,34 @@
 
 namespace Openpp\PushNotificationBundle\Task;
 
-use Symfony\Component\DependencyInjection\ContainerAware;
+use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
+use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
+use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 
 /**
  * 
  * @author shiroko@webware.co.jp
  *
  */
-class ConditionTask extends ContainerAware
+class ConditionTask
 {
+    protected $conditionManager;
+    protected $pushServiceManager;
+    protected $userManager;
+
+    /**
+     * Constructor
+     *
+     * @param ConditionManagerInterface $conditionManager
+     * @param PushServiceManagerInterface $pushServiceManager
+     */
+    public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, UserManagerInterface $userManager)
+    {
+        $this->conditionManager   = $conditionManager;
+        $this->pushServiceManager = $pushServiceManager;
+        $this->userManager        = $userManager;
+    }
+
     /**
      * 
      * @param string $time
@@ -18,17 +37,32 @@ class ConditionTask extends ContainerAware
      */
     public function execute($time = null, $margin = null)
     {
-        $conditionManager = $this->container->get('openpp.push_notification.manager.condition');
-        $conditions = $conditionManager->matchConditionByTime(
-                $time ? $time : new \Datetime(),
-                $margin ? new \DateInterval('PT'. $margin . 'M') : null
+        $conditions = $this->conditionManager->matchConditionByTime(
+            $time ? new \DateTime($time) : new \DateTime(),
+            $margin ? new \DateInterval('PT'. $margin . 'M') : null
         );
 
         foreach ($conditions as $condition) {
-            $application = $conditon->getApplication()->getName();
-            $target = $condition->getTagExpression();
-            $message = $condition->getMessage();
-            $this->container->get('openpp.push_notification.push_service_manager')->push($application, $target, $message);
+            if ($condition->getAreaCircle()) {
+                $users = $this->userManager->findUserInAreaCircleWithTag(
+                    $condition->getApplication(),
+                    $condition->getTagExpression(),
+                    $condition->getAreaCircle()
+                );
+                foreach ($users as $user) {
+                    $this->pushServiceManager->push(
+                        $condition->getApplication()->getName(),
+                        $user->getUidTag(),
+                        $condition->getMessage()
+                    );
+                }
+            } else {
+                $this->pushServiceManager->push(
+                    $condition->getApplication()->getName(),
+                    $condition->getTagExpression(),
+                    $condition->getMessage()
+                );
+            }
         }
 
         return $conditions;

@@ -38,12 +38,12 @@ class User implements UserInterface
     protected $badge;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $createdAt;
 
     /**
-     * @var \Datetime
+     * @var \DateTime
      */
     protected $updatedAt;
 
@@ -232,6 +232,14 @@ class User implements UserInterface
         }
 
         return null;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUidTag()
+    {
+        return TagManagerInterface::UID_TAG_PREFIX . $this->getUid();
     }
 
     /**
