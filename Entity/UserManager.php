@@ -6,7 +6,8 @@ use Doctrine\Common\Persistence\ObjectManager;
 use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
 use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Application\Openpp\MapBundle\Entity\Circle;
+use Openpp\MapBundle\Model\CircleInterface;
+use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
 
 class UserManager extends BaseManager
 {
@@ -65,8 +66,9 @@ class UserManager extends BaseManager
      * @param string $tagExpression
      * @param Circle $circle
      */
-    public function findUserInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, Circle $circle)
+    public function findUserInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, CircleInterface $circle)
     {
+        $transformer = new GeometryToStringTransformer();
         /* @var $qb \Doctrine\ORM\QueryBuilder */
         $qb = $this->repository->createQueryBuilder('u');
         $qb
@@ -75,7 +77,7 @@ class UserManager extends BaseManager
             ->where($qb->expr()->eq('u.application', ':application'))
             ->andWhere('d.location = ST_Intersection(d.location, ST_Buffer(:center, :radius))')
             ->setParameter('application', $application)
-            ->setParameter('center', $circle->getCenter())
+            ->setParameter('center', $transformer->transform($circle->getCenter()))
             ->setParameter('radius', $circle->getRadius())
         ;
 
