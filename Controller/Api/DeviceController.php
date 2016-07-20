@@ -13,7 +13,7 @@ use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
-use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
 
 
 /**
@@ -195,11 +195,28 @@ class DeviceController extends FOSRestController
         $device->setDeviceIdentifier($deviceIdentifier);
         $device->setToken($token);
         $device->setType($type);
-        $device->setRegisteredAt(new \DateTime());
+        if (!$device->getRegisteredAt()) {
+            $device->setRegisteredAt(new \DateTime());
+        }
         $device->setUnregisteredAt(null);
 
         if (null !== $locationLatitude && null !== $locationLongitude) {
-            $device->setLocation(new Point($locationLatitude, $locationLongitude));
+            if ($location = $device->getLocation()) {
+                $point = $location->getPoint();
+                $newPoint = clone $point;
+                $newPoint
+                    ->setLatitude($locationLatitude)
+                    ->setLongitude($locationLongitude)
+                ;
+                $location->setPoint($newPoint);
+            } else {
+                try {
+                    $pointManager = $this->get('openpp.map.manager.point');
+                    $device->setLocation($pointManager->createFromLonLat($locationLongitude, $locationLatitude));
+                } catch (ServiceNotFoundException $e) {
+                    // do nothing
+                }
+            }
         }
 
         $user->setApplication($application);

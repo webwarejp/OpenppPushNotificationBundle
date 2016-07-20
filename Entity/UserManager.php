@@ -14,7 +14,6 @@ class UserManager extends BaseManager
     protected $objectManager;
     protected $repository;
     protected $class;
-    protected $deviceClass;
 
     /**
      * Constructor
@@ -23,14 +22,13 @@ class UserManager extends BaseManager
      * @param string $class
      * @param string $deviceClass
      */
-    public function __construct(ObjectManager $om, $class, $deviceClass)
+    public function __construct(ObjectManager $om, $class)
     {
         $this->objectManager = $om;
         $this->repository = $om->getRepository($class);
 
         $metadata = $om->getClassMetadata($class);
         $this->class = $metadata->getName();
-        $this->deviceClass = $deviceClass;
     }
 
     /**
@@ -74,13 +72,15 @@ class UserManager extends BaseManager
         $qb
             ->distinct()
             ->innerJoin('u.devices', 'd')
+            ->innerJoin('d.location', 'l')
             ->where($qb->expr()->eq('u.application', ':application'))
-            ->andWhere('d.location = ST_Intersection(d.location, ST_Buffer(:center, :radius))')
+            ->andWhere('l.point = ST_Intersection(l.point, ST_Buffer(:center, :radius))')
             ->setParameter('application', $application)
             ->setParameter('center', $transformer->transform($circle->getCenter()))
             ->setParameter('radius', $circle->getRadius())
         ;
 
+        //TODO: check tags
         return $qb->getQuery()->getResult();
     }
 }

@@ -20,7 +20,6 @@
 		"sonata-project/admin-bundle" : "^3.0",
 		"friendsofsymfony/rest-bundle" : "~1.7",
 		"nelmio/api-doc-bundle" : "^2.4",
-		"creof/doctrine2-spatial" : "dev-master",
 		"openpp/notificationhubs-rest-php" : "~0.5",
 		"openpp/map-bundle" : "~0.4"
 	},

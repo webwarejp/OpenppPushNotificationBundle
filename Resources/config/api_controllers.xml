@@ -10,6 +10,9 @@
             <argument type="service" id="openpp.push_notification.manager.device" />
             <argument type="service" id="openpp.push_notification.manager.user" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
+            <call method="setContainer">
+                <argument type="service" id="service_container" />
+            </call>
         </service>
 
     </services>

@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('user')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\User')->end()
                         ->scalarNode('condition')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\Condition')->end()
                         ->scalarNode('areaCircle')->defaultValue('Application\\Openpp\\MapBundle\\Entity\\Circle')->end()
+                        ->scalarNode('location')->defaultValue('Application\\Openpp\\MapBundle\\Entity\\Point')->end()
                     ->end()
                 ->end()
             ->end();

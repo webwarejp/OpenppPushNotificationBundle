@@ -10,8 +10,8 @@ namespace Openpp\PushNotificationBundle\Model;
  */
 interface DeviceInterface
 {
-    const TYPE_ANDROID = 0;
-    const TYPE_IOS     = 1;
+    const TYPE_ANDROID = 1;
+    const TYPE_IOS     = 2;
 
     /**
      * Returns the device identifier.
@@ -86,16 +86,16 @@ interface DeviceInterface
     /**
      * Returns the device's location.
      *
-     * @return \CrEOF\Spatial\PHP\Types\Geometry\Point
+     * @return \Openpp\MapBundle\Model\PointInterface
      */
     public function getLocation();
 
     /**
      * Sets the device's location.
      *
-     * @param \CrEOF\Spatial\PHP\Types\Geometry\Point $location
+     * @param \Openpp\MapBundle\Model\PointInterface
      */
-    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location);
+    public function setLocation(\Openpp\MapBundle\Model\PointInterface $location);
 
     /**
      * Returns the application.

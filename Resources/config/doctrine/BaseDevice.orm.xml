@@ -3,11 +3,10 @@
     <mapped-superclass name="Openpp\PushNotificationBundle\Entity\BaseDevice">
 
         <field name="deviceIdentifier" type="string"   column="device_identifier" length="255" />
-        <field name="type"             type="smallint" column="type"              length="255" />
+        <field name="type"             type="smallint" column="type"                           />
         <field name="token"            type="string"   column="token"             length="255" />
         <field name="registrationId"   type="string"   column="registration_id"   length="255" nullable="true" />
         <field name="eTag"             type="string"   column="etag"              length="255" nullable="true" />
-        <field name="location"         type="point"    column="location"          nullable="true" />
 
         <field name="registeredAt"   type="datetime"   column="registered_at" />
         <field name="unregisteredAt" type="datetime"   column="unregistered_at"  nullable="true" />

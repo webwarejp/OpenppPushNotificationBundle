@@ -36,7 +36,7 @@ class Device implements DeviceInterface
     protected $eTag;
 
     /**
-     * @var \CrEOF\Spatial\PHP\Types\Geometry\Point
+     * @var \Openpp\MapBundle\Model\PointInterface
      */
     protected $location;
 
@@ -161,7 +161,7 @@ class Device implements DeviceInterface
     /**
      * {@inheritdoc}
      */
-    public function setLocation(\CrEOF\Spatial\PHP\Types\Geometry\Point $location = null)
+    public function setLocation(\Openpp\MapBundle\Model\PointInterface $location = null)
     {
         $this->location = $location;
     }

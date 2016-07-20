@@ -12,6 +12,8 @@ use Sonata\AdminBundle\Route\RouteCollection;
 
 class ConditionAdmin extends Admin
 {
+    protected $mapBundleEnable = false;
+
     /**
      * @param DatagridMapper $datagridMapper
      */
@@ -105,13 +107,18 @@ class ConditionAdmin extends Admin
                 ))
 */
             ->end()
-            ->with('form.group_location', array('class' => 'col-md-12'))
-                ->add('areaCircle', 'openpp_type_map_geometry_circle', array(
-                    'required' => false,
-                    'label' => false
-                ))
-            ->end()
         ;
+
+        if ($this->mapBundleEnable) {
+            $formMapper
+                ->with('form.group_location', array('class' => 'col-md-12'))
+                    ->add('areaCircle', 'openpp_type_map_geometry_circle', array(
+                        'required' => false,
+                        'label' => false
+                ))
+                ->end()
+            ;
+        }
     }
 
     /**
@@ -140,10 +147,16 @@ class ConditionAdmin extends Admin
     {
         $collection->remove('show');
     }
+
+    public function setMapBundleEnable($mapBundleEnable)
+    {
+        $this->mapBundleEnable = $mapBundleEnable;
+    }
+
 /*
     private function getHourChoices()
     {
-        return range(0, 23);
+        return range(2, 23);
     }
 */
 }

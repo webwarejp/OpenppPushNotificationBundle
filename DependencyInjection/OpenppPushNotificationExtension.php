@@ -36,17 +36,34 @@ class OpenppPushNotificationExtension extends Extension
             $loader->load('consumer.xml');
             $loader->load('api_controllers.xml');
 
+            $mapBundleEnable = false;
+            if (isset($bundles['OpenppMapBundle'])) {
+                $mapBundleEnable = true;
+            }
+
             if (isset($bundles['SonataAdminBundle'])) {
                 $loader->load('admin.xml');
+                $this->configureAdmin($mapBundleEnable, $container);
             }
         }
 
         if ($config['consumer'] && 'orm' == $config['db_driver']) {
-            $this->registerDoctrineMapping($config);
+            $this->registerDoctrineMapping($config, $mapBundleEnable);
         }
 
         $this->configureClass($config, $container);
         $this->configurePushServiceManager($config, $container);
+    }
+
+    /**
+     * @param boolean                                                 $mapBundleEnable
+     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     */
+    protected function configureAdmin($mapBundleEnable, ContainerBuilder $container)
+    {
+        $container->getDefinition('openpp.push_notification.admin.condition')
+            ->addMethodCall('setMapBundleEnable', array($mapBundleEnable))
+        ;
     }
 
     /**
@@ -90,11 +107,12 @@ class OpenppPushNotificationExtension extends Extension
     /**
      * Registers doctrine mapping on concrete push notification entities
      *
-     * @param array $config
+     * @param array   $config
+     * @param boolean $mapBundleEnable
      *
      * @return void
      */
-    protected function registerDoctrineMapping(array $config)
+    protected function registerDoctrineMapping(array $config, $mapBundleEnable = true)
     {
         $collector = DoctrineCollector::getInstance();
 
@@ -211,21 +229,40 @@ class OpenppPushNotificationExtension extends Extension
             'orphanRemoval' => false,
         ));
 
-        // One-To-One, Unidirectional Condition and Circle
-        $collector->addAssociation($config['class']['condition'], 'mapOneToOne', array(
-            'fieldName' => 'areaCircle',
-            'targetEntity' => $config['class']['areaCircle'],
-            'cascade' => array(
-                'persist',
-                'remove',
-            ),
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'area_circle_id',
-                    'referencedColumnName' => 'id',
+        if ($mapBundleEnable) {
+            // One-To-One, Unidirectional Device and Point
+            $collector->addAssociation($config['class']['device'], 'mapOneToOne', array(
+                'fieldName' => 'location',
+                'targetEntity' => $config['class']['location'],
+                'cascade' => array(
+                    'persist',
+                    'remove',
                 ),
-            ),
-            'orphanRemoval' => false,
-        ));
+                'joinColumns'   =>  array(
+                    array(
+                        'name'  => 'location_id',
+                        'referencedColumnName' => 'id',
+                    ),
+                ),
+                'orphanRemoval' => false,
+            ));
+
+            // One-To-One, Unidirectional Condition and Circle
+            $collector->addAssociation($config['class']['condition'], 'mapOneToOne', array(
+                'fieldName' => 'areaCircle',
+                'targetEntity' => $config['class']['areaCircle'],
+                'cascade' => array(
+                    'persist',
+                    'remove',
+                ),
+                'joinColumns'   =>  array(
+                    array(
+                        'name'  => 'area_circle_id',
+                        'referencedColumnName' => 'id',
+                    ),
+                ),
+                'orphanRemoval' => false,
+            ));
+        }
     }
 }
