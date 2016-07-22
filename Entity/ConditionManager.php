@@ -62,6 +62,7 @@ class ConditionManager implements ConditionManagerInterface
         $qb = $this->getRepository()->createQueryBuilder('c');
         $qb
             ->where($qb->expr()->eq('c.enable', $qb->expr()->literal(true)))
+            ->andWhere($qb->expr()->in('c.timeType', ':timeTypes'))
             ->andWhere(
                 $qb->expr()->orX(
                     $qb->expr()->andX(
@@ -85,12 +86,12 @@ class ConditionManager implements ConditionManagerInterface
         ;
 
         $qb->setParameters(array(
-            'now' => $now,
-            'pre' => $preTime
+            'now'       => $now,
+            'pre'       => $preTime,
+            'timeTypes' => array(ConditionInterface::TIME_TYPE_PERIODIC, ConditionInterface::TIME_TYPE_SPECIFIC),
         ));
-        $query = $qb->getQuery();
 
-        return $query->getResult();
+        return $qb->getQuery()->getResult();
     }
 
     /**
@@ -142,5 +143,29 @@ class ConditionManager implements ConditionManagerInterface
         }
 
         return $result;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getContinuingConditions()
+    {
+        /* @var $qb \Doctrine\ORM\QueryBuilder */
+        $qb = $this->getRepository()->createQueryBuilder('c');
+        $qb
+            ->where($qb->expr()->eq('c.enable', $qb->expr()->literal(true)))
+            ->andWhere($qb->expr()->eq('c.timeType', ':timeType'))
+            ->andWhere($qb->expr()->andX(
+                $qb->expr()->lte('c.startDate', ':now'),
+                $qb->expr()->orX(
+                    $qb->expr()->isNull('c.endDate'),
+                    $qb->expr()->gte('c.endDate', ':now')
+                )
+            ))
+            ->setParameter('timeType', ConditionInterface::TIME_TYPE_CONTINUING)
+            ->setParameter('now', new \DateTime())
+        ;
+
+        return $qb->getQuery()->getResult();
     }
 }

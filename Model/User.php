@@ -235,7 +235,7 @@ class User implements UserInterface
     }
 
     /**
-     * @return string
+     * {@inheritdoc}
      */
     public function getUidTag()
     {

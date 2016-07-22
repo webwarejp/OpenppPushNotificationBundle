@@ -35,7 +35,6 @@ class OpenppPushNotificationExtension extends Extension
             $loader->load('pusher.xml');
             $loader->load('consumer.xml');
             $loader->load('api_controllers.xml');
-
             $mapBundleEnable = false;
             if (isset($bundles['OpenppMapBundle'])) {
                 $mapBundleEnable = true;
@@ -45,9 +44,8 @@ class OpenppPushNotificationExtension extends Extension
                 $loader->load('admin.xml');
                 $this->configureAdmin($mapBundleEnable, $container);
             }
-        }
 
-        if ($config['consumer'] && 'orm' == $config['db_driver']) {
+            $this->configureORMManager($mapBundleEnable, $container);
             $this->registerDoctrineMapping($config, $mapBundleEnable);
         }
 
@@ -56,8 +54,8 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
-     * @param boolean                                                 $mapBundleEnable
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param boolean          $mapBundleEnable
+     * @param ContainerBuilder $container
      */
     protected function configureAdmin($mapBundleEnable, ContainerBuilder $container)
     {
@@ -67,8 +65,22 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
-     * @param array                                                   $config
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param boolean          $mapBundleEnable
+     * @param ContainerBuilder $container
+     */
+    protected function configureORMManager($mapBundleEnable, ContainerBuilder $container)
+    {
+        $deviceManagerDefinition = $container->getDefinition('openpp.push_notification.manager.device');
+        if ($mapBundleEnable) {
+            $deviceManagerDefinition->replaceArgument(3, $container->getParameter('openpp.map.point.class'));
+        } else {
+            $deviceManagerDefinition->replaceArgument(3, '');
+        }
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
      */
     protected function configureClass($config, ContainerBuilder $container)
     {
@@ -88,8 +100,8 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
-     * @param array                                                   $config
-     * @param \Symfony\Component\DependencyInjection\ContainerBuilder $container
+     * @param array            $config
+     * @param ContainerBuilder $container
      */
     protected function configurePushServiceManager($config, ContainerBuilder $container)
     {

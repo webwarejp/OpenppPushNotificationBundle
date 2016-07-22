@@ -16,9 +16,9 @@ interface ConditionInterface
     const INTERVAL_TYPE_WEEKLY  = 3;
     const INTERVAL_TYPE_MONTHLY = 4;
 
-    const TIME_TYPE_NONE = 0;
-    const TIME_TYPE_SPECIFIC = 1;
-    const TIME_TYPE_PERIODIC = 2;
+    const TIME_TYPE_SPECIFIC   = 1;
+    const TIME_TYPE_PERIODIC   = 2;
+    const TIME_TYPE_CONTINUING = 3;
 
     /**
      * Returns this condition's name.

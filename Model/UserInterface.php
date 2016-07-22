@@ -111,4 +111,11 @@ interface UserInterface
      * @return DeviceInterface
      */
     public function getDeviceByToken($token);
+
+    /**
+     * Gets a uid_ tag.
+     *
+     * @return string
+     */
+    public function getUidTag();
 }

@@ -4,7 +4,7 @@ namespace Openpp\PushNotificationBundle\Task;
 
 use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
-use Openpp\PushNotificationBundle\Model\UserManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 
 /**
  * 
@@ -15,19 +15,20 @@ class ConditionTask
 {
     protected $conditionManager;
     protected $pushServiceManager;
-    protected $userManager;
+    protected $deviceManager;
 
     /**
      * Constructor
      *
-     * @param ConditionManagerInterface $conditionManager
+     * @param ConditionManagerInterface   $conditionManager
      * @param PushServiceManagerInterface $pushServiceManager
+     * @param DeviceManagerInterface      $deviceManager
      */
-    public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, UserManagerInterface $userManager)
+    public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, DeviceManagerInterface $deviceManager)
     {
         $this->conditionManager   = $conditionManager;
         $this->pushServiceManager = $pushServiceManager;
-        $this->userManager        = $userManager;
+        $this->deviceManager      = $deviceManager;
     }
 
     /**
@@ -44,15 +45,18 @@ class ConditionTask
 
         foreach ($conditions as $condition) {
             if ($condition->getAreaCircle()) {
-                $users = $this->userManager->findUserInAreaCircleWithTag(
+                $devices = $this->deviceManager->findDevicesInAreaCircleWithTag(
                     $condition->getApplication(),
                     $condition->getTagExpression(),
                     $condition->getAreaCircle()
                 );
-                foreach ($users as $user) {
+                foreach ($devices as $device) {
+                    $tagExpression = $condition->getTagExpression();
+                    $uidTag = $device->getUser()->getUidTag();
+                    $tagExpression = $tagExpression ? '(' . $tagExpression . ') && ' . $uidTag : $uidTag;
                     $this->pushServiceManager->push(
                         $condition->getApplication()->getName(),
-                        $user->getUidTag(),
+                        $tagExpression,
                         $condition->getMessage()
                     );
                 }

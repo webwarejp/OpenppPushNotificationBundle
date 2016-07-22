@@ -203,12 +203,14 @@ class DeviceController extends FOSRestController
         if (null !== $locationLatitude && null !== $locationLongitude) {
             if ($location = $device->getLocation()) {
                 $point = $location->getPoint();
-                $newPoint = clone $point;
-                $newPoint
-                    ->setLatitude($locationLatitude)
-                    ->setLongitude($locationLongitude)
-                ;
-                $location->setPoint($newPoint);
+                if ($point->getLatitude() != $locationLatitude || $point->getLongitude() != $locationLongitude) {
+                    $newPoint = clone $point;
+                    $newPoint
+                        ->setLatitude($locationLatitude)
+                        ->setLongitude($locationLongitude)
+                    ;
+                    $location->setPoint($newPoint);
+                }
             } else {
                 try {
                     $pointManager = $this->get('openpp.map.manager.point');

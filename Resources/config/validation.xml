@@ -13,6 +13,11 @@
                 <option name="message">The periodic setting is mandatory start date and period type.</option>
             </constraint>
         </getter>
+        <getter property="continuingSettingValid">
+            <constraint name="True">
+                <option name="message">The continuing setting is mandatory start date.</option>
+            </constraint>
+        </getter>
         <getter property="endDateValid">
             <constraint name="True">
                 <option name="message">The end date is invalid.</option>

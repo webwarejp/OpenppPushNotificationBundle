@@ -66,12 +66,12 @@ class ConditionAdmin extends Admin
             ->end()
             ->with('form.group_time', array('class' => 'col-md-6'))
                 ->add('timeType', 'sonata_type_choice_field_mask', array(
-                    'required' => false,
-                    'choices' => Condition::getTimeTypeChoices(),
+                    'required' => true,
+                    'choices' => Condition::getTimeTypeChoices($this->mapBundleEnable),
                     'map' => array(
-                        Condition::TIME_TYPE_NONE => array(),
                         Condition::TIME_TYPE_SPECIFIC => array('specificDates'),
                         Condition::TIME_TYPE_PERIODIC => array('startDate', 'endDate', 'IntervalType'),
+                        Condition::TIME_TYPE_CONTINUING => array('startDate', 'endDate'),
                     ),
                 ))
                 ->add('specificDates', 'sonata_type_native_collection', array(
@@ -100,12 +100,6 @@ class ConditionAdmin extends Admin
                     'placeholder' => false,
                     'label' => false,
                 ))
-/* TODO:
-                ->add('intervalTime', 'choice', array(
-                    'required' => false,
-                    'choices' => $this->getHourChoices(),
-                ))
-*/
             ->end()
         ;
 
@@ -152,11 +146,4 @@ class ConditionAdmin extends Admin
     {
         $this->mapBundleEnable = $mapBundleEnable;
     }
-
-/*
-    private function getHourChoices()
-    {
-        return range(2, 23);
-    }
-*/
 }

@@ -18,9 +18,9 @@ class Condition implements ConditionInterface
     );
 
     protected static $timeTypeChoices = array(
-        self::TIME_TYPE_NONE     => 'None',
-        self::TIME_TYPE_SPECIFIC => 'Specific Dates',
-        self::TIME_TYPE_PERIODIC => 'Periodic'
+        self::TIME_TYPE_SPECIFIC   => 'Specific Dates',
+        self::TIME_TYPE_PERIODIC   => 'Periodic',
+        self::TIME_TYPE_CONTINUING => 'Continuing',
     );
 
     /**
@@ -351,10 +351,16 @@ class Condition implements ConditionInterface
     /**
      * Returns the interval type choices.
      *
+     * @param boolean $mapBundleEnable
+     *
      * @return array
      */
-    public static function getTimeTypeChoices()
+    public static function getTimeTypeChoices($mapBundleEnable = false)
     {
+        if (!$mapBundleEnable) {
+            unset(self::$timeTypeChoices[self::TIME_TYPE_CONTINUING]);
+        }
+
         return self::$timeTypeChoices;
     }
 
@@ -404,13 +410,26 @@ class Condition implements ConditionInterface
     public function isPeriodicSettingValid()
     {
         if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
-            if (!$this->getStartDate() && !$this->getEndDate() && !$this->getIntervalType()) {
-                return true;
-            }
             if (!$this->getStartDate()) {
                 return false;
             }
             if (!$this->getIntervalType()) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether the continuing setting is valid.
+     *
+     * @return boolean
+     */
+    public function isContinuingSettingValid()
+    {
+        if ($this->getTimeType() === self::TIME_TYPE_CONTINUING) {
+            if (!$this->getStartDate()) {
                 return false;
             }
         }
@@ -425,7 +444,7 @@ class Condition implements ConditionInterface
      */
     public function isEndDateValid()
     {
-        if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
+        if (in_array($this->getTimeType(), array(self::TIME_TYPE_PERIODIC, self::TIME_TYPE_CONTINUING))) {
             if ($this->getStartDate() && $this->getEndDate() && $this->getStartDate() > $this->getEndDate()) {
                 return false;
             }

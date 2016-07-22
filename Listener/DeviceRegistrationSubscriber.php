@@ -16,7 +16,7 @@ use Openpp\PushNotificationBundle\Model\TagManagerInterface;
  * @author shiroko@webware.co.jp
  *
  */
-class TargetEventSubscriber implements EventSubscriber
+class DeviceRegistrationSubscriber implements EventSubscriber
 {
     protected $container;
 
