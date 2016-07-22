@@ -2,6 +2,8 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
+use Openpp\MapBundle\Model\CircleInterface;
+
 interface DeviceManagerInterface
 {
     /**
@@ -65,4 +67,13 @@ interface DeviceManagerInterface
      * @return DeviceInterface or null
      */
     public function findDeviceBy(array $criteria);
+
+    /**
+     * Finds the devices in specified circle area and match specified tag expression.
+     *
+     * @param ApplicationInterface $application
+     * @param string $tagExpression
+     * @param CircleInterface $circle
+     */
+    public function findDevicesInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, CircleInterface $circle);
 }

@@ -191,7 +191,7 @@ interface ConditionInterface
     /**
      * Sets the circle area.
      *
-     * @param CircleInterface $area
+     * @param CircleInterface $areaCircle
     */
-    public function setAreaCircle(CircleInterface $areaCenter);
+    public function setAreaCircle(CircleInterface $areaCircle);
 }

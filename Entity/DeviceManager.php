@@ -2,7 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Entity;
 
-use Doctrine\Common\Persistence\ObjectManager;
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
@@ -21,17 +21,17 @@ class DeviceManager extends BaseManager
     /**
      * Constructor
      *
-     * @param ObjectManager $om
-     * @param string        $class
-     * @param string        $userClass
-     * @param string        $pointClass
+     * @param ManagerRegistry $managerRegistry
+     * @param string          $class
+     * @param string          $userClass
+     * @param string          $pointClass
      */
-    public function __construct(ObjectManager $om, $class, $userClass, $pointClass = '')
+    public function __construct(ManagerRegistry $managerRegistry, $class, $userClass, $pointClass = '')
     {
-        $this->objectManager = $om;
-        $this->repository = $om->getRepository($class);
+        $this->objectManager = $managerRegistry->getManagerForClass($class);
+        $this->repository = $this->objectManager->getRepository($class);
 
-        $metadata = $om->getClassMetadata($class);
+        $metadata = $this->objectManager->getClassMetadata($class);
         $this->class = $metadata->getName();
 
         $this->userClass = $userClass;

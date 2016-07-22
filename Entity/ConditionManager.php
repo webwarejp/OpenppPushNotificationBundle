@@ -2,8 +2,8 @@
 
 namespace Openpp\PushNotificationBundle\Entity;
 
+use Doctrine\Common\Persistence\ManagerRegistry;
 use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
-use Doctrine\Common\Persistence\ObjectManager;
 use Openpp\PushNotificationBundle\Model\ConditionInterface;
 
 /**
@@ -20,15 +20,15 @@ class ConditionManager implements ConditionManagerInterface
     /**
      * Constructor
      *
-     * @param ObjectManager $om
+     * @param ManagerRegistry $managerRegistry
      * @param string $class
      */
-    public function __construct(ObjectManager $om, $class)
+    public function __construct(ManagerRegistry $managerRegistry, $class)
     {
-        $this->objectManager = $om;
-        $this->repository = $om->getRepository($class);
+        $this->objectManager = $managerRegistry->getManagerForClass($class);
+        $this->repository = $this->objectManager->getRepository($class);
 
-        $metadata = $om->getClassMetadata($class);
+        $metadata = $this->objectManager->getClassMetadata($class);
         $this->class = $metadata->getName();
     }
 

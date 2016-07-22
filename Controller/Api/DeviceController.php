@@ -162,7 +162,7 @@ class DeviceController extends FOSRestController
      *
      * @throws ApplicationNotFoundException
      *
-     * @return multitype:boolean
+     * @return array
      */
     protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type)
     {
@@ -260,7 +260,7 @@ class DeviceController extends FOSRestController
      *
      * @throws ApplicationNotFoundException
      *
-     * @return multitype:boolean
+     * @return array
      */
     protected function unregisterDevice($applicationName, $deviceIdentifier)
     {

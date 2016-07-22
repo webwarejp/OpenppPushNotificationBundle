@@ -25,7 +25,6 @@
             <call method="setTranslationDomain">
                 <argument>OpenppPushNotificationBundle</argument>
             </call>
-
         </service>
 
         <service id="openpp.push_notification.admin.user" class="Openpp\PushNotificationBundle\Admin\UserAdmin">
@@ -54,7 +53,7 @@
             <tag name="sonata.admin" manager_type="orm" group="openpp.push_notification" label_catalogue="OpenppPushNotificationBundle" label="condition"  label_translator_strategy="sonata.admin.label.strategy.underscore"/>
             <argument />
             <argument>%openpp.push_notification.admin.condition.entity%</argument>
-            <argument>OpenppPushNotificationBundle:ConditionAdmin</argument>
+            <argument>SonataAdminBundle:CRUD</argument>
 
             <call method="setTranslationDomain">
                 <argument>OpenppPushNotificationBundle</argument>
