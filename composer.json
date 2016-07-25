@@ -21,7 +21,7 @@
 		"friendsofsymfony/rest-bundle" : "~1.7",
 		"nelmio/api-doc-bundle" : "^2.4",
 		"openpp/map-bundle" : "~0.4",
-		"sly/notification-pusher" : "^2.2,",
+		"sly/notification-pusher" : "^2.2",
 		"openpp/notificationhubs-rest-php" : "~0.5"
 	},
 	"autoload" : {
