@@ -12,26 +12,23 @@ class PushServiceManager implements PushServiceManagerInterface
 
     protected $backend;
     protected $tagManager;
-    protected $defaultPusher;
-    protected $fallbackPusher;
+    protected $pusher;
 
     /**
      * Constructor
      *
+     * @param BackendInterface $backend
      * @param TagManagerInterface $tagManager
-     * @param PusherInterface $defaultPusher
-     * @param PusherInterface $fallbackPusher
+     * @param PusherInterface $pusher
      */
     public function __construct(
         BackendInterface    $backend,
         TagManagerInterface $tagManager,
-        PusherInterface     $defaultPusher,
-        PusherInterface     $fallbackPusher = null
+        PusherInterface     $pusher = null
     ) {
-        $this->backend        = $backend;
-        $this->tagManager     = $tagManager;
-        $this->defaultPusher  = $defaultPusher;
-        $this->fallbackPusher = $fallbackPusher;
+        $this->backend    = $backend;
+        $this->tagManager = $tagManager;
+        $this->pusher     = $pusher;
     }
 
     /**
@@ -192,14 +189,6 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function getPusher()
     {
-        return $this->defaultPusher;
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function getFallBackPusher()
-    {
-        return $this->fallbackPusher;
+        return $this->pusher;
     }
 }

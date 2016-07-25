@@ -42,13 +42,16 @@ class Application implements ApplicationInterface
      */
     protected $gcmTemplate;
 
-    /* TODO: impelement it.
+    /**
+     * @var string
+     */
     protected $apnsCertificate;
 
-    protected $apnsCertificateKey;
-
+    /**
+     * @var string
+     */
     protected $gcmApiKey;
-    */
+
     /**
      * @var ArrayCollection
      */
@@ -168,37 +171,37 @@ class Application implements ApplicationInterface
         $this->gcmTemplate = $gcmTemplate;
     }
 
-    /* TODO: implement it.
+    /**
+     * {@inheritdoc}
+     */
     public function getApnsCertificate()
     {
         return $this->apnsCertificate;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setApnsCertificate($apnsCertificate)
     {
         $this->apnsCertificate = $apnsCertificate;
     }
 
-    public function getApnsCertificateKey()
-    {
-        return $this->apnsCertificateKey;
-    }
-
-    public function setApnsCertificateKey($apnsCertificateKey)
-    {
-        $this->apnsCertificateKey = $apnsCertificateKey;
-    }
-
+    /**
+     * {@inheritdoc}
+     */
     public function getGcmApiKey()
     {
         return $this->gcmApiKey;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     public function setGcmApiKey($gcmApiKey)
     {
         $this->gcmApiKey = $gcmApiKey;
     }
-    */
 
     /**
      * {@inheritdoc}

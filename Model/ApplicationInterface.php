@@ -95,6 +95,34 @@ interface ApplicationInterface
     public function setGcmTemplate($gcmTemplate);
 
     /**
+     * Returns the Apns certificate.
+     *
+     * @return string
+     */
+    public function getApnsCertificate();
+
+    /**
+     * Sets the Apns certificate.
+     *
+     * @param string $apnsCertificate
+     */
+    public function setApnsCertificate($apnsCertificate);
+
+    /**
+     * Returns the GCM api key.
+     *
+     * @return string
+     */
+    public function getGcmApiKey();
+
+    /**
+     * Sets the GCM api key.
+     *
+     * @param string $gcmApiKey
+     */
+    public function setGcmApiKey($gcmApiKey);
+
+    /**
      * Returns the users.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection

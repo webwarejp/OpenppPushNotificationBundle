@@ -13,7 +13,6 @@
             <argument type="service" id="sonata.notification.backend" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument />
-            <argument />
         </service>
     </services>
 </container>

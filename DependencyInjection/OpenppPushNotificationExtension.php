@@ -42,7 +42,7 @@ class OpenppPushNotificationExtension extends Extension
 
             if (isset($bundles['SonataAdminBundle'])) {
                 $loader->load('admin.xml');
-                $this->configureAdmin($mapBundleEnable, $container);
+                $this->configureAdmin($mapBundleEnable, $config, $container);
             }
 
             $this->configureORMManager($mapBundleEnable, $container);
@@ -55,10 +55,15 @@ class OpenppPushNotificationExtension extends Extension
 
     /**
      * @param boolean          $mapBundleEnable
+     * @param array            $config
      * @param ContainerBuilder $container
      */
-    protected function configureAdmin($mapBundleEnable, ContainerBuilder $container)
+    protected function configureAdmin($mapBundleEnable, array $config, ContainerBuilder $container)
     {
+        $container->getDefinition('openpp.push_notification.admin.application')
+            ->addMethodCall('setPusherName', array($config['pusher']))
+        ;
+
         $container->getDefinition('openpp.push_notification.admin.condition')
             ->addMethodCall('setMapBundleEnable', array($mapBundleEnable))
         ;
@@ -107,12 +112,12 @@ class OpenppPushNotificationExtension extends Extension
     {
         if ($config['consumer']) {
             $container->getDefinition('openpp.push_notification.push_service_manager')
-                ->replaceArgument(2, new Reference($config['service']))
-                ->replaceArgument(3, null);
+                ->replaceArgument(2, new Reference($config['pusher']))
+            ;
         } else {
             $container->getDefinition('openpp.push_notification.push_service_manager')
                 ->replaceArgument(2, null)
-                ->replaceArgument(3, null);
+            ;
         }
     }
 

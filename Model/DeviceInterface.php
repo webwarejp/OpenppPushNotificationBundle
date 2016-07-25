@@ -2,13 +2,15 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
+use Sly\NotificationPusher\Model\DeviceInterface as BaseDeviceInterface;
+
 /**
  * DeviceInterface
  *
  * @author shiroko@webware.co.jp
  *
  */
-interface DeviceInterface
+interface DeviceInterface extends BaseDeviceInterface
 {
     const TYPE_ANDROID = 1;
     const TYPE_IOS     = 2;
@@ -40,20 +42,6 @@ interface DeviceInterface
      * @param integer $type
      */
     public function setType($type);
-
-    /**
-     * Returns the GCM Registered ID or APNS Device Token.
-     *
-     * @return string
-     */
-    public function getToken();
-
-    /**
-     * Sets the GCM Registered ID or APNS Device Token.
-     *
-     * @param string $token
-     */
-    public function setToken($token);
 
     /**
      * Returns the registration ID related to the push service.

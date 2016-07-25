@@ -10,6 +10,18 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 class ApplicationAdmin extends Admin
 {
+    protected $pusherName;
+
+    /**
+     * Sets the pusher name.
+     *
+     * @param string $pusherName
+     */
+    public function setPusherName($pusherName)
+    {
+        $this->pusherName = $pusherName;
+    }
+
     /**
      * @param DatagridMapper $datagridMapper
      */
@@ -18,7 +30,6 @@ class ApplicationAdmin extends Admin
         $datagridMapper
             ->add('name')
             ->add('description')
-            ->add('hubName')
         ;
     }
 
@@ -30,7 +41,6 @@ class ApplicationAdmin extends Admin
         $listMapper
             ->add('name')
             ->add('description')
-            ->add('hubName')
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),
@@ -51,13 +61,25 @@ class ApplicationAdmin extends Admin
             ->add('description')
             ->end();
 
-        $formMapper->with($this->trans('form.group_azure_label'))
-                ->add('hubName')
-                ->add('connectionString')
-                ->add('apnsTemplate')
-                ->add('gcmTemplate')
-            ->end()
-        ;
+        switch ($this->pusherName) {
+            case "openpp.push_notification.pusher.own":
+                $formMapper->with($this->trans('form.group_own_label'))
+                        ->add('apnsCertificate')
+                        ->add('gcmApiKey')
+                    ->end()
+                ;
+                break;
+
+            case "openpp.push_notification.pusher.azure":
+                $formMapper->with($this->trans('form.group_azure_label'))
+                        ->add('hubName')
+                        ->add('connectionString')
+                        ->add('apnsTemplate')
+                        ->add('gcmTemplate')
+                    ->end()
+                ;
+                break;
+        }
     }
 
     /**
@@ -69,6 +91,8 @@ class ApplicationAdmin extends Admin
             ->add('id')
             ->add('name')
             ->add('description')
+            ->add('apnsCertificate')
+            ->add('gcmApiKey')
             ->add('hubName')
             ->add('connectionString')
             ->add('apnsTemplate')

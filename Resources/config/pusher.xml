@@ -5,6 +5,13 @@
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <services>
+        <service id="openpp.push_notification.pusher.own" class="Openpp\PushNotificationBundle\Pusher\OwnPusher">
+            <argument type="service" id="openpp.push_notification.manager.application" />
+            <argument type="service" id="openpp.push_notification.manager.tag" />
+            <argument type="service" id="openpp.push_notification.manager.user" />
+            <argument type="service" id="openpp.push_notification.manager.device" />
+        </service>
+
         <service id="openpp.push_notification.pusher.azure" class="Openpp\PushNotificationBundle\Pusher\AzurePusher">
             <argument type="service" id="openpp.push_notification.manager.application" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
@@ -14,8 +21,8 @@
             <argument type="service" id="openpp.push_notification.factory.registration" />
         </service>
 
-    <service id="openpp.push_notification.factory.notification" class="Openpp\NotificationHubsRest\Notification\NotificationFactory" />
-    <service id="openpp.push_notification.factory.registration" class="Openpp\NotificationHubsRest\Registration\RegistrationFactory" />
+        <service id="openpp.push_notification.factory.notification" class="Openpp\NotificationHubsRest\Notification\NotificationFactory" />
+        <service id="openpp.push_notification.factory.registration" class="Openpp\NotificationHubsRest\Registration\RegistrationFactory" />
 
     </services>
 </container>

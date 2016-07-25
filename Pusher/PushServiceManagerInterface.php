@@ -129,11 +129,4 @@ interface PushServiceManagerInterface
      * @return PusherInterface
      */
     public function getPusher();
-
-    /**
-     * Get a fallback pusher.
-     * 
-     * @return PusherInterface
-     */
-    public function getFallbackPusher();
 }

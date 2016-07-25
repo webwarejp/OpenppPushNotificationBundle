@@ -9,6 +9,7 @@ use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\MapBundle\Model\CircleInterface;
 use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
 use Doctrine\ORM\Query\ResultSetMapping;
+use Doctrine\Common\Collections\ArrayCollection;
 
 class DeviceManager extends BaseManager
 {
@@ -75,10 +76,37 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     *
-     * @param ApplicationInterface $application
-     * @param string               $tagExpression
-     * @param CircleInterface      $circle
+     * {@inheritDoc}
+     */
+    public function findActiveDevices(ApplicationInterface $application)
+    {
+        $qb = $this->repository->createQueryBuilder('d');
+        /* @var $qb \Doctrine\ORM\QueryBuilder */
+        $qb
+            ->where($qb->expr()->eq('d.application', ':application'))
+            ->andWhere($qb->expr()->isNull('d.unregisteredAt'))
+            ->setParameter('application', $application)
+        ;
+
+        $result = $qb->getQuery()->getResult();
+        if ($result) {
+            $result = new ArrayCollection($result);
+        }
+
+        return $result;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression)
+    {
+        // TODO: check tags.
+        return $this->findActiveDevices($application);
+    }
+
+    /**
+     * {@inheritDoc}
      */
     public function findDevicesInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, CircleInterface $circle)
     {
