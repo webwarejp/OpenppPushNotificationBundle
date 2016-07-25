@@ -31,18 +31,18 @@ class OwnPusher extends AbstractPusher
 
         if ($devices) {
             foreach (array(DeviceInterface::TYPE_ANDROID, DeviceInterface::TYPE_IOS) as $type) {
-                $devices = $devices->filter(function ($d) use ($type) {
+                $targetDevices = $devices->filter(function ($d) use ($type) {
                     return $d->getType() == $type;
                 });
 
-                if (!$devices->count()) {
+                if (!$targetDevices->count()) {
                     continue;
                 }
-                $devices = new DeviceCollection($devices->toArray());
+                $deviceCollection = new DeviceCollection($targetDevices->toArray());
 
-                $push = new Push($this->getAdapter($application, $type), $devices, $message);
+                $push = new Push($this->getAdapter($application, $type), $deviceCollection, $message);
                 $pushManager->add($push);
-                $devices = $pushManager->push();
+                $pushCollection = $pushManager->push();
             }
         }
     }
