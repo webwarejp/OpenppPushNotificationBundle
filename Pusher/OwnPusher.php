@@ -10,6 +10,7 @@ use Sly\NotificationPusher\Adapter\Gcm;
 use Sly\NotificationPusher\Adapter\Apns;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
+use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 
 
 class OwnPusher extends AbstractPusher
@@ -51,7 +52,7 @@ class OwnPusher extends AbstractPusher
      * Get the adapter.
      *
      * @param ApplicationInterface $application
-     * @param unknown $deviceType
+     * @param integer $deviceType
      *
      * @return \Sly\NotificationPusher\Adapter\AdapterInterface
      */
