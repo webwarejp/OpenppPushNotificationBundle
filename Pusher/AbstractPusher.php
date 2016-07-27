@@ -9,6 +9,8 @@ use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
+use Openpp\PushNotificationBundle\Event\PushResultEvent;
 
 abstract class AbstractPusher implements PusherInterface
 {
@@ -32,19 +34,31 @@ abstract class AbstractPusher implements PusherInterface
     protected $deviceManager;
 
     /**
+     * @var EventDispatcherInterface
+     */
+    protected $dispatcher;
+
+    /**
      * Constructor
      *
      * @param ApplicationManagerInterface  $applicationManager
      * @param TagManagerInterface          $tagManager
      * @param UserManagerInterface         $userManager
      * @param DeviceManagerInterface       $deviceManager
+     * @param EventDispatcherInterface     $dispatcher
      */
-    public function __construct(ApplicationManagerInterface $applicationManager, TagManagerInterface $tagManager, UserManagerInterface $userManager, DeviceManagerInterface $deviceManager)
-    {
+    public function __construct(
+        ApplicationManagerInterface $applicationManager,
+        TagManagerInterface         $tagManager,
+        UserManagerInterface        $userManager,
+        DeviceManagerInterface      $deviceManager,
+        EventDispatcherInterface    $dispatcher
+    ) {
         $this->applicationManager = $applicationManager;
         $this->tagManager         = $tagManager;
         $this->userManager        = $userManager;
         $this->deviceManager      = $deviceManager;
+        $this->dispatcher         = $dispatcher;
     }
 
     /**
@@ -52,10 +66,7 @@ abstract class AbstractPusher implements PusherInterface
      */
     public function addTagToUser($applicationName, $uid, $tag)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($applicationName);
 
         $tagObjects = $this->tagManager->getTagObjects($tag, true);
 
@@ -67,10 +78,7 @@ abstract class AbstractPusher implements PusherInterface
      */
     public function removeTagFromUser($applicationName, $uid, $tag)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($applicationName);
 
         $tagObjects = $this->tagManager->getTagObjects($tag, false);
 
@@ -99,24 +107,38 @@ abstract class AbstractPusher implements PusherInterface
     }
 
     /**
-     * Reterns whether there is the Android user associated with the tag expressions or not.
+     * Returns the application.
      *
-     * @param ApplicationInterface $application
-     * @param string $target
+     * @param string|ApplicationInterface $application
+     *
+     * @throws ApplicationNotFoundException
+     * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
-    protected function hasAndroidTarget(ApplicationInterface $application, $target)
+    protected function getApplication($application)
     {
-        return $this->userManager->hasUserWithTag($application, $target, DeviceInterface::TYPE_ANDROID);
+        if ($application instanceof ApplicationInterface) {
+            return $application;
+        }
+
+        $application = $this->applicationManager->findApplicationByName($application);
+        if (!$application) {
+            throw new ApplicationNotFoundException($application . ' is not found.');
+        }
+
+        return $application;
     }
 
     /**
-     * Reterns whether there is the iOS user associated with the tag expressions or not.
+     * Dispatch the push result event.
      *
      * @param ApplicationInterface $application
-     * @param string $target
+     * @param string               $message
+     * @param \DateTime            $timestamp
+     * @param mixed                $devices
      */
-    protected function hasIOSTarget(ApplicationInterface $application, $target)
+    protected function dispatchPushResult(ApplicationInterface $application, $message, $timestamp, $devices)
     {
-        return $this->userManager->hasUserWithTag($application, $target, DeviceInterface::TYPE_IOS);
+        $event = new PushResultEvent($application, $message, $timestamp, $devices);
+        $this->dispatcher->dispatch(PushResultEvent::EVENT_NAME, $event);
     }
 }

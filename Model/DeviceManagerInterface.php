@@ -70,6 +70,15 @@ interface DeviceManagerInterface
     public function findDeviceBy(array $criteria);
 
     /**
+     * Finds multiple devices by the given criteria.
+     *
+     * @param array $criteria
+     *
+     * @return array
+     */
+    public function findDevicesBy(array $criteria);
+
+    /**
      * Finds all active devices for the application.
      *
      * @param ApplicationInterface $application

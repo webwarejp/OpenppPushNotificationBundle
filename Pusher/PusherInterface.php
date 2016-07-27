@@ -12,14 +12,22 @@ interface PusherInterface
     /**
      * Sends the push notification.
      *
-     * @param string $applicationName Application name
-     * @param string $target          Target devices expressed by tag or tag expression
-     * @param string $message         Notificaton message
-     * @param array  $options         Notificaton options
-     *
-     * @throws \Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException
+     * @param string|ApplicationInterface $application Application name
+     * @param string $tagExpression       Tag expression
+     * @param string $message             Notificaton message
+     * @param array  $options             Notificaton options
      */
-    public function push($applicationName, $target, $message, array $options);
+    public function push($application, $tagExpression, $message, array $options);
+
+    /**
+     * Sends the push notification to the given diveces.
+     *
+     * @param string|ApplicationInterface $application Application name
+     * @param integer[]|DeviceInterface[] $devices     Devices
+     * @param string $message             Notificaton  message
+     * @param array  $options             Notificaton  options
+     */
+    public function pushToDevice($application, $devices, $message, array $options);
 
     /**
      * Adds the tags to the user.

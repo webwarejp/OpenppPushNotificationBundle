@@ -71,6 +71,14 @@ class Device implements DeviceInterface
     protected $updatedAt;
 
     /**
+     * @var array
+     */
+    protected static $typeChoices = array(
+        self::TYPE_NAME_ANDROID => self::TYPE_ANDROID,
+        self::TYPE_NAME_IOS     => self::TYPE_IOS,
+    );
+
+    /**
      * {@inheritdoc}
      */
     public function getDeviceIdentifier()
@@ -298,5 +306,26 @@ class Device implements DeviceInterface
     public function setUpdatedAt(\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getTypeChoices()
+    {
+        return self::$typeChoices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getTypeName($type)
+    {
+        $choices = array_flip(self::$typeChoices);
+        if (isset($choices[$type])) {
+            return $choices[$type];
+        }
+
+        return '';
     }
 }

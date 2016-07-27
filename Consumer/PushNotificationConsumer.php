@@ -38,10 +38,17 @@ class PushNotificationConsumer implements ConsumerInterface
 
         switch ($operation) {
             case PushServiceManagerInterface::OPERATION_PUSH:
-                $target  = $event->getMessage()->getValue('target');
+                $tagExpression = $event->getMessage()->getValue('tagExpression');
+                $message       = $event->getMessage()->getValue('message');
+                $options       = $event->getMessage()->getValue('options');
+                $this->pushServiceManager->pushExecute($application, $tagExpression, $message, $options);
+                break;
+
+            case PushServiceManagerInterface::OPERATION_PUSH_TO_DEVICES:
+                $devices = $event->getMessage()->getValue('devices');
                 $message = $event->getMessage()->getValue('message');
                 $options = $event->getMessage()->getValue('options');
-                $this->pushServiceManager->pushExecute($application, $target, $message, $options);
+                $this->pushServiceManager->pushToDevicesExecute($application, $devices, $message, $options);
                 break;
 
             case PushServiceManagerInterface::OPERATION_ADDTAGTOUSER:

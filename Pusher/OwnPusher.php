@@ -10,42 +10,54 @@ use Sly\NotificationPusher\Adapter\Gcm;
 use Sly\NotificationPusher\Adapter\Apns;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
-
+use Openpp\PushNotificationBundle\Model\Device;
+use Openpp\PushNotificationBundle\Collections\DeviceCollection as Devices;
 
 class OwnPusher extends AbstractPusher
 {
     /**
      * {@inheritdoc}
      */
-    public function push($applicationName, $target, $message, array $options = array())
+    public function push($application, $tagExpression, $message, array $options = array())
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($application);
 
-        $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
-        $message     = new Message($message, $options);
-
-        $devices = $this->deviceManager->findDevicesByTagExpression($application, $target);
+        $devices = $this->deviceManager->findDevicesByTagExpression($application, $tagExpression);
 
         if ($devices) {
-            foreach (array(DeviceInterface::TYPE_ANDROID, DeviceInterface::TYPE_IOS) as $type) {
-                $targetDevices = $devices->filter(function ($d) use ($type) {
-                    return $d->getType() == $type;
-                });
-
-                if (!$targetDevices->count()) {
-                    continue;
-                }
-                $deviceCollection = new DeviceCollection($targetDevices->toArray());
-
-                $push = new Push($this->getAdapter($application, $type), $deviceCollection, $message);
-                $pushManager->add($push);
-                $pushCollection = $pushManager->push();
-            }
+            $this->pushToDevice($application, $devices, $message, $options);
         }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pushToDevice($application, $devices, $message, array $options = array())
+    {
+        $application = $this->getApplication($application);
+
+        if (is_integer($devices[0])) {
+            $devices = $this->deviceManager->findDevicesBy(array('id' => $devices));
+        }
+        $devices = new Devices(is_array($devices) ? $devices : $devices->toArray());
+
+        $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
+        $messageObj  = new Message($message, $options);
+        $timestamp   = new \DateTime();
+
+        foreach (array_values(Device::getTypeChoices()) as $type) {
+            $targetDevices = $devices->getByType($type);
+            if (!$targetDevices->count()) {
+                continue;
+            }
+            $deviceCollection = new DeviceCollection($targetDevices->toArray());
+
+            $push = new Push($this->getAdapter($application, $type), $deviceCollection, $messageObj);
+            $pushManager->add($push);
+            $pushManager->push();
+        }
+
+        $this->dispatchPushResult($application, $message, $timestamp, $devices);
     }
 
     /**

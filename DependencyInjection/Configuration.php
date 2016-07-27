@@ -49,6 +49,18 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('location')->defaultValue('Application\\Openpp\\MapBundle\\Entity\\Point')->end()
                     ->end()
                 ->end()
+                ->arrayNode('report')
+                    ->children()
+                        ->arrayNode('email')
+                            ->children()
+                                ->scalarNode('from')->isRequired()->end()
+                                ->scalarNode('to')->isRequired()->end()
+                                ->scalarNode('subject')->defaultValue('Push Notification Report')->end()
+                                ->scalarNode('template')->defaultValue('OpenppPushNotificationBundle:report:push_report_email.txt.twig')->end()
+                            ->end()
+                        ->end()
+                    ->end()
+                ->end()
             ->end();
 
         return $treeBuilder;

@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<container xmlns="http://symfony.com/schema/dic/services"
+           xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+           xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
+
+    <parameters>
+        <parameter key="openpp.push_notification.listener.push_result.class">Openpp\PushNotificationBundle\Listener\PushResultListener</parameter>
+    </parameters>
+
+    <services>
+        <service id="openpp.push_notification.listener.push_result" class="%openpp.push_notification.listener.push_result.class%">
+            <tag name="kernel.event_listener" event="openpp.push_notification.event.push_result" method="onPushed" />
+            <argument type="service" id="mailer" />
+            <argument type="service" id="twig" />
+            <argument  />
+        </service>
+    </services>
+
+</container>

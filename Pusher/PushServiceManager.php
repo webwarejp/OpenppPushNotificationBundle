@@ -34,27 +34,49 @@ class PushServiceManager implements PushServiceManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function push($applicationName, $target, $message, array $options = array())
+    public function push($applicationName, $tagExpression, $message, array $options = array())
     {
-        if ($target != '') {
-            $this->tagManager->checkTagExpression($target);
+        if ($tagExpression != '') {
+            $this->tagManager->checkTagExpression($tagExpression);
         }
 
         $this->backend->createAndPublish(self::TYPE_NAME, array(
-            'application' => $applicationName,
-            'target'      => $target,
-            'message'     => $message,
-            'options'     => $options,
-            'operation'   => self::OPERATION_PUSH,
+            'application'   => $applicationName,
+            'tagExpression' => $tagExpression,
+            'message'       => $message,
+            'options'       => $options,
+            'operation'     => self::OPERATION_PUSH,
         ));
     }
 
     /**
      * {@inheritDoc}
      */
-    public function pushExecute($applicationName, $target, $message, array $options = array())
+    public function pushExecute($applicationName, $tagExpression, $message, array $options = array())
     {
-        $this->getPusher()->push($applicationName, $target, $message, $options);
+        $this->getPusher()->push($applicationName, $tagExpression, $message, $options);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function pushToDevices($applicationName, $devices, $message, array $options = array())
+    {
+        $this->backend->createAndPublish(self::TYPE_NAME, array(
+            'application' => $applicationName,
+            'devices'     => $devices,
+            'message'     => $message,
+            'options'     => $options,
+            'operation'   => self::OPERATION_PUSH_TO_DEVICES,
+        ));
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = array())
+    {
+        $this->getPusher()->pushToDevice($applicationName, $devices, $message, $options);
     }
 
     /**

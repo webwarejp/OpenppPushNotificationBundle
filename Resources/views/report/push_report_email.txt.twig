@@ -1,0 +1,19 @@
+{% block subject %}
+{% autoescape false %}
+{{ subject }}
+{% endautoescape %}
+{% endblock %}
+{% block body_text %}
+{% autoescape false %}
+{{ 'Push notification message was published as the following.' | trans({}, 'OpenppPushNotificationBundle') }}
+
+[{{ application }}]
+- message: {{ message }}
+- timestamp: {{ timestamp|date('Y-m-d H:i:s') }}
+- publications:
+{% for device, count in counts %}
+  {{ device }}: {{ count }}
+{% endfor %}
+{% endautoescape %}
+{% endblock %}
+

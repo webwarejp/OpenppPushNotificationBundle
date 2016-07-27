@@ -5,6 +5,7 @@ namespace Openpp\PushNotificationBundle\Task;
 use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
+use Openpp\PushNotificationBundle\Collections\DeviceCollection;
 
 /**
  * 
@@ -50,14 +51,12 @@ class ConditionTask
                     $condition->getTagExpression(),
                     $condition->getAreaCircle()
                 );
-                foreach ($devices as $device) {
-                    $tagExpression = $condition->getTagExpression();
-                    $uidTag = $device->getUser()->getUidTag();
-                    $tagExpression = $tagExpression ? '(' . $tagExpression . ') && ' . $uidTag : $uidTag;
-                    $this->pushServiceManager->push(
-                        $condition->getApplication()->getName(),
-                        $tagExpression,
-                        $condition->getMessage()
+                if ($devices) {
+                    $devices = new DeviceCollection($devices);
+                    $this->pushServiceManager->pushToDevices(
+                         $condition->getApplication()->getName(),
+                         $devices->toIdArray()->toArray(),
+                         $condition->getMessage()
                     );
                 }
             } else {

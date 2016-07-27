@@ -12,7 +12,7 @@ use Openpp\NotificationHubsRest\NotificationHub\NotificationHub;
 use Openpp\NotificationHubsRest\Notification\NotificationFactory;
 use Openpp\NotificationHubsRest\Registration\RegistrationFactory;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * 
@@ -32,33 +32,59 @@ class AzurePusher extends AbstractPusher
      * Constructor
      *
      * @param ApplicationManagerInterface $applicationManager
-     * @param TagManagerInterface $tagManager
-     * @param UserManagerInterface $userManager
-     * @param NotificationFactory $notificationFactory
-     * @param RegistrationFactory $registrationFactory
+     * @param TagManagerInterface         $tagManager
+     * @param UserManagerInterface        $userManager
+     * @param EventDispatcherInterface    $dispathcer
+     * @param NotificationFactory         $notificationFactory
+     * @param RegistrationFactory         $registrationFactory
      */
-    public function __construct(ApplicationManagerInterface $applicationManager, TagManagerInterface $tagManager, UserManagerInterface $userManager, DeviceManagerInterface $deviceManager, NotificationFactory $notificationFactory, RegistrationFactory $registrationFactory)
-    {
+    public function __construct(
+        ApplicationManagerInterface $applicationManager,
+        TagManagerInterface         $tagManager,
+        UserManagerInterface        $userManager,
+        DeviceManagerInterface      $deviceManager,
+        EventDispatcherInterface    $dispathcer,
+        NotificationFactory         $notificationFactory,
+        RegistrationFactory         $registrationFactory
+    ) {
         $this->notificationFactory = $notificationFactory;
         $this->registrationFactory = $registrationFactory;
 
-        parent::__construct($applicationManager, $tagManager, $userManager, $deviceManager);
+        parent::__construct($applicationManager, $tagManager, $userManager, $deviceManager, $dispathcer);
     }
 
     /**
      * {@inheritdoc}
      */
-    public function push($applicationName, $target, $message, array $options = array())
+    public function push($application, $tagExpression, $message, array $options = array())
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($application);
 
-        $notifications = $this->createNotifications($application, $target, $message, $options);
+        $notifications = $this->createNotifications($application, $tagExpression, $message, $options);
 
         foreach ($notifications as $notification) {
             $this->getHub($application)->sendNotification($notification);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function pushToDevice($application, $devices, $message, array $options = array())
+    {
+        $application = $this->getApplication($application);
+
+        if (is_integer($devices[0])) {
+            $devices = $this->deviceManager->findDevicesBy(array('id' => $devices));
+        }
+
+        foreach (array_chunk($devices, 20) as $chunk) {
+            $tagExpression = '';
+            foreach ($chunk as $device) {
+                //TODO: specify unique device tag.
+                $tagExpression = $tagExpression ? $tagExpression . ' || ' . $device->getUser()->getUidTag() : $device->getUser()->getUidTag();
+            }
+            $this->push($application, $tagExpression, $message, $options);
         }
     }
 
@@ -82,18 +108,18 @@ class AzurePusher extends AbstractPusher
      * Creates Notifications.
      *
      * @param ApplicationInterface $application
-     * @param string $target
+     * @param string $tagExpression
      * @param string $message
      * @param array $options
      *
      * @return \Openpp\NotificationHubsRest\Notification\NotificationInterface[]
      */
-    protected function createNotifications(ApplicationInterface $application, $target, $message, array $options)
+    protected function createNotifications(ApplicationInterface $application, $tagExpression, $message, array $options)
     {
         $notifications = array();
 
-        if (TagManagerInterface::BROADCAST_TAG === $target) {
-            $target = '';
+        if (TagManagerInterface::BROADCAST_TAG === $tagExpression) {
+            $tagExpression = '';
         }
 
         if (is_string($message)) {
@@ -102,7 +128,7 @@ class AzurePusher extends AbstractPusher
             throw new \InvalidArgumentException('Invalid message type.');
         }
 
-        $notifications[] = $this->notificationFactory->createNotification('template', $message, $options, $target);
+        $notifications[] = $this->notificationFactory->createNotification('template', $message, $options, $tagExpression);
 
         return $notifications;
     }
@@ -120,10 +146,7 @@ class AzurePusher extends AbstractPusher
      */
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($applicationName);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
         if (!$device) {
@@ -164,10 +187,7 @@ class AzurePusher extends AbstractPusher
      */
     public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
-        if (!$application) {
-            throw new ApplicationNotFoundException($applicationName . ' is not found.');
-        }
+        $application = $this->getApplication($applicationName);
 
         $deviceType = $type === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
 

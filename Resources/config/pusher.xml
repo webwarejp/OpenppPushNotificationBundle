@@ -10,6 +10,7 @@
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument type="service" id="openpp.push_notification.manager.user" />
             <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="event_dispatcher" />
         </service>
 
         <service id="openpp.push_notification.pusher.azure" class="Openpp\PushNotificationBundle\Pusher\AzurePusher">
@@ -17,6 +18,7 @@
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument type="service" id="openpp.push_notification.manager.user" />
             <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="event_dispatcher" />
             <argument type="service" id="openpp.push_notification.factory.notification" />
             <argument type="service" id="openpp.push_notification.factory.registration" />
         </service>

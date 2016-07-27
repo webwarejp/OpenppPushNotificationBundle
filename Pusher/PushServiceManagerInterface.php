@@ -11,6 +11,7 @@ namespace Openpp\PushNotificationBundle\Pusher;
 interface PushServiceManagerInterface
 {
     const OPERATION_PUSH                = 'push';
+    const OPERATION_PUSH_TO_DEVICES     = 'pushToDevices';
     const OPERATION_ADDTAGTOUSER        = 'addTag';
     const OPERATION_REMOVETAGFROMUSER   = 'removeTag';
     const OPERATION_CREATE_REGISTRATION = 'createRegistration';
@@ -21,21 +22,41 @@ interface PushServiceManagerInterface
      * Creates the job message to send the push notification.
      *
      * @param string $applicationName
-     * @param string $target
+     * @param string $tagExpression
      * @param string $message
      * @param array  $options
      */
-    public function push($applicationName, $target, $message, array $options);
+    public function push($applicationName, $tagExpression, $message, array $options);
 
     /**
      * Executes to send the push notification.
      *
      * @param string $applicationName
-     * @param string $target
+     * @param string $tagExpression
      * @param string $message
      * @param array  $options
      */
-    public function pushExecute($applicationName, $target, $message, array $options);
+    public function pushExecute($applicationName, $tagExpression, $message, array $options);
+
+    /**
+     * Creates the job message to send the push notification to the given devices.
+     *
+     * @param string $applicationName
+     * @param array  $devices
+     * @param string $message
+     * @param array  $options
+     */
+    public function pushToDevices($applicationName, $devices, $message, array $options);
+
+    /**
+     * Executes to send the push notification to the given devices.
+     *
+     * @param string $applicationName
+     * @param array  $devices
+     * @param string $message
+     * @param array  $options
+     */
+    public function pushToDevicesExecute($applicationName, $devices, $message, array $options);
 
     /**
      * Creates the job message to add the tags to the user.

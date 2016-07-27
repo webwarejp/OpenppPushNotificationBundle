@@ -14,6 +14,8 @@ interface DeviceInterface extends BaseDeviceInterface
 {
     const TYPE_ANDROID = 1;
     const TYPE_IOS     = 2;
+    const TYPE_NAME_ANDROID = 'android';
+    const TYPE_NAME_IOS     = 'iOS';
 
     /**
      * Returns the device identifier.
@@ -140,4 +142,20 @@ interface DeviceInterface extends BaseDeviceInterface
      * @param \DateTime $unregisteredAt
      */
     public function setUnregisteredAt(\DateTime $unregisteredAt);
+
+    /**
+     * Returns the type choices.
+     *
+     * @return array
+     */
+    public static function getTypeChoices();
+
+    /**
+     * Returns the type name.
+     *
+     * @param integer $type
+     *
+     * @return string
+     */
+    public static function getTypeName($type);
 }

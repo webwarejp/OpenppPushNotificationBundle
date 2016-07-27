@@ -78,6 +78,14 @@ class DeviceManager extends BaseManager
     /**
      * {@inheritDoc}
      */
+    public function findDevicesBy(array $criteria)
+    {
+        return $this->repository->findBy($criteria);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function findActiveDevices(ApplicationInterface $application)
     {
         $qb = $this->repository->createQueryBuilder('d');
@@ -120,6 +128,7 @@ class DeviceManager extends BaseManager
         $rsm->addEntityResult($this->getClass(), 'd');
         $rsm->addFieldResult('d', 'id', 'id');
         $rsm->addFieldResult('d', 'type', 'type');
+        $rsm->addFieldResult('d', 'token', 'token');
         $rsm->addJoinedEntityResult($this->userClass, 'u', 'd', 'user');
         $rsm->addFieldResult('u', 'user_id', 'id');
         $rsm->addFieldResult('u', 'uid', 'uid');
@@ -128,6 +137,7 @@ class DeviceManager extends BaseManager
 SELECT
   d.id,
   d.type,
+  d.token,
   u.id AS user_id,
   u.uid
 FROM

@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * 
@@ -38,7 +39,12 @@ EOF
         $time = $input->getOption('time');
         $margin = $input->getOption('margin');
 
-        $conditions = $this->getContainer()->get('openpp.push_notification.task.condition')->execute($time, $margin);
+        $task = $this->getContainer()->get('openpp.push_notification.task.condition', ContainerInterface::NULL_ON_INVALID_REFERENCE);
+        if (!$task) {
+            throw new \RuntimeException('This command can execute only when this server acts as the consumer.');
+        }
+
+        $conditions = $task->execute($time, $margin);
 
         if (!$conditions) {
             $output->writeln('No conditions match.');

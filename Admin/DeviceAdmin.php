@@ -7,6 +7,7 @@ use Sonata\AdminBundle\Datagrid\DatagridMapper;
 use Sonata\AdminBundle\Datagrid\ListMapper;
 use Sonata\AdminBundle\Form\FormMapper;
 use Sonata\AdminBundle\Show\ShowMapper;
+use Openpp\PushNotificationBundle\Model\Device;
 
 class DeviceAdmin extends Admin
 {
@@ -17,7 +18,10 @@ class DeviceAdmin extends Admin
     {
         $datagridMapper
             ->add('application')
-            ->add('type', null, array('field_type' => 'openpp_push_notification_type_device'))
+            ->add('type', 'doctrine_orm_choice', array(), 'choice', array(
+                'choices' => Device::getTypeChoices(),
+                'choices_as_values' => true,
+            ))
             ->add('deviceIdentifier')
             ->add('token')
             ->add('registeredAt')
@@ -32,7 +36,9 @@ class DeviceAdmin extends Admin
     {
         $listMapper
             ->add('application')
-            ->add('type', 'openpp_push_notification_type_device')
+            ->add('type', 'choice', array(
+                'choices' => array_flip(Device::getTypeChoices()),
+            ))
             ->add('user')
             ->add('deviceIdentifier')
             ->add('active', 'boolean')
@@ -58,7 +64,10 @@ class DeviceAdmin extends Admin
             ->add('application', 'sonata_type_model_list')
             ->add('user', 'sonata_type_model_list')
             ->add('deviceIdentifier')
-            ->add('type', 'openpp_push_notification_type_device')
+            ->add('type', 'choice', array(
+                'choices' => Device::getTypeChoices(),
+                'choices_as_values' => true,
+            ))
             ->add('token')
             ->add('registeredAt', 'sonata_type_datetime_picker', array('dp_use_current' => true))
             ->add('unregisteredAt', 'sonata_type_datetime_picker', array('required' => false))

@@ -31,10 +31,11 @@ class OpenppPushNotificationExtension extends Extension
 
         if ($config['consumer']) {
             $loader->load('orm.xml');
-            $loader->load('form.xml');
             $loader->load('pusher.xml');
             $loader->load('consumer.xml');
             $loader->load('api_controllers.xml');
+            $loader->load('report.xml');
+
             $mapBundleEnable = false;
             if (isset($bundles['OpenppMapBundle'])) {
                 $mapBundleEnable = true;
@@ -47,6 +48,14 @@ class OpenppPushNotificationExtension extends Extension
 
             $this->configureORMManager($mapBundleEnable, $container);
             $this->registerDoctrineMapping($config, $mapBundleEnable);
+
+            if (isset($config['report'])) {
+                $container->getDefinition('openpp.push_notification.listener.push_result')
+                    ->replaceArgument(2, $config['report']);
+            } else {
+                $container->getDefinition('openpp.push_notification.listener.push_result')
+                    ->replaceArgument(2, array());
+            }
         }
 
         $this->configureClass($config, $container);
