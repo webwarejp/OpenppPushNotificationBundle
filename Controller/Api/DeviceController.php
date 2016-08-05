@@ -227,24 +227,6 @@ class DeviceController extends FOSRestController
         $device->setUser($user);
         $user->addDevice($device);
 
-        $tagNames = array();
-        if ($type == DeviceInterface::TYPE_ANDROID) {
-            $tagNames[] = 'android';
-        } else {
-            $tagNames[] = 'ios';
-        }
-        $tagNames[] = $user->getUidTag();
-
-        foreach ($tagNames as $tagName) {
-            $tag = $this->tagManager->findTagByName($tagName);
-
-            if (is_null($tag)) {
-                $tag = $this->tagManager->create();
-                $tag->setName($tagName);
-            }
-            $user->addTag($tag);
-        }
-
         $application->addUser($user);
 
         $this->deviceManager->save($device);

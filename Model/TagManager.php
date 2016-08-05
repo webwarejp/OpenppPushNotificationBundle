@@ -2,17 +2,13 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-use Openpp\PushNotificationBundle\Exception\InvalidTagExpressionException;
 
 abstract class TagManager implements TagManagerInterface
 {
-    const MAX_TAG_LENGTH = 120;
-    const MAX_TAGS_WITH_ONLY_OR_OPERATORS = 20;
-    const MAX_TAGS_WITH_VALIOUS_OPERATORS = 6;
-
     protected $reservedTags = array(
-        self::BROADCAST_TAG,
-        self::UID_TAG_PREFIX,
+        TagInterface::UID_TAG_PREFIX,
+        DeviceInterface::TYPE_NAME_ANDROID,
+        DeviceInterface::TYPE_NAME_IOS,
     );
 
     protected $reservedTagPatterns;
@@ -49,67 +45,6 @@ abstract class TagManager implements TagManagerInterface
     public function findTagByName($name)
     {
         return $this->findTagBy(array('name' => $name));
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function checkTagExpression($expression)
-    {
-        $tags = array();
-        $strs = preg_split('/(&&|\|\|)/', $expression);
-
-        foreach ($strs as $str) {
-            $str = trim($str);
-            $str = trim($str, '()!');
-            $tags[] = $str;
-        }
-
-        $this->checkTag($tags);
-
-        $orOnly = true;
-        if (preg_match_all('/(&&|\|\||!)/', $expression, $operators)) {
-            if (in_array('&&', $operators[0]) || in_array('!', $operators[0])) {
-                $orOnly = false;
-            }
-        }
-
-        if ($orOnly && self::MAX_TAGS_WITH_ONLY_OR_OPERATORS < count($tags)) {
-            throw new InvalidTagExpressionException('Tag expressions are limited to 20 tags if they contain only ORs.');
-        } elseif (!$orOnly && self::MAX_TAGS_WITH_VALIOUS_OPERATORS < count($tags)) {
-            throw new InvalidTagExpressionException('Tag expressions are limited to 6 tags if they contain except ORs.');
-        }
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function checkTag($tags)
-    {
-        if (!is_array($tags)) {
-            $tags = array($tags);
-        }
-
-        foreach ($tags as $tag) {
-            $this->checkSingleTag($tag);
-        }
-    }
-
-    /**
-     * Check a tag.
-     *
-     * @param string $tag
-     *
-     * @throws InvalidTagExpressionException
-     */
-    public function checkSingleTag($tag) {
-        if (self::MAX_TAG_LENGTH < strlen($tag)) {
-            throw new InvalidTagExpressionException('A tag can be up to 120 characters: ' . $tag);
-        }
-
-        if (!preg_match('/^[a-zA-Z0-9_@#\.:\-]+$/', $tag)) {
-            throw new InvalidTagExpressionException("A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: " . $tag);
-        }
     }
 
     /**

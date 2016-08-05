@@ -3,6 +3,7 @@
 namespace Openpp\PushNotificationBundle\Model;
 
 use Openpp\MapBundle\Model\CircleInterface;
+use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 /**
  * 
  * @author shiroko@webware.co.jp
@@ -448,6 +449,21 @@ class Condition implements ConditionInterface
             if ($this->getStartDate() && $this->getEndDate() && $this->getStartDate() > $this->getEndDate()) {
                 return false;
             }
+        }
+
+        return true;
+    }
+
+    /**
+     * Returns whether the tagExpression is valid.
+     *
+     * @return boolean
+     */
+    public function isTagExpressionValid()
+    {
+        if ($this->getTagExpression()) {
+            $te = new TagExpression($this->getTagExpression());
+            return $te->validate(false);
         }
 
         return true;

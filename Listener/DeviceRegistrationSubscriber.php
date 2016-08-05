@@ -4,12 +4,16 @@ namespace Openpp\PushNotificationBundle\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\ORM\EntityManager;
+use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\DependencyInjection\ContainerInterface;
-use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\Model\Device;
+use Openpp\PushNotificationBundle\Model\UserInterface;
+use Openpp\PushNotificationBundle\Model\TagInterface;
 
 /**
  * 
@@ -18,7 +22,22 @@ use Openpp\PushNotificationBundle\Model\TagManagerInterface;
  */
 class DeviceRegistrationSubscriber implements EventSubscriber
 {
+    /**
+     * @var ContainerInterface
+     */
     protected $container;
+    /**
+     * @var ArrayCollection
+     */
+    protected $creates;
+    /**
+     * @var ArrayCollection
+     */
+    protected $updates;
+    /**
+     * @var ArrayCollection
+     */
+    protected $deletes;
 
     /**
      * Constructor
@@ -28,6 +47,9 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     public function __construct(ContainerInterface $container)
     {
         $this->container = $container;
+        $this->creates = new ArrayCollection();
+        $this->updates = new ArrayCollection();
+        $this->deletes = new ArrayCollection();
     }
 
     /**
@@ -36,82 +58,143 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            Events::postPersist,
-            Events::preUpdate,
-            Events::preRemove,
+            Events::onFlush,
         );
     }
 
     /**
-     *
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $eventArgs
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $entity = $args->getEntity();
+        $em = $eventArgs->getEntityManager();
+        $uow = $em->getUnitOfWork();
 
-        if ($entity instanceof DeviceInterface) {
-            $application = $entity->getApplication();
-            $user = $entity->getUser();
-            $uidTag = TagManagerInterface::UID_TAG_PREFIX . $user->getUid();
-            $tags = $this->toTagNameArray($user->getTags());
-            $tags = empty($tags) ? array($uidTag) : $tags + array($uidTag);
+        $this->processInsersions($em, $uow);
+        $this->processUpdates($em, $uow);
+        $this->processDeletions($em, $uow);
 
-            $this->getPushServiceManager()->createRegistration($application->getName(), $entity->getDeviceIdentifier(), $tags);
+        $this->executeRegistration();
+    }
+
+    /**
+     * @param EntityManager $em
+     * @param UnitOfWork    $uow
+     */
+    protected function processInsersions(EntityManager $em, UnitOfWork $uow)
+    {
+        foreach ($uow->getScheduledEntityInsertions() as $entity) {
+            if ($entity instanceof DeviceInterface) {
+                $user = $entity->getUser();
+                // Add device type tag
+                $deviceTypeTag = $this->getTagManager()->getTagObject(Device::getTypeName($entity->getType()));
+                $user->addTag($deviceTypeTag);
+
+                $objectManager->persist($deviceTypeTag);
+                $uow->computeChangeSet($em->getClassMetadata(get_class($deviceTypeTag)), $deviceTypeTag);
+
+                $this->creates->add($entity);
+            }
         }
     }
 
     /**
-     * 
-     * @param LifecycleEventArgs $args
+     * @param EntityManager $em
+     * @param UnitOfWork    $uow
      */
-    public function preUpdate(PreUpdateEventArgs $args)
+    protected function processUpdates(EntityManager $em, UnitOfWork $uow)
     {
-        $entity = $args->getEntity();
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+            if ($entity instanceof DeviceInterface) {
+                $original = $uow->getOriginalEntityData($entity);
 
-        if ($entity instanceof UserInterface) {
-            $devices = $entity->getDevices();
-            if (!empty($devices)) {
-                $application = $entity->getApplication();
-                $uidTag = TagManagerInterface::UID_TAG_PREFIX . $entity->getUid();
-                $tags = $this->toTagNameArray($entity->getTags());
-                $tags = empty($tags) ? array($uidTag) : $tags + array($uidTag);
+                if ($original['unregisterdAt'] && !$entity->getUnregisteredAt()) {
+                    $this->creates->add($entity);
+                } else if (!$original['unregisterdAt'] && $entity->getUnregisteredAt()) {
+                    $this->deletes->add($entity);
+                }
 
-                foreach ($entity->getDevices() as $device) {
-                    $this->getPushServiceManager()->updateRegistration($application->getName(), $device->getDeviceIdentifier(), $tags);
+                if ($original['token'] != $entity->getToken() || $original['user'] != $entity->getUser()) {
+                    $this->updates->add($entity);
                 }
             }
-        } else if ($entity instanceof DeviceInterface) {
-            if ($args->hasChangedField('token') || $args->hasChangedField('user')) {
-                $uidTag = TagManagerInterface::UID_TAG_PREFIX . $entity->getUser()->getUid();
-                $tags = $this->toTagNameArray($entity->getUser()->getTags());
-                $tags = empty($tags) ? array($uidTag) : $tags + array($uidTag);
-                $this->getPushServiceManager()->updateRegistration($entity->getApplication()->getName(), $entity->getDeviceIdentifier(), $tags);
+        }
+    }
+
+    /**
+     * @param EntityManager $em
+     * @param UnitOfWork    $uow
+     */
+    protected function processDeletions(EntityManager $em, UnitOfWork $uow)
+    {
+        foreach ($uow->getScheduledEntityDeletions() as $entity) {
+            if ($entity instanceof DeviceInterface) {
+                $this->deletes->add($entity);
             }
         }
     }
 
     /**
-     * 
-     * @param LifecycleEventArgs $args
+     * @param EntityManager $em
+     * @param UnitOfWork    $uow
      */
-    public function preRemove(LifecycleEventArgs $args)
+    protected function processCollectionUpdates(EntityManager $em, UnitOfWork $uow)
     {
-        $entity = $args->getEntity();
+        $deletions = $uow->getScheduledCollectionDeletions();
+        $updates   = $uow->getScheduledCollectionUpdates();
 
-        if ($entity instanceof UserInterface) {
-            foreach ($entity->getDevices() as $device) {
-                $this->getPushServiceManager()->deleteRegistration($entity->getApplication()->getName(), $device->getType(), $device->getRegistrationId(), $device->getETag());
+        foreach (array_merge($deletions, $updates) as $col) {
+            /* @var $col \Doctrine\ORM\PersistentCollection */
+            if ($col->getOwner() instanceof UserInterface && $col->first() instanceof TagInterface) {
+                $user = $col->getOwner();
+                foreach ($user->getDevices() as $device) {
+                    if (!$this->updates->contains($device)) {
+                        $this->updates->add($device);
+                    }
+                }
             }
-        } else if ($entity instanceof DeviceInterface) {
-            $this->getPushServiceManager()->deleteRegistration($entity->getApplication()->getName(), $entity->getType(), $entity->getRegistrationId(), $entity->getETag());
+        }
+    }
+
+    /**
+     *
+     */
+    protected function executeRegistration()
+    {
+        foreach ($this->creates as $device) {
+            $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
+            $tags = $this->unsetDifferentDeviceTag($device->getType());
+
+            $this->getPushServiceManager()->createRegistration(
+                $device->getApplication()->getName(),
+                $device->getDeviceIdentifier(),
+                $tags
+            );
+        }
+        foreach ($this->updates as $device) {
+            $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
+            $tags = $this->unsetDifferentDeviceTag($device->getType());
+
+            $this->getPushServiceManager()->updateRegistration(
+                $device->getApplication()->getName(),
+                $device->getDeviceIdentifier(),
+                $tags
+            );
+        }
+        foreach ($this->deletes as $device) {
+            $this->getPushServiceManager()->deleteRegistration(
+                $device->getApplication()->getName(),
+                $device->getType(),
+                $device->getRegistrationId(),
+                $device->getETag()
+            );
         }
     }
 
     /**
      * Gets the Push Service Manager.
      *
-     * @return object
+     * @return \Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface
      */
     protected function getPushServiceManager()
     {
@@ -119,19 +202,30 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     }
 
     /**
-     * Converts the array of tag objects to the array of tag names.
+     * Gets the Tag Manager.
      *
-     * @param mixed $tags
-     *
-     * @return array array of tag names
+     * @return \Openpp\PushNotificationBundle\Model\TagManagerInterface
      */
-    protected function toTagNameArray($tags)
+    protected function getTagManager()
     {
-        $array = array();
-        foreach ($tags as $tag) {
-            $array[] = $tag->getName();
+        return $this->container->get('openpp.push_notification.manager.tag');
+    }
+
+    /**
+     * Removes the different device tags from tag array.
+     *
+     * @param integer $type
+     * @param array $tags
+     * @return array
+     */
+    private function unsetDifferentDeviceTag($type, array $tags)
+    {
+        foreach (array_diff(array_keys(Device::getTypeChoices()), array(Device::getTypeName($type))) as $typeName) {
+            if ($key = array_search($typeName, $tags) !== false) {
+                unset($tags[$key]);
+            }
         }
 
-        return $array;
+        return $tags;
     }
 }

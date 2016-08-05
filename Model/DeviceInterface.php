@@ -15,7 +15,7 @@ interface DeviceInterface extends BaseDeviceInterface
     const TYPE_ANDROID = 1;
     const TYPE_IOS     = 2;
     const TYPE_NAME_ANDROID = 'android';
-    const TYPE_NAME_IOS     = 'iOS';
+    const TYPE_NAME_IOS     = 'ios';
 
     /**
      * Returns the device identifier.

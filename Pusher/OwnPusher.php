@@ -39,7 +39,7 @@ class OwnPusher extends AbstractPusher
         if (is_integer($devices[0])) {
             $devices = $this->deviceManager->findDevicesBy(array('id' => $devices));
         }
-        $devices = new Devices(is_array($devices) ? $devices : $devices->toArray());
+        $devices = new Devices($devices);
 
         $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
         $messageObj  = new Message($message, $options);

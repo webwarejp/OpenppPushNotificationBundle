@@ -9,7 +9,8 @@ use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\MapBundle\Model\CircleInterface;
 use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Doctrine\Common\Collections\ArrayCollection;
+use Openpp\PushNotificationBundle\TagExpression\TagExpression;
+use Openpp\PushNotificationBundle\Collections\DeviceCollection;
 
 class DeviceManager extends BaseManager
 {
@@ -17,6 +18,7 @@ class DeviceManager extends BaseManager
     protected $repository;
     protected $class;
     protected $userClass;
+    protected $tagClass;
     protected $pointClass;
 
     /**
@@ -25,9 +27,10 @@ class DeviceManager extends BaseManager
      * @param ManagerRegistry $managerRegistry
      * @param string          $class
      * @param string          $userClass
+     * @param string          $tagClass
      * @param string          $pointClass
      */
-    public function __construct(ManagerRegistry $managerRegistry, $class, $userClass, $pointClass = '')
+    public function __construct(ManagerRegistry $managerRegistry, $class, $userClass, $tagClass, $pointClass = '')
     {
         $this->objectManager = $managerRegistry->getManagerForClass($class);
         $this->repository = $this->objectManager->getRepository($class);
@@ -36,6 +39,7 @@ class DeviceManager extends BaseManager
         $this->class = $metadata->getName();
 
         $this->userClass = $userClass;
+        $this->tagClass  = $tagClass;
         $this->pointClass = $pointClass;
     }
 
@@ -97,9 +101,6 @@ class DeviceManager extends BaseManager
         ;
 
         $result = $qb->getQuery()->getResult();
-        if ($result) {
-            $result = new ArrayCollection($result);
-        }
 
         return $result;
     }
@@ -107,10 +108,80 @@ class DeviceManager extends BaseManager
     /**
      * {@inheritDoc}
      */
-    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression)
+    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = array())
     {
-        // TODO: check tags.
-        return $this->findActiveDevices($application);
+        if (!$tagExpression) {
+            return $this->findActiveDevices($application);
+        }
+
+        $rsm = new ResultSetMapping();
+        $rsm->addEntityResult($this->getClass(), 'd');
+        $rsm->addFieldResult('d', 'device_id', 'id');
+        $rsm->addFieldResult('d', 'device_type', 'type');
+        $rsm->addFieldResult('d', 'device_token', 'token');
+        $rsm->addJoinedEntityResult($this->userClass, 'u', 'd', 'user');
+        $rsm->addFieldResult('u', 'user_id', 'id');
+        $rsm->addFieldResult('u', 'user_uid', 'uid');
+
+        $sql = <<<SQL
+WITH _device_user_tag AS ( 
+  SELECT 
+    d.id AS device_id,
+    d.type AS device_type,
+    d.token AS device_token,
+    u.id AS user_id,
+    u.uid AS user_uid,
+    ARRAY(
+      SELECT 
+        t.name
+      FROM
+        %s t JOIN %s ut ON ut.tag_id = t.id 
+      WHERE
+        u.id = ut.user_id
+    ) AS tags 
+  FROM
+    %s d JOIN %s u ON d.user_id = u.id
+  WHERE
+    u.application_id = ?
+    %s
+)
+SELECT 
+ * 
+FROM
+  _device_user_tag dut 
+WHERE 
+  %s
+SQL;
+
+        $tagTableName     = $this->objectManager->getClassMetadata($this->tagClass)->getTableName();
+        $userTagTableName = 'push__user_tag'; // TODO
+        $deviceTableName  = $this->objectManager->getClassMetadata($this->class)->getTableName();
+        $userTableName    = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
+
+        $tagsColumn = 'dut.tags';
+        $te = new TagExpression($tagExpression);
+        $whereClause = $te->toNativeSQLWhereClause();
+        $whereClause = str_replace('%s', 'dut.tags', $whereClause);
+
+        $deviceWhereClause = '';
+        if ($devices) {
+            $deviceWhereClause = 'AND d.id in (?)';
+        }
+        $sql = sprintf($sql, $tagTableName, $userTagTableName, $deviceTableName, $userTableName, $deviceWhereClause, $whereClause);
+        $query = $this->objectManager->createNativeQuery($sql, $rsm);
+
+        $params = array();
+        $params[] = $application->getId();
+        if ($devices) {
+            $params[] = $devices;
+        }
+
+        $key = 0;
+        foreach ($params as $param) {
+            $query->setParameter(++$key, $param);
+        }
+
+        return $query->getResult();
     }
 
     /**
@@ -168,7 +239,13 @@ SQL;
             $query->setParameter(++$key, $param);
         }
 
-        //TODO: check tags
-        return $query->getResult();
+        $result = $query->getResult();
+
+        if (!$result || !$tagExpression) {
+            return $result;
+        }
+
+        $devices = new DeviceCollection($result);
+        return $this->findDevicesByTagExpression($application, $tagExpression, $devices->toIdArray()->toArray());
     }
 }

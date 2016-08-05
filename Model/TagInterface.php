@@ -10,6 +10,8 @@ namespace Openpp\PushNotificationBundle\Model;
  */
 interface TagInterface
 {
+    const UID_TAG_PREFIX = 'uid_';
+
     /**
      * Returns the name
      *

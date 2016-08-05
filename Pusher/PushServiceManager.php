@@ -4,12 +4,12 @@ namespace Openpp\PushNotificationBundle\Pusher;
 
 use Sonata\NotificationBundle\Backend\BackendInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\TagExpression\TagExpression;
+use Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer;
 
 
 class PushServiceManager implements PushServiceManagerInterface
 {
-    const TYPE_NAME = 'openpp.push_notification.push';
-
     protected $backend;
     protected $tagManager;
     protected $pusher;
@@ -37,10 +37,11 @@ class PushServiceManager implements PushServiceManagerInterface
     public function push($applicationName, $tagExpression, $message, array $options = array())
     {
         if ($tagExpression != '') {
-            $this->tagManager->checkTagExpression($tagExpression);
+            $te = new TagExpression($tagExpression);
+            $te->validate();
         }
 
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application'   => $applicationName,
             'tagExpression' => $tagExpression,
             'message'       => $message,
@@ -62,7 +63,7 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function pushToDevices($applicationName, $devices, $message, array $options = array())
     {
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application' => $applicationName,
             'devices'     => $devices,
             'message'     => $message,
@@ -84,26 +85,23 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function addTagToUser($applicationName, $uid, $tag)
     {
-        $this->tagManager->checkTag($tag);
-
-        if (is_array($tag)) {
-            foreach ($tag as $idx => $one) {
-                if ($this->tagManager->isReservedTag($one)) {
-                    unset($tag[$idx]);
-                }
-            }
-
-            $tag = array_values($tag);
-            if (empty($tag)) {
-                return;
-            }
-        } else {
-            if ($this->tagManager->isReservedTag($tag)) {
-                return;
-            }
+        if (!is_array($tag)) {
+            $tag = array($tag);
         }
 
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        foreach ($tag as $idx => $one) {
+
+            TagExpression::validateSingleTag($one);
+
+            if ($this->tagManager->isReservedTag($one)) {
+                unset($tag[$idx]);
+            }
+        }
+        if (!$tag) {
+            return;
+        }
+
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application' => $applicationName,
             'uid'         => $uid,
             'tag'         => $tag,
@@ -124,9 +122,23 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function removeTagFromUser($applicationName, $uid, $tag)
     {
-        $this->tagManager->checkTag($tag);
+        if (!is_array($tag)) {
+            $tag = array($tag);
+        }
 
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        foreach ($tag as $idx => $one) {
+
+            TagExpression::validateSingleTag($one);
+
+            if ($this->tagManager->isReservedTag($one)) {
+                unset($tag[$idx]);
+            }
+        }
+        if (!$tag) {
+            return;
+        }
+
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application' => $applicationName,
             'uid'         => $uid,
             'tag'         => $tag,
@@ -147,7 +159,7 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application'      => $applicationName,
             'deviceIdentifier' => $deviceIdentifier,
             'tags'             => $tags,
@@ -168,7 +180,7 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application'      => $applicationName,
             'deviceIdentifier' => $deviceIdentifier,
             'tags'             => $tags,
@@ -189,7 +201,7 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
     {
-        $this->backend->createAndPublish(self::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application'    => $applicationName,
             'type'           => $type,
             'registrationId' => $registrationId,

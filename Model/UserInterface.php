@@ -118,4 +118,11 @@ interface UserInterface
      * @return string
      */
     public function getUidTag();
+
+    /**
+     * Gets all tag name that user has.
+     *
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function getTagNames();
 }

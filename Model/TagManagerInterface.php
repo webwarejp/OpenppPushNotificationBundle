@@ -4,9 +4,6 @@ namespace Openpp\PushNotificationBundle\Model;
 
 interface TagManagerInterface
 {
-    const BROADCAST_TAG = 'broadcast';
-    const UID_TAG_PREFIX = 'uid_';
-
     /**
      * Returns the tag's fully qualified class name.
      *
@@ -38,27 +35,6 @@ interface TagManagerInterface
      * @return TagInterface
      */
     public function create();
-
-    /**
-     * Check tag expressions.
-     * Tag expressions are limited to 20 tags if they contain only ORs; otherwise they are limited to 6 tags.
-     *
-     * @param string $expression
-     *
-     * @throws InvalidTagExpressionException
-     */
-    public function checkTagExpression($expression);
-
-    /**
-     * Check the tag(s).
-     * A tag can be any string, up to 120 characters, containing alphanumeric and
-     * the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’.
-     *
-     * @param string|array $tag
-     *
-     * @throws InvalidTagExpressionException
-     */
-    public function checkTag($tag);
 
     /**
      * Reterns whether the tag is reserved.

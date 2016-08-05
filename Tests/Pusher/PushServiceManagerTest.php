@@ -22,14 +22,7 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend = $this->getMockBuilder('Sonata\NotificationBundle\Backend\BackendInterface')
                               ->getMock();
 
-        $container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerInterface')
-                          ->getMock();
-        $container->expects($this->any())
-                  ->method('get')
-                  ->willReturn($this->backend);
-
-        $this->manager = new PushServiceManager($this->tagManager, $this->pusher);
-        $this->manager->setContainer($container);
+        $this->manager = new PushServiceManager($this->backend, $this->tagManager, $this->pusher);
     }
 
     public function testGetPusher()
@@ -37,25 +30,17 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->assertSame($this->pusher, $this->manager->getPusher());
     }
 
-    public function testGetFallbackPusher()
-    {
-        $this->assertNull($this->manager->getFallBackPusher());
-    }
-
     public function testPush()
     {
-        $this->tagManager->expects($this->once())
-                         ->method('checkTagExpression');
-
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
                         array('openpp.push_notification.push', array(
-                              'application' => 'viewer',
-                              'target'      => 'ios && female',
-                              'message'     => 'TEST',
-                              'options'     => array(),
-                              'operation'   => PushServiceManagerInterface::OPERATION_PUSH,
+                              'application'   => 'viewer',
+                              'tagExpression' => 'ios && female',
+                              'message'       => 'TEST',
+                              'options'       => array(),
+                              'operation'     => PushServiceManagerInterface::OPERATION_PUSH,
                 )));
 
         $this->manager->push('viewer', 'ios && female', 'TEST');
@@ -75,7 +60,7 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         return array(
             array('viewer', '1234', array('friend_4321', 'friend_2345')),
             array('viewer', '1234', array('friend_4321', 'friend_2345', 'broadcast')),
-            array('viewer', '1234', array('friend_4321', 'uid_1234', 'friend_2345'))
+            array('viewer', '1234', array('friend_4321', 'friend_2345', 'uid_1234'))
         );
     }
 
@@ -91,8 +76,6 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
             array('broadcast', true),
             array('uid_1234', true),
         );
-        $this->tagManager->expects($this->once())
-                         ->method('checkTag');
         $this->tagManager->expects($this->any())
                          ->method('isReservedTag')
                          ->will($this->returnValueMap($valueMap));
@@ -128,8 +111,6 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
             array('broadcast', true),
             array('uid_1234', true),
         );
-        $this->tagManager->expects($this->once())
-                         ->method('checkTag');
         $this->tagManager->expects($this->any())
                          ->method('isReservedTag')
                          ->will($this->returnValueMap($valueMap));
@@ -154,8 +135,6 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
      */
     public function testRemoveTagFromUser($applicationName, $uid, $tag)
     {
-        $this->tagManager->expects($this->once())
-                         ->method('checkTag');
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(

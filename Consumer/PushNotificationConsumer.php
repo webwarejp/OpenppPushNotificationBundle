@@ -13,6 +13,8 @@ use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
  */
 class PushNotificationConsumer implements ConsumerInterface
 {
+    const TYPE_NAME = 'openpp.push_notification.push';
+
     /**
      * @var PushServiceManagerInterface
      */

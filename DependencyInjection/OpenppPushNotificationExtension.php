@@ -86,9 +86,9 @@ class OpenppPushNotificationExtension extends Extension
     {
         $deviceManagerDefinition = $container->getDefinition('openpp.push_notification.manager.device');
         if ($mapBundleEnable) {
-            $deviceManagerDefinition->replaceArgument(3, $container->getParameter('openpp.map.point.class'));
+            $deviceManagerDefinition->replaceArgument(4, $container->getParameter('openpp.map.point.class'));
         } else {
-            $deviceManagerDefinition->replaceArgument(3, '');
+            $deviceManagerDefinition->replaceArgument(4, '');
         }
     }
 

@@ -118,10 +118,6 @@ class AzurePusher extends AbstractPusher
     {
         $notifications = array();
 
-        if (TagManagerInterface::BROADCAST_TAG === $tagExpression) {
-            $tagExpression = '';
-        }
-
         if (is_string($message)) {
             $message = array('message' => $message);
         } else if (!is_array($message)) {

@@ -239,7 +239,17 @@ class User implements UserInterface
      */
     public function getUidTag()
     {
-        return TagManagerInterface::UID_TAG_PREFIX . $this->getUid();
+        return TagInterface::UID_TAG_PREFIX . $this->getUid();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getTagNames()
+    {
+        return $this->tags->map(function($t) {
+            return $t->getName();
+        });
     }
 
     /**

@@ -4,8 +4,7 @@ namespace Openpp\PushNotificationBundle\Listener;
 
 use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\LifecycleEventArgs;
-use Doctrine\ORM\Event\PreUpdateEventArgs;
+use Doctrine\ORM\Event\OnFlushEventArgs;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\MapBundle\Model\PointInterface;
@@ -43,38 +42,31 @@ class DeviceLocationSubscriber implements EventSubscriber
     public function getSubscribedEvents()
     {
         return array(
-            Events::postPersist,
-            Events::preUpdate,
+            Events::onFlush,
         );
     }
 
     /**
-     *
-     * @param LifecycleEventArgs $args
+     * @param OnFlushEventArgs $eventArgs
      */
-    public function postPersist(LifecycleEventArgs $args)
+    public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $entity = $args->getEntity();
+        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
 
-        if ($entity instanceof DeviceInterface) {
-            if ($entity->getLocation()) {
-                $this->judgeLocation($entity, $entity->getLocation()->getPoint());
+        foreach ($uow->getScheduledEntityInsertions() as $entity) {
+            if ($entity instanceof DeviceInterface) {
+                if ($entity->getLocation()) {
+                    $this->judgeLocation($entity, $entity->getLocation()->getPoint());
+                }
             }
         }
-    }
-
-    /**
-     *
-     * @param LifecycleEventArgs $args
-     */
-    public function preUpdate(PreUpdateEventArgs $args)
-    {
-        $entity = $args->getEntity();
-
-        if ($entity instanceof PointInterface) {
-            $device = $this->getDeviceManager()->findDeviceBy(array('location' => $entity));
-            if ($device) {
-                $this->judgeLocation($device, $args->getNewValue('point'), $args->getOldValue('point'));
+        foreach ($uow->getScheduledEntityUpdates() as $entity) {
+            if ($entity instanceof PointInterface) {
+                $device = $this->getDeviceManager()->findDeviceBy(array('location' => $entity));
+                if ($device) {
+                    $original = $uow->getOriginalEntityData($entity);
+                    $this->judgeLocation($device, $entity->getPoint(), $original['point']);
+                }
             }
         }
     }
@@ -97,10 +89,12 @@ class DeviceLocationSubscriber implements EventSubscriber
             }
 
             if ($this->getGeometryQuerier()->isPointInCircle($currentPoint, $condition->getAreaCircle())) {
-                $tagExpression = $condition->getTagExpression();
-                $uidTag = $device->getUser()->getUidTag();
-                $tagExpression = $tagExpression ? '(' . $tagExpression . ') && ' . $uidTag : $uidTag;
-                $this->getPushServiceManager()->push($condition->getApplication(), $tagExpression, $condition->getMessage());
+                // TODO: tag expression check
+                $this->getPushServiceManager()->pushToDevices(
+                    $condition->getApplication()->getName(),
+                    array($device->getId()),
+                    $condition->getMessage()
+                );
             }
         }
     }

@@ -3,7 +3,6 @@
 namespace Openpp\PushNotificationBundle\Model;
 
 use Openpp\MapBundle\Model\CircleInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 
 interface DeviceManagerInterface
 {
@@ -83,22 +82,23 @@ interface DeviceManagerInterface
      *
      * @param ApplicationInterface $application
      *
-     * @return array|ArrayCollection
+     * @return array
      */
     public function findActiveDevices(ApplicationInterface $application);
 
     /**
-     * Finds the devices which match specified tag expression.
+     * Finds the devices which match the given tag expression.
      *
      * @param ApplicationInterface $application
      * @param string $tagExpression
+     * @param array  $devices
      *
-     * @return array|ArrayCollection
+     * @return array
      */
-    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression);
+    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = array());
 
     /**
-     * Finds the devices in specified circle area and match specified tag expression.
+     * Finds the devices in specified circle area and match the given tag expression.
      *
      * @param ApplicationInterface $application
      * @param string $tagExpression
