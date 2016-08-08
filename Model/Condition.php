@@ -12,16 +12,16 @@ use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 class Condition implements ConditionInterface
 {
     protected static $intervalTypeChoices = array(
-        self::INTERVAL_TYPE_HOURLY => 'hourly',
-        self::INTERVAL_TYPE_DAILY  => 'daily',
-        self::INTERVAL_TYPE_WEEKLY => 'weekly',
-        self::INTERVAL_TYPE_MONTHLY => 'monthly'
+        'hourly'  => self::INTERVAL_TYPE_HOURLY,
+        'daily'   => self::INTERVAL_TYPE_DAILY,
+        'weekly'  => self::INTERVAL_TYPE_WEEKLY,
+        'monthly' => self::INTERVAL_TYPE_MONTHLY,
     );
 
     protected static $timeTypeChoices = array(
-        self::TIME_TYPE_SPECIFIC   => 'Specific Dates',
-        self::TIME_TYPE_PERIODIC   => 'Periodic',
-        self::TIME_TYPE_CONTINUING => 'Continuing',
+        'Specific Dates' => self::TIME_TYPE_SPECIFIC,
+        'Periodic'       => self::TIME_TYPE_PERIODIC,
+        'Continuing'     => self::TIME_TYPE_CONTINUING,
     );
 
     /**
@@ -359,7 +359,8 @@ class Condition implements ConditionInterface
     public static function getTimeTypeChoices($mapBundleEnable = false)
     {
         if (!$mapBundleEnable) {
-            unset(self::$timeTypeChoices[self::TIME_TYPE_CONTINUING]);
+            $key = array_search(self::TIME_TYPE_CONTINUING, self::$timeTypeChoices);
+            unset(self::$timeTypeChoices[$key]);
         }
 
         return self::$timeTypeChoices;

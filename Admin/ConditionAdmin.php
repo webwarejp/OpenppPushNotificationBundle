@@ -25,7 +25,11 @@ class ConditionAdmin extends Admin
             ->add('enable')
             ->add('message')
             ->add('tagExpression')
-            ->add('timeType', 'doctrine_orm_choice', array(), 'choice', array('choices' => Condition::getTimeTypeChoices()))
+            ->add('timeType', 'doctrine_orm_choice', array(), 'choice', array(
+                'choices' => Condition::getTimeTypeChoices($this->mapBundleEnable),
+                'choices_as_values' => true,
+                'choice_translation_domain' => 'OpenppPushNotificationBundle',
+            ))
         ;
     }
 
@@ -40,7 +44,10 @@ class ConditionAdmin extends Admin
             ->add('enable', null, array('editable' => true))
             ->add('message', 'html', array('truncate' => array('length' => 10)))
             ->add('tagExpression', 'html', array('truncate' => array('length' => 10)))
-            ->add('timeType', 'choice', array('choices' => Condition::getTimeTypeChoices()))
+            ->add('timeType', 'choice', array(
+                'choices' => array_flip(Condition::getTimeTypeChoices($this->mapBundleEnable)),
+                'choice_translation_domain' => 'OpenppPushNotificationBundle',
+            ))
             ->add('_action', 'actions', array(
                 'actions' => array(
                     'show' => array(),
@@ -68,6 +75,8 @@ class ConditionAdmin extends Admin
                 ->add('timeType', 'sonata_type_choice_field_mask', array(
                     'required' => true,
                     'choices' => Condition::getTimeTypeChoices($this->mapBundleEnable),
+                    'choices_as_values' => true,
+                    'choice_translation_domain' => 'OpenppPushNotificationBundle',
                     'map' => array(
                         Condition::TIME_TYPE_SPECIFIC => array('specificDates'),
                         Condition::TIME_TYPE_PERIODIC => array('startDate', 'endDate', 'IntervalType'),
@@ -97,6 +106,8 @@ class ConditionAdmin extends Admin
                     'expanded' => true,
                     'required' => false,
                     'choices' => Condition::getIntervalTypeChoices(),
+                    'choices_as_values' => true,
+                    'choice_translation_domain' => 'OpenppPushNotificationBundle',
                     'placeholder' => false,
                     'label' => false,
                 ))
