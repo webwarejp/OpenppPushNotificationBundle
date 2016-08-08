@@ -142,4 +142,18 @@ interface ApplicationInterface
      * @param DeviceInterface $user
      */
     public function removeUser(UserInterface $user);
+
+    /**
+     * Returns the APNS certificate file.
+     *
+     * @return \Symfony\Component\HttpFoundation\File\UploadedFile
+     */
+    public function getApnsCertificateFile();
+
+    /**
+     * Sets the APNS certificate file.
+     *
+     * @param \Symfony\Component\HttpFoundation\File\UploadedFile $file
+     */
+    public function setApnsCertificateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null);
 }

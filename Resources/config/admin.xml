@@ -13,7 +13,9 @@
             <call method="setTranslationDomain">
                 <argument>OpenppPushNotificationBundle</argument>
             </call>
-
+            <call method="setApnsCertificateDir">
+                <argument>%openpp.push_notification.apns_certificate.directory%</argument>
+            </call>
         </service>
 
         <service id="openpp.push_notification.admin.device" class="Openpp\PushNotificationBundle\Admin\DeviceAdmin">

@@ -3,6 +3,7 @@
 namespace Openpp\PushNotificationBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * Represents a Application model
@@ -66,6 +67,11 @@ class Application implements ApplicationInterface
      * @var \DateTime
      */
     protected $updatedAt;
+
+    /**
+     * @Assert\File()
+     */
+    protected $apnsCertificateFile;
 
     /**
      * Constructor
@@ -277,5 +283,21 @@ class Application implements ApplicationInterface
     public function __toString()
     {
         return $this->getName();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getApnsCertificateFile()
+    {
+        return $this->apnsCertificateFile;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setApnsCertificateFile(\Symfony\Component\HttpFoundation\File\UploadedFile $file = null)
+    {
+        $this->apnsCertificateFile = $file;
     }
 }

@@ -12,6 +12,8 @@ class ApplicationAdmin extends Admin
 {
     protected $pusherName;
 
+    protected $apnsCertificateDir;
+
     /**
      * Sets the pusher name.
      *
@@ -20,6 +22,16 @@ class ApplicationAdmin extends Admin
     public function setPusherName($pusherName)
     {
         $this->pusherName = $pusherName;
+    }
+
+    /**
+     * Sets the APNS certificate directory to save.
+     *
+     * @param string $apnsCertificateDir
+     */
+    public function setApnsCertificateDir($apnsCertificateDir)
+    {
+        $this->apnsCertificateDir = $apnsCertificateDir;
     }
 
     /**
@@ -64,7 +76,8 @@ class ApplicationAdmin extends Admin
         switch ($this->pusherName) {
             case "openpp.push_notification.pusher.own":
                 $formMapper->with($this->trans('form.group_own_label'))
-                        ->add('apnsCertificate')
+                        ->add('apnsCertificate', null, array('read_only' => true))
+                        ->add('apnsCertificateFile', 'file', array('label' => false))
                         ->add('gcmApiKey')
                     ->end()
                 ;
@@ -100,5 +113,36 @@ class ApplicationAdmin extends Admin
             ->add('createdAt')
             ->add('updatedAt')
         ;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function prePersist($object)
+    {
+        $this->uploadApnsCertificate($object);
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    public function preUpdate($object)
+    {
+        $this->uploadApnsCertificate($object);
+    }
+
+    protected function uploadApnsCertificate($object)
+    {
+        /* @var $object \Openpp\PushNotificationBundle\Model\ApplicationInterface */
+        if ($uploaded = $object->getApnsCertificateFile()) {
+
+            if ($object->getApnsCertificate()) {
+                unlink($object->getApnsCertificate());
+            }
+
+            $file = $uploaded->move($this->apnsCertificateDir, $uploaded->getClientOriginalName());
+            $object->setApnsCertificate($file->getPathname());
+            $object->setApnsCertificateFile(null);
+        }
     }
 }

@@ -9,6 +9,7 @@
         <parameter key="openpp.push_notification.manager.device.class">Openpp\PushNotificationBundle\Entity\DeviceManager</parameter>
         <parameter key="openpp.push_notification.manager.user.class">Openpp\PushNotificationBundle\Entity\UserManager</parameter>
         <parameter key="openpp.push_notification.manager.condition.class">Openpp\PushNotificationBundle\Entity\ConditionManager</parameter>
+        <parameter key="openpp.push_notification.apns_certificate.directory">%kernel.root_dir%/../web/uploads/push_notification/apns_certificate</parameter>
     </parameters>
 
     <services>
