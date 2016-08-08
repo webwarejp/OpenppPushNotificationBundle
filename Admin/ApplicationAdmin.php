@@ -77,7 +77,7 @@ class ApplicationAdmin extends Admin
             case "openpp.push_notification.pusher.own":
                 $formMapper->with($this->trans('form.group_own_label'))
                         ->add('apnsCertificate', null, array('read_only' => true))
-                        ->add('apnsCertificateFile', 'file', array('label' => false))
+                        ->add('apnsCertificateFile', 'file', array('label' => false, 'required' => false))
                         ->add('gcmApiKey')
                     ->end()
                 ;
