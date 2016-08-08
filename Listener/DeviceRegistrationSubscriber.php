@@ -90,7 +90,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
                 $deviceTypeTag = $this->getTagManager()->getTagObject(Device::getTypeName($entity->getType()));
                 $user->addTag($deviceTypeTag);
 
-                $objectManager->persist($deviceTypeTag);
+                $em->persist($deviceTypeTag);
                 $uow->computeChangeSet($em->getClassMetadata(get_class($deviceTypeTag)), $deviceTypeTag);
 
                 $this->creates->add($entity);
@@ -163,7 +163,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     {
         foreach ($this->creates as $device) {
             $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
-            $tags = $this->unsetDifferentDeviceTag($device->getType());
+            $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->createRegistration(
                 $device->getApplication()->getName(),
@@ -173,7 +173,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
         }
         foreach ($this->updates as $device) {
             $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
-            $tags = $this->unsetDifferentDeviceTag($device->getType());
+            $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->updateRegistration(
                 $device->getApplication()->getName(),

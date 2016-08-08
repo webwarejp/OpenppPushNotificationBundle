@@ -82,6 +82,9 @@ class OwnPusher extends AbstractPusher
                     'certificate' => $application->getApnsCertificate()
                 ));
                 break;
+
+            default:
+                throw new \RuntimeException('Unsupported device type: ' . $deviceType);
         }
 
         return $adapter;

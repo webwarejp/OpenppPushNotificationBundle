@@ -53,7 +53,7 @@ interface TagManagerInterface
      *
      * @return array array of TagInterface
      */
-    public function getTagObjects($tags, $creation);
+    public function getTagObjects($tags, $creation = true);
 
     /**
      * Converts a tag name to the tag object.

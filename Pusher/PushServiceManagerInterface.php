@@ -26,7 +26,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function push($applicationName, $tagExpression, $message, array $options);
+    public function push($applicationName, $tagExpression, $message, array $options = array());
 
     /**
      * Executes to send the push notification.
@@ -36,7 +36,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushExecute($applicationName, $tagExpression, $message, array $options);
+    public function pushExecute($applicationName, $tagExpression, $message, array $options = array());
 
     /**
      * Creates the job message to send the push notification to the given devices.
@@ -46,7 +46,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushToDevices($applicationName, $devices, $message, array $options);
+    public function pushToDevices($applicationName, $devices, $message, array $options = array());
 
     /**
      * Executes to send the push notification to the given devices.
@@ -56,7 +56,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushToDevicesExecute($applicationName, $devices, $message, array $options);
+    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = array());
 
     /**
      * Creates the job message to add the tags to the user.

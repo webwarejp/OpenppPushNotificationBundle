@@ -15,9 +15,8 @@ class UserManager extends BaseManager
     /**
      * Constructor
      *
-     * @param ObjectManager $om
+     * @param ManagerRegistry $managerRegistry
      * @param string $class
-     * @param string $deviceClass
      */
     public function __construct(ManagerRegistry $managerRegistry, $class)
     {
