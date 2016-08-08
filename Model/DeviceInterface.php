@@ -18,13 +18,6 @@ interface DeviceInterface extends BaseDeviceInterface
     const TYPE_NAME_IOS     = 'ios';
 
     /**
-     * Returns the id.
-     *
-     * @return mixed
-     */
-    public function getId();
-
-    /**
      * Returns the device identifier.
      *
      * @return string
