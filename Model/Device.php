@@ -36,6 +36,16 @@ class Device implements DeviceInterface
     protected $eTag;
 
     /**
+     * @var string
+     */
+    protected $publicKey;
+
+    /**
+     * @var string
+     */
+    protected $authToken;
+
+    /**
      * @var \Openpp\MapBundle\Model\PointInterface
      */
     protected $location;
@@ -76,6 +86,7 @@ class Device implements DeviceInterface
     protected static $typeChoices = array(
         self::TYPE_NAME_ANDROID => self::TYPE_ANDROID,
         self::TYPE_NAME_IOS     => self::TYPE_IOS,
+        self::TYPE_NAME_WEB     => self::TYPE_WEB,
     );
 
     /**
@@ -164,6 +175,38 @@ class Device implements DeviceInterface
     public function getLocation()
     {
         return $this->location;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPublicKey($publicKey)
+    {
+        $this->publicKey = $publicKey;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPublicKey()
+    {
+        return $this->publicKey;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setAuthtoken($authToken)
+    {
+        $this->authToken = $authToken;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getAuthToken()
+    {
+        return $this->authToken;
     }
 
     /**

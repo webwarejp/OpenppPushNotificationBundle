@@ -92,7 +92,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/register", requirements={"_format"="json"})
+     * @Post("/device/ios/register", defaults={"_format"="json"})
      * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      * @RequestParam(name="device_token", description="The device token returned from Apple.", strict=true)
@@ -110,6 +110,36 @@ class DeviceController extends FOSRestController
             $paramFetcher->get('location_latitude'),
             $paramFetcher->get('location_longitude'),
             DeviceInterface::TYPE_IOS
+        );
+    }
+
+    /**
+     * @ApiDoc(
+     *  description="Registers an Web browser",
+     *  section="Openpp Push Notifications (Web Push)"
+     * )
+     *
+     * @Post("/device/web/register", defaults={"_format"="json"})
+     * @RequestParam(name="origin", description="The name of the application registering.", strict=true)
+     * @RequestParam(name="endpoint", description="The URL that allows an application server to request delivery of a push message to a webapp.", strict=true)
+     * @RequestParam(name="key", description="The keying material used to encrypt push messages.", strict=true)
+     * @RequestParam(name="auth", description="keying material used to authenticate push messages.", strict=true)
+     * @RequestParam(name="uid", description="The user identifier", strict=false)
+     * @RequestParam(name="location_latitude", description="The latitude of device's location", strict=false)
+     * @RequestParam(name="location_longitude", description="The longitude of device's location", strict=false)
+     */
+    public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher)
+    {
+        return $this->registerDevice(
+                $paramFetcher->get('origin'),
+                $paramFetcher->get('endpoint'),
+                $paramFetcher->get('endpoint'),
+                $paramFetcher->get('uid'),
+                $paramFetcher->get('location_latitude'),
+                $paramFetcher->get('location_longitude'),
+                DeviceInterface::TYPE_WEB,
+                $paramFetcher->get('key'),
+                $paramFetcher->get('auth')
         );
     }
 
@@ -150,6 +180,24 @@ class DeviceController extends FOSRestController
     }
 
     /**
+     * @ApiDoc(
+     *  description="Unregisters an Web browser",
+     *  section="Openpp Push Notifications (Web Push)"
+     * )
+     *
+     * @Post("/device/web/register", requirements={"_format"="json"})
+     * @RequestParam(name="origin", description="The name of the application registering.", strict=true)
+     * @RequestParam(name="endpoint", description="The URL that allows an application server to request delivery of a push message to a webapp.", strict=true)
+     */
+    public function unregisterDeviceWebAction(ParamFetcherInterface $paramFetcher)
+    {
+        return $this->unregisterDevice(
+            $paramFetcher->get('origin'),
+            $paramFetcher->get('endpoint')
+        );
+    }
+
+    /**
      * Registers a device to the application.
      *
      * @param string  $applicationName
@@ -164,18 +212,12 @@ class DeviceController extends FOSRestController
      *
      * @return array
      */
-    protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type)
+    protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
     {
         $application = $this->applicationManager->findApplicationByName($applicationName);
 
         if (is_null($application)) {
             throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');
-        }
-
-        $user = $this->userManager->findUserByUid($application, $uid);
-
-        if (is_null($user)) {
-            $user = $this->userManager->create();
         }
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
@@ -195,6 +237,8 @@ class DeviceController extends FOSRestController
         $device->setDeviceIdentifier($deviceIdentifier);
         $device->setToken($token);
         $device->setType($type);
+        $device->setPublicKey($key);
+        $device->setAuthtoken($auth);
         if (!$device->getRegisteredAt()) {
             $device->setRegisteredAt(new \DateTime());
         }
@@ -217,6 +261,19 @@ class DeviceController extends FOSRestController
                     $device->setLocation($pointManager->createFromLonLat($locationLongitude, $locationLatitude));
                 } catch (ServiceNotFoundException $e) {
                     // do nothing
+                }
+            }
+        }
+
+        $user = $device->getUser();
+        if (is_null($user) || $user->getUid() != $uid) {
+            if ($uid) {
+                $user = $this->userManager->findUserByUid($application, $uid);
+            }
+            if (is_null($user)) {
+                $user = $this->userManager->create();
+                if (is_null($uid)) {
+                    $uid = uniqid('pseudo_');
                 }
             }
         }

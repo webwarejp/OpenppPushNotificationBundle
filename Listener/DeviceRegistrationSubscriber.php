@@ -162,7 +162,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function executeRegistration()
     {
         foreach ($this->creates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
+            $tags = $device->getUser()->getTagNames()->toArray() + array($device->getUser()->getUidTag());
             $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->createRegistration(
@@ -172,7 +172,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
             );
         }
         foreach ($this->updates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray() + $device->getUser()->getUidTag();
+            $tags = $device->getUser()->getTagNames()->toArray() + array($device->getUser()->getUidTag());
             $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->updateRegistration(

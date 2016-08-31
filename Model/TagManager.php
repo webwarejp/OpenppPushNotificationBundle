@@ -9,6 +9,7 @@ abstract class TagManager implements TagManagerInterface
         TagInterface::UID_TAG_PREFIX,
         DeviceInterface::TYPE_NAME_ANDROID,
         DeviceInterface::TYPE_NAME_IOS,
+        DeviceInterface::TYPE_NAME_WEB,
     );
 
     protected $reservedTagPatterns;

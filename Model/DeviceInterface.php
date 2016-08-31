@@ -14,8 +14,10 @@ interface DeviceInterface extends BaseDeviceInterface
 {
     const TYPE_ANDROID = 1;
     const TYPE_IOS     = 2;
+    const TYPE_WEB     = 3; // Web Push
     const TYPE_NAME_ANDROID = 'android';
     const TYPE_NAME_IOS     = 'ios';
+    const TYPE_NAME_WEB     = 'web';
 
     /**
      * Returns the device identifier.
@@ -86,6 +88,34 @@ interface DeviceInterface extends BaseDeviceInterface
      * @param \Openpp\MapBundle\Model\PointInterface
      */
     public function setLocation(\Openpp\MapBundle\Model\PointInterface $location);
+
+    /**
+     * Returns the client public key for Web Push message encryption.
+     *
+     * @return string
+     */
+    public function getPublicKey();
+
+    /**
+     * Sets the client public key for Web Push message encryption.
+     *
+     * @param string $publicKey
+     */
+    public function setPublicKey($publicKey);
+
+    /**
+     * Returns the authentication secret for Web Push message encryption.
+     *
+     * @return string
+     */
+    public function getAuthToken();
+
+    /**
+     * Sets the authentication secret for Web Push message encryption.
+     *
+     * @param string $authToken
+     */
+    public function setAuthtoken($authToken);
 
     /**
      * Returns the application.

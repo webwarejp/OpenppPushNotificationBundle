@@ -56,6 +56,8 @@ class OpenppPushNotificationExtension extends Extension
                 $container->getDefinition('openpp.push_notification.listener.push_result')
                     ->replaceArgument(2, array());
             }
+
+            $this->configurePusher($config, $container);
         }
 
         $this->configureClass($config, $container);
@@ -126,6 +128,28 @@ class OpenppPushNotificationExtension extends Extension
         } else {
             $container->getDefinition('openpp.push_notification.push_service_manager')
                 ->replaceArgument(2, null)
+            ;
+        }
+    }
+
+    /**
+     * @param array            $config
+     * @param ContainerBuilder $container
+     */
+    protected function configurePusher($config, ContainerBuilder $container)
+    {
+        if (isset($config['web_push']['public_key_path'])) {
+            $container->setParameter('openpp.push_notification.web_push.public_key_path', $config['web_push']['public_key_path']);
+
+            $container->getDefinition('openpp.push_notification.pusher.own')
+                ->addMethodCall('setKeyPair', array($config['web_push']['public_key_path'], $config['web_push']['private_key_path']))
+            ;
+        } else {
+            $container->setParameter('openpp.push_notification.web_push.public_key_path', null);
+        }
+        if (isset($config['web_push']['ttl'])) {
+            $container->getDefinition('openpp.push_notification.pusher.own')
+                ->addMethodCall('setTTL', array($config['web_push']['ttl']))
             ;
         }
     }

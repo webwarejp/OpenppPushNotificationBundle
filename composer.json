@@ -22,7 +22,9 @@
 		"nelmio/api-doc-bundle" : "^2.4",
 		"openpp/map-bundle" : "~0.4",
 		"sly/notification-pusher" : "^2.2",
-		"openpp/notificationhubs-rest-php" : "~0.5"
+		"openpp/web-push-adapter" : "^0.1",
+		"openpp/notificationhubs-rest-php" : "~0.5",
+		"spomky-labs/base64url" : "^1.0"
 	},
 	"autoload" : {
 		"psr-4" : {

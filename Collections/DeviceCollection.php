@@ -3,6 +3,7 @@
 namespace Openpp\PushNotificationBundle\Collections;
 
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Criteria;
 
 class DeviceCollection extends ArrayCollection
 {
@@ -34,5 +35,15 @@ class DeviceCollection extends ArrayCollection
         return $this->map(function($d) {
             return $d->getId();
         });
+    }
+
+    /**
+     * @return \Doctrine\Common\Collections\Collection
+     */
+    public function sortByField($field)
+    {
+        $criteria = Criteria::create()->orderBy(array($field => Criteria::ASC));
+
+        return $this->matching($criteria);
     }
 }
