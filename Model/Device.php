@@ -371,4 +371,24 @@ class Device implements DeviceInterface
 
         return '';
     }
+
+    /**
+     * Gets the parameter. (compatible with Sly\NotificationPusher\Model\Device
+     * 
+     * @param string $key
+     * @param mixed  $default
+     *
+     * @return mixed
+     */
+    public function getParameter($key, $default = null)
+    {
+        if (in_array($key, array('publicKey', 'authToken'))) {
+            if (empty($this->$key)) {
+                return $default;
+            }
+            return $this->$key;
+        }
+
+        return $default;
+    }
 }
