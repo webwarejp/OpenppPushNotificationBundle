@@ -294,7 +294,7 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
-    public function setAreaCircle(CircleInterface $areaCircle)
+    public function setAreaCircle(CircleInterface $areaCircle = null)
     {
         $this->areaCircle = $areaCircle;
     }
