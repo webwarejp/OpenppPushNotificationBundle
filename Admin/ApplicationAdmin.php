@@ -41,6 +41,7 @@ class ApplicationAdmin extends Admin
     {
         $datagridMapper
             ->add('name')
+            ->add('packageName')
             ->add('description')
         ;
     }
@@ -52,6 +53,7 @@ class ApplicationAdmin extends Admin
     {
         $listMapper
             ->add('name')
+            ->add('packageName')
             ->add('description')
             ->add('_action', 'actions', array(
                 'actions' => array(
@@ -70,6 +72,8 @@ class ApplicationAdmin extends Admin
     {
         $formMapper
             ->add('name')
+            ->add('packageName')
+            ->add('icon', 'sonata_type_model_list', array('required' => false))
             ->add('description')
             ->end();
 
@@ -103,6 +107,7 @@ class ApplicationAdmin extends Admin
         $showMapper
             ->add('id')
             ->add('name')
+            ->add('packageName')
             ->add('description')
             ->add('apnsCertificate')
             ->add('gcmApiKey')

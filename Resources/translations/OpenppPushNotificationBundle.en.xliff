@@ -30,6 +30,10 @@
         <source>filter.label_name</source>
         <target>Name</target>
       </trans-unit>
+      <trans-unit id="filter.label_package_name">
+        <source>filter.label_package_name</source>
+        <target>Package Name / URL</target>
+      </trans-unit>
       <trans-unit id="filter.label_description">
         <source>filter.label_description</source>
         <target>Description</target>
@@ -41,6 +45,14 @@
       <trans-unit id="form.label_name">
         <source>form.label_name</source>
         <target>Name</target>
+      </trans-unit>
+      <trans-unit id="form.label_package_name">
+        <source>form.label_package_name</source>
+        <target>Package Name / URL</target>
+      </trans-unit>
+      <trans-unit id="form.label_icon">
+        <source>form.label_icon</source>
+        <target>Icon</target>
       </trans-unit>
       <trans-unit id="form.label_description">
         <source>form.label_description</source>
@@ -86,6 +98,10 @@
         <source>list.label_name</source>
         <target>Name</target>
       </trans-unit>
+      <trans-unit id="list.label_package_name">
+        <source>list.label_package_name</source>
+        <target>Package Name / URL</target>
+      </trans-unit>
       <trans-unit id="list.label_description">
         <source>list.label_description</source>
         <target>Description</target>
@@ -105,6 +121,10 @@
       <trans-unit id="show.label_name">
         <source>show.label_name</source>
         <target>Name</target>
+      </trans-unit>
+      <trans-unit id="show.label_package_name">
+        <source>show.label_package_name</source>
+        <target>Package Name / URL</target>
       </trans-unit>
       <trans-unit id="show.label_description">
         <source>show.label_description</source>
@@ -386,6 +406,10 @@
         <source>form.label_message</source>
         <target>Message</target>
       </trans-unit>
+      <trans-unit id="form.label_url">
+        <source>form.label_url</source>
+        <target>Access URL</target>
+      </trans-unit>
       <trans-unit id="form.label_tag_expression">
         <source>form.label_tag_expression</source>
         <target>Tag Expression</target>
@@ -481,6 +505,34 @@
       <trans-unit id="breadcrumb.link_condition_delete">
         <source>breadcrumb.link_condition_delete</source>
         <target>Delete</target>
+      </trans-unit>
+      <trans-unit id="condition.time.periodic">
+        <source>condition.time.periodic</source>
+        <target>Periodic</target>
+      </trans-unit>
+      <trans-unit id="condition.time.specific">
+        <source>condition.time.specific</source>
+        <target>Specific Dates</target>
+      </trans-unit>
+      <trans-unit id="condition.time.continuing">
+        <source>condition.time.continuing</source>
+        <target>Continuing</target>
+      </trans-unit>
+      <trans-unit id="condition.interval.hourly">
+        <source>condition.interval.hourly</source>
+        <target>hourly</target>
+      </trans-unit>
+      <trans-unit id="condition.interval.daily">
+        <source>condition.interval.daily</source>
+        <target>daily</target>
+      </trans-unit>
+      <trans-unit id="condition.interval.weekly">
+        <source>condition.interval.weekly</source>
+        <target>weekly</target>
+      </trans-unit>
+      <trans-unit id="condition.interval.monthly">
+        <source>condition.interval.monthly</source>
+        <target>monthly</target>
       </trans-unit>
     </body>
   </file>

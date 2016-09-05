@@ -11,13 +11,13 @@ namespace Openpp\PushNotificationBundle\Model;
 interface ApplicationManagerInterface
 {
     /**
-     * Finds a application by its name.
+     * Finds a application by its package name.
      *
-     * @param string $name
+     * @param string $packagename
      *
      * @return ApplicationInterface or null
      */
-    public function findApplicationByName($name);
+    public function findApplicationByPackageName($packagename);
 
     /**
      * Finds one application by the given criteria.

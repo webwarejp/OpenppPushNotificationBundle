@@ -21,6 +21,16 @@ class Application implements ApplicationInterface
     /**
      * @var string
      */
+    protected $packageName;
+
+    /**
+     * @var \Sonata\MediaBundle\Model\MediaInterface
+     */
+    protected $icon;
+
+    /**
+     * @var string
+     */
     protected $description;
 
     /**
@@ -95,6 +105,38 @@ class Application implements ApplicationInterface
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getPackageName()
+    {
+        return $this->packageName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setPackageName($packageName)
+    {
+        $this->packageName = $packageName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIcon(\Sonata\MediaBundle\Model\MediaInterface $icon = null)
+    {
+        $this->icon = $icon;
     }
 
     /**

@@ -68,6 +68,7 @@ class ConditionAdmin extends Admin
                 ->add('name')
                 ->add('application', 'sonata_type_model_list')
                 ->add('message')
+                ->add('url', 'url', array('required' => false))
                 ->add('enable')
                 ->add('tagExpression')
             ->end()

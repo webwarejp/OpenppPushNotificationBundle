@@ -77,6 +77,20 @@ interface ConditionInterface
     public function setMessage($message);
 
     /**
+     * Returns the url of transition on click of the notification.
+     *
+     * @return string
+     */
+    public function getUrl();
+
+    /**
+     * Sets the url of transition on click of the notification.
+     *
+     * @param string $url
+     */
+    public function setUrl($url);
+
+    /**
      * Returns the tag expression.
      *
      * @return string

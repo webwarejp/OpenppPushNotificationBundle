@@ -178,6 +178,22 @@ class OpenppPushNotificationExtension extends Extension
             'orphanRemoval' => false,
         ));
 
+        // Many-To-One Unidirectional for Application and Media
+        $collector->addAssociation($config['class']['application'], 'mapManyToOne', array(
+            'fieldName'     => 'icon',
+            'targetEntity'  => $config['class']['media'],
+            'cascade' => array(
+                'persist',
+            ),
+            'joinColumns'   =>  array(
+                array(
+                    'name'  => 'icon_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
         $collector->addAssociation($config['class']['user'], 'mapManyToOne', array(
             'fieldName'     => 'application',
             'targetEntity'  => $config['class']['application'],

@@ -47,6 +47,7 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('condition')->defaultValue('Application\\Openpp\\PushNotificationBundle\\Entity\\Condition')->end()
                         ->scalarNode('areaCircle')->defaultValue('Application\\Openpp\\MapBundle\\Entity\\Circle')->end()
                         ->scalarNode('location')->defaultValue('Application\\Openpp\\MapBundle\\Entity\\Point')->end()
+                        ->scalarNode('media')->defaultValue('Application\\Sonata\\MediaBundle\\Entity\\Media')->end()
                     ->end()
                 ->end()
                 ->arrayNode('web_push')

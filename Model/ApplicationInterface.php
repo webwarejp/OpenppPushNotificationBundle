@@ -11,18 +11,46 @@ namespace Openpp\PushNotificationBundle\Model;
 interface ApplicationInterface
 {
     /**
-     * Returns the application's name.
+     * Returns the application's name to use as the notification title.
      *
      * @return string
      */
     public function getName();
 
     /**
-     * Sets the application's name.
+     * Sets the application's name to use as the notification title.
      *
      * @param string $name
      */
     public function setName($name);
+
+    /**
+     * Returns the application's package name or site URL.
+     *
+     * @return string
+     */
+    public function getPackageName();
+
+    /**
+     * Sets the application's package name or site URL.
+     *
+     * @param string $packageName
+     */
+    public function setPackageName($packageName);
+
+    /**
+     * Returns the icon for the notification of Web Push.
+     *
+     * @return \Sonata\MediaBundle\Model\MediaInterface
+     */
+    public function getIcon();
+
+    /**
+     * Sets the icon for the notification of Web Push.
+     *
+     * @param \Sonata\MediaBundle\Model\MediaInterface $icon
+     */
+    public function setIcon(\Sonata\MediaBundle\Model\MediaInterface $icon = null);
 
     /**
      * Returns the application's descriptrion.

@@ -22,6 +22,10 @@
         <source>filter.label_name</source>
         <target>名前</target>
       </trans-unit>
+      <trans-unit id="filter.label_package_name">
+        <source>filter.label_package_name</source>
+        <target>パッケージ名 / URL</target>
+      </trans-unit>
       <trans-unit id="filter.label_description">
         <source>filter.label_description</source>
         <target>説明</target>
@@ -31,8 +35,16 @@
         <target>ハブ名</target>
       </trans-unit>
       <trans-unit id="form.label_name">
-        <source>form.label_name</source>
+        <source>form.form.label_name</source>
         <target>名前</target>
+      </trans-unit>
+      <trans-unit id="form.label_package_name">
+        <source>form.form.label_package_name</source>
+        <target>パッケージ名 / URL</target>
+      </trans-unit>
+      <trans-unit id="form.label_icon">
+        <source>form.label_icon</source>
+        <target>アイコン</target>
       </trans-unit>
       <trans-unit id="form.label_description">
         <source>form.label_description</source>
@@ -78,6 +90,10 @@
         <source>list.label_name</source>
         <target>名前</target>
       </trans-unit>
+      <trans-unit id="list.label_package_name">
+        <source>list.label_package_name</source>
+        <target>パッケージ名 / URL</target>
+      </trans-unit>
       <trans-unit id="list.label_description">
         <source>list.label_description</source>
         <target>説明</target>
@@ -95,8 +111,12 @@
         <target>ID</target>
       </trans-unit>
       <trans-unit id="show.label_name">
-        <source>show.label_name</source>
+        <source>show.label_title</source>
         <target>名前</target>
+      </trans-unit>
+      <trans-unit id="show.label_package_name">
+        <source>show.label_package_name</source>
+        <target>パッケージ名</target>
       </trans-unit>
       <trans-unit id="show.label_description">
         <source>show.label_description</source>
@@ -370,6 +390,10 @@
         <source>form.label_message</source>
         <target>メッセージ</target>
       </trans-unit>
+      <trans-unit id="form.label_url">
+        <source>form.label_url</source>
+        <target>遷移先URL</target>
+      </trans-unit>
       <trans-unit id="form.label_tag_expression">
         <source>form.label_tag_expression</source>
         <target>タグ式</target>
@@ -462,32 +486,32 @@
         <source>breadcrumb.link_condition_delete</source>
         <target>削除</target>
       </trans-unit>
-      <trans-unit id="Periodic">
-        <source>Periodic</source>
+      <trans-unit id="condition.time.periodic">
+        <source>condition.time.periodic</source>
         <target>周期</target>
       </trans-unit>
-      <trans-unit id="Specific Dates">
-        <source>Specific Dates</source>
+      <trans-unit id="condition.time.specific">
+        <source>condition.time.specific</source>
         <target>指定日時</target>
       </trans-unit>
-      <trans-unit id="Continuing">
-        <source>Continuing</source>
+      <trans-unit id="condition.time.continuing">
+        <source>condition.time.continuing</source>
         <target>継続</target>
       </trans-unit>
-      <trans-unit id="hourly">
-        <source>hourly</source>
+      <trans-unit id="condition.interval.hourly">
+        <source>condition.interval.hourly</source>
         <target>毎時</target>
       </trans-unit>
-      <trans-unit id="daily">
-        <source>daily</source>
+      <trans-unit id="condition.interval.daily">
+        <source>condition.interval.daily</source>
         <target>毎日</target>
       </trans-unit>
-      <trans-unit id="weekly">
-        <source>weekly</source>
+      <trans-unit id="condition.interval.weekly">
+        <source>condition.interval.weekly</source>
         <target>毎週</target>
       </trans-unit>
-      <trans-unit id="monthly">
-        <source>monthly</source>
+      <trans-unit id="condition.interval.monthly">
+        <source>condition.interval.monthly</source>
         <target>毎月</target>
       </trans-unit>
     </body>

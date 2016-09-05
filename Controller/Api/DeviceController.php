@@ -214,7 +214,7 @@ class DeviceController extends FOSRestController
      */
     protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
+        $application = $this->applicationManager->findApplicationByPackageName($applicationName);
 
         if (is_null($application)) {
             throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');

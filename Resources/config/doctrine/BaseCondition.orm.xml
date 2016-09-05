@@ -5,6 +5,7 @@
         <field name="name"             type="string"   column="name"              length="255" unique="true" />
         <field name="enable"           type="boolean"  column="enable"                         nullable="true" />
         <field name="message"          type="text"     column="message"                        nullable="false" />
+        <field name="url"              type="string"   column="url"                            nullable="true" />
         <field name="tagExpression"    type="text"     column="tag_expression"                 nullable="true" />
         <field name="timeType"         type="smallint" column="time_type"                      nullable="true" />
         <field name="specificDates"    type="array"    column="specific_dates"                 nullable="true" />

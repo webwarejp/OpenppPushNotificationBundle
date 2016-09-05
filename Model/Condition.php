@@ -12,16 +12,16 @@ use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 class Condition implements ConditionInterface
 {
     protected static $intervalTypeChoices = array(
-        'hourly'  => self::INTERVAL_TYPE_HOURLY,
-        'daily'   => self::INTERVAL_TYPE_DAILY,
-        'weekly'  => self::INTERVAL_TYPE_WEEKLY,
-        'monthly' => self::INTERVAL_TYPE_MONTHLY,
+        'condition.interval.hourly'  => self::INTERVAL_TYPE_HOURLY,
+        'condition.interval.daily'   => self::INTERVAL_TYPE_DAILY,
+        'condition.interval.weekly'  => self::INTERVAL_TYPE_WEEKLY,
+        'condition.interval.monthly' => self::INTERVAL_TYPE_MONTHLY,
     );
 
     protected static $timeTypeChoices = array(
-        'Specific Dates' => self::TIME_TYPE_SPECIFIC,
-        'Periodic'       => self::TIME_TYPE_PERIODIC,
-        'Continuing'     => self::TIME_TYPE_CONTINUING,
+        'condition.time.specific'   => self::TIME_TYPE_SPECIFIC,
+        'condition.time.periodic'   => self::TIME_TYPE_PERIODIC,
+        'condition.time.continuing' => self::TIME_TYPE_CONTINUING,
     );
 
     /**
@@ -42,7 +42,17 @@ class Condition implements ConditionInterface
     /**
      * @var string
      */
+    protected $title;
+
+    /**
+     * @var string
+     */
     protected $message;
+
+    /**
+     * @var string
+     */
+    protected $url;
 
     /**
      * @var string
@@ -164,6 +174,22 @@ class Condition implements ConditionInterface
     public function setMessage($message)
     {
         $this->message = $message;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUrl()
+    {
+        return $this->url;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUrl($url)
+    {
+        $this->url = $url;
     }
 
     /**

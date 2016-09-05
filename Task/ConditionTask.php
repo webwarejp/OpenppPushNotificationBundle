@@ -45,6 +45,11 @@ class ConditionTask
         );
 
         foreach ($conditions as $condition) {
+            $options = array();
+            if (!empty($condition->getUrl())) {
+                $options['url'] = $condition->getUrl();
+            }
+
             if ($condition->getAreaCircle()) {
                 $devices = $this->deviceManager->findDevicesInAreaCircleWithTag(
                     $condition->getApplication(),
@@ -54,16 +59,18 @@ class ConditionTask
                 if ($devices) {
                     $devices = new DeviceCollection($devices);
                     $this->pushServiceManager->pushToDevices(
-                         $condition->getApplication()->getName(),
+                         $condition->getApplication()->getPackageName(),
                          $devices->toIdArray()->toArray(),
-                         $condition->getMessage()
+                         $condition->getMessage(),
+                         $options
                     );
                 }
             } else {
                 $this->pushServiceManager->push(
-                    $condition->getApplication()->getName(),
+                    $condition->getApplication()->getPackageName(),
                     $condition->getTagExpression(),
-                    $condition->getMessage()
+                    $condition->getMessage(),
+                    $options
                 );
             }
         }
