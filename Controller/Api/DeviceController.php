@@ -167,8 +167,8 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/register", requirements={"_format"="json"})
-     * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
+     * @Post("/device/ios/unregister", requirements={"_format"="json"})
+     * @RequestParam(name="application_name", description="The name of the application unregistering.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      */
     public function unregisterDeviceIosAction(ParamFetcherInterface $paramFetcher)
@@ -185,8 +185,8 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/device/web/register", requirements={"_format"="json"})
-     * @RequestParam(name="origin", description="The name of the application registering.", strict=true)
+     * @Post("/device/web/unregister", requirements={"_format"="json"})
+     * @RequestParam(name="origin", description="The name of the application unregistering.", strict=true)
      * @RequestParam(name="endpoint", description="The URL that allows an application server to request delivery of a push message to a webapp.", strict=true)
      */
     public function unregisterDeviceWebAction(ParamFetcherInterface $paramFetcher)
