@@ -3,7 +3,8 @@
     <mapped-superclass name="Openpp\PushNotificationBundle\Entity\BaseApplication">
 
         <field name="name"             type="string" column="name"              length="255" nullable="false" />
-        <field name="packageName"      type="string" column="package_name"      length="255" unique="true"/>
+        <field name="packageName"      type="string" column="package_name"      length="255" unique="true" />
+        <field name="slug"             type="string" column="slug"              length="255" unique="true" />
         <field name="description"      type="string" column="description"       length="255" nullable="true" />
 
         <field name="apnsCertificate"  type="string" column="apns_certificate"  length="255" nullable="true" />

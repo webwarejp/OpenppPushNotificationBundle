@@ -1,0 +1,40 @@
+var url ='';
+
+function showNotification(data) {
+  url = data.url;
+  return self.registration.showNotification(data.title, {
+    icon: data.icon,
+    body: data.message,
+    vibrate: [400,100,400]
+  });
+}
+
+function receivePush(event) {
+  var data = '';
+
+  if (event.data) {
+    data = event.data.json();
+  }
+  if ('showNotification' in self.registration) {
+    event.waitUntil(showNotification(data));
+  }
+}
+
+function clickNotification(event) {
+  event.notification.close();
+
+  event.waitUntil(clients.matchAll({
+    type: "window"
+  }).then(function(clientList) {
+    for (var i = 0; i < clientList.length; i++) {
+      var client = clientList[i];
+      if (client.url == url && 'focus' in client)
+        return client.focus();
+    }
+    if (clients.openWindow)
+      return clients.openWindow(url);
+  }));
+}
+
+self.addEventListener('push', receivePush, false);
+self.addEventListener('notificationclick', clickNotification, false);

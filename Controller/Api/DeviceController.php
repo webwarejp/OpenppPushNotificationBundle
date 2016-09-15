@@ -66,7 +66,7 @@ class DeviceController extends FOSRestController
      * )
      *
      * @Post("/device/android/register", defaults={"_format"="json"})
-     * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
+     * @RequestParam(name="application_id", description="The application ID to register.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the Android device.", strict=true)
      * @RequestParam(name="registration_id", description="The registration id returned from GCM", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
@@ -76,7 +76,7 @@ class DeviceController extends FOSRestController
     public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->registerDevice(
-            $paramFetcher->get('application_name'),
+            $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier'),
             $paramFetcher->get('registration_id'),
             $paramFetcher->get('uid'),
@@ -93,7 +93,7 @@ class DeviceController extends FOSRestController
      * )
      *
      * @Post("/device/ios/register", defaults={"_format"="json"})
-     * @RequestParam(name="application_name", description="The name of the application registering.", strict=true)
+     * @RequestParam(name="application_id", description="The application ID to register.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      * @RequestParam(name="device_token", description="The device token returned from Apple.", strict=true)
      * @RequestParam(name="uid", description="The user identifier", strict=true)
@@ -103,7 +103,7 @@ class DeviceController extends FOSRestController
     public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->registerDevice(
-            $paramFetcher->get('application_name'),
+            $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier'),
             $paramFetcher->get('device_token'),
             $paramFetcher->get('uid'),
@@ -120,7 +120,7 @@ class DeviceController extends FOSRestController
      * )
      *
      * @Post("/device/web/register", defaults={"_format"="json"})
-     * @RequestParam(name="origin", description="The name of the application registering.", strict=true)
+     * @RequestParam(name="application_id", description="The application ID to register.", strict=true)
      * @RequestParam(name="endpoint", description="The URL that allows an application server to request delivery of a push message to a webapp.", strict=true)
      * @RequestParam(name="key", description="The keying material used to encrypt push messages.", strict=true)
      * @RequestParam(name="auth", description="keying material used to authenticate push messages.", strict=true)
@@ -131,7 +131,7 @@ class DeviceController extends FOSRestController
     public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->registerDevice(
-                $paramFetcher->get('origin'),
+                $paramFetcher->get('application_id'),
                 $paramFetcher->get('endpoint'),
                 $paramFetcher->get('endpoint'),
                 $paramFetcher->get('uid'),
@@ -149,14 +149,14 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (GCM)"
      * )
      *
-     * @Post("/device/android/unregister", requirements={"_format"="json"})
-     * @RequestParam(name="application_name", description="The name of the application unregistering.", strict=true)
+     * @Post("/device/android/unregister", defaults={"_format"="json"})
+     * @RequestParam(name="application_id", description="The application ID to unregister.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the Android device.", strict=true)
      */
     public function unregisterDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->unregisterDevice(
-            $paramFetcher->get('application_name'),
+            $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier')
         );
     }
@@ -167,14 +167,14 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/unregister", requirements={"_format"="json"})
-     * @RequestParam(name="application_name", description="The name of the application unregistering.", strict=true)
+     * @Post("/device/ios/unregister", defaults={"_format"="json"})
+     * @RequestParam(name="application_id", description="The application ID to unregister.", strict=true)
      * @RequestParam(name="device_identifier", description="The vendor device identifier of the iOS device.", strict=true)
      */
     public function unregisterDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->unregisterDevice(
-            $paramFetcher->get('application_name'),
+            $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier')
         );
     }
@@ -185,14 +185,14 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/device/web/unregister", requirements={"_format"="json"})
-     * @RequestParam(name="origin", description="The name of the application unregistering.", strict=true)
+     * @Post("/device/web/unregister", defaults={"_format"="json"})
+     * @RequestParam(name="application_id", description="The application ID to unregister.", strict=true)
      * @RequestParam(name="endpoint", description="The URL that allows an application server to request delivery of a push message to a webapp.", strict=true)
      */
     public function unregisterDeviceWebAction(ParamFetcherInterface $paramFetcher)
     {
         return $this->unregisterDevice(
-            $paramFetcher->get('origin'),
+            $paramFetcher->get('application_id'),
             $paramFetcher->get('endpoint')
         );
     }
@@ -200,7 +200,7 @@ class DeviceController extends FOSRestController
     /**
      * Registers a device to the application.
      *
-     * @param string  $applicationName
+     * @param string  $applicationId
      * @param string  $deviceIdentifier
      * @param string  $token
      * @param string  $uid
@@ -212,12 +212,12 @@ class DeviceController extends FOSRestController
      *
      * @return array
      */
-    protected function registerDevice($applicationName, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
+    protected function registerDevice($applicationId, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
     {
-        $application = $this->applicationManager->findApplicationByPackageName($applicationName);
+        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
 
         if (is_null($application)) {
-            throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');
+            throw new ApplicationNotFoundException('Application ' . $applicationId . ' is not found.');
         }
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
@@ -288,25 +288,29 @@ class DeviceController extends FOSRestController
 
         $this->deviceManager->save($device);
 
-        return array('registered' => true);
+        return array(
+            'deviceIdentifier' => $deviceIdentifier,
+            'uid' => $uid,
+            'registrationDate' => $device->getUpdatedAt(),
+        );
     }
 
     /**
      * Unregisters a device from the application.
      *
-     * @param string $applicationName
+     * @param string $applicationId
      * @param string $deviceIdentifier
      *
      * @throws ApplicationNotFoundException
      *
      * @return array
      */
-    protected function unregisterDevice($applicationName, $deviceIdentifier)
+    protected function unregisterDevice($applicationId, $deviceIdentifier)
     {
-        $application = $this->applicationManager->findApplicationByName($applicationName);
+        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
 
         if (is_null($application)) {
-            throw new ApplicationNotFoundException('Application ' . $applicationName . ' is not found.');
+            throw new ApplicationNotFoundException('Application ' . $applicationId . ' is not found.');
         }
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
@@ -315,8 +319,14 @@ class DeviceController extends FOSRestController
             $device->setUnregisteredAt(new \DateTime());
             $device->getUser()->setBadge(0);
             $this->deviceManager->save($device);
+
+            return array(
+                'deviceIdentifier' => $deviceIdentifier,
+                'uid' => $device->getUser()->getUid(),
+                'unregistrationDate' => $device->getUnregisteredAt(),
+            );
         }
 
-        return array('unregistered' => true);
+        return array('message' => 'No device.');
     }
 }

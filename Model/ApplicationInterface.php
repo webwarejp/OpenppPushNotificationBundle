@@ -39,6 +39,20 @@ interface ApplicationInterface
     public function setPackageName($packageName);
 
     /**
+     * Returns the slug.
+     *
+     * @return string
+     */
+    public function getSlug();
+
+    /**
+     * Sets the slug.
+     *
+     * @param string $slug
+     */
+    public function setSlug($slug);
+
+    /**
      * Returns the icon for the notification of Web Push.
      *
      * @return \Sonata\MediaBundle\Model\MediaInterface

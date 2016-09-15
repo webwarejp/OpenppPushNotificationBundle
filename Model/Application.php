@@ -24,6 +24,11 @@ class Application implements ApplicationInterface
     protected $packageName;
 
     /**
+     * @var string
+     */
+    protected $slug;
+
+    /**
      * @var \Sonata\MediaBundle\Model\MediaInterface
      */
     protected $icon;
@@ -121,6 +126,22 @@ class Application implements ApplicationInterface
     public function setPackageName($packageName)
     {
         $this->packageName = $packageName;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getSlug()
+    {
+        return $this->slug;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setSlug($slug)
+    {
+        $this->slug = $slug;
     }
 
     /**

@@ -8,6 +8,10 @@ abstract class BaseApplication extends ModelApplication
 {
     public function prePersist()
     {
+        if (empty($this->slug)) {
+            $this->slug = sha1(uniqid());
+        }
+
         $this->setCreatedAt(new \DateTime);
         $this->setUpdatedAt(new \DateTime);
     }
