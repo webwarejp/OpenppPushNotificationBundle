@@ -163,6 +163,22 @@ class Condition implements ConditionInterface
     /**
      * {@inheritdoc}
      */
+    public function getTitle()
+    {
+        return $this->title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
     public function getMessage()
     {
         return $this->message;
@@ -428,6 +444,22 @@ class Condition implements ConditionInterface
         }
 
         return $interval;
+    }
+
+    /**
+     * Returns whether the specific setting is valid.
+     *
+     * @return boolean
+     */
+    public function isSpecificSettingValid()
+    {
+        if ($this->getTimeType() === self::TIME_TYPE_SPECIFIC) {
+            if (empty($this->specificDates)) {
+                return false;
+            }
+        }
+
+        return true;
     }
 
     /**

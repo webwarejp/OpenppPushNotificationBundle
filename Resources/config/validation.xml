@@ -6,26 +6,33 @@
 
     <class name="Openpp\PushNotificationBundle\Model\Condition">
         <property name="application">
-            <constraint name="NotNull" />
+            <constraint name="NotNull">
+                <option name="message">openpp_push_notification.condition.no_application</option>
+            </constraint>
         </property>
+        <getter property="specificSettingValid">
+            <constraint name="IsTrue">
+                <option name="message">openpp_push_notification.condition.no_specific</option>
+            </constraint>
+        </getter>
         <getter property="periodicSettingValid">
             <constraint name="IsTrue">
-                <option name="message">The periodic setting is mandatory start date and period type.</option>
+                <option name="message">openpp_push_notification.condition.invalid_periodic</option>
             </constraint>
         </getter>
         <getter property="continuingSettingValid">
             <constraint name="IsTrue">
-                <option name="message">The continuing setting is mandatory start date.</option>
+                <option name="message">openpp_push_notification.condition.invalid_continuing</option>
             </constraint>
         </getter>
         <getter property="endDateValid">
             <constraint name="IsTrue">
-                <option name="message">The end date is invalid.</option>
+                <option name="message">openpp_push_notification.condition.invalid_enddate</option>
             </constraint>
         </getter>
         <getter property="TagExpressionValid">
             <constraint name="IsTrue">
-                <option name="message">Tag Expression is invalid.</option>
+                <option name="message">openpp_push_notification.condition.invalid_tagexpression</option>
             </constraint>
         </getter>
     </class>

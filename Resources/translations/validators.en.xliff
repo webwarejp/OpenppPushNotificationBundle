@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file source-language="en" target-language="en" datatype="plaintext"  original="file.ext">
+    <body>
+      <trans-unit id="openpp_push_notification.condition.no_application">
+        <source>openpp_push_notification.condition.no_application</source>
+        <target>Please specify a applicaiton</target>
+      </trans-unit>
+      <trans-unit id="openpp_push_notification.condition.no_specific">
+        <source>openpp_push_notification.condition.no_specific</source>
+        <target>Please specify at least one date to send the notification</target>
+      </trans-unit>
+      <trans-unit id="openpp_push_notification.condition.invalid_periodic">
+        <source>openpp_push_notification.condition.invalid_periodic</source>
+        <target>The periodic setting is mandatory start date and period type</target>
+      </trans-unit>
+      <trans-unit id="openpp_push_notification.condition.invalid_continuing">
+        <source>openpp_push_notification.condition.invalid_continuing</source>
+        <target>Please specify start date</target>
+      </trans-unit>
+      <trans-unit id="openpp_push_notification.condition.invalid_enddate">
+        <source>openpp_push_notification.condition.invalid_enddate</source>
+        <target>The end date is invalid</target>
+      </trans-unit>
+      <trans-unit id="openpp_push_notification.condition.invalid_tagexpression">
+        <source>openpp_push_notification.condition.invalid_tagexpression</source>
+        <target>Tag Expression is invalid</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

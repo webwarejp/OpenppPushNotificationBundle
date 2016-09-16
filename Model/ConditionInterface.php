@@ -63,6 +63,20 @@ interface ConditionInterface
     public function setApplication(ApplicationInterface $application);
 
     /**
+     * Returns the notification title.
+     *
+     * @return string
+     */
+    public function getTitle();
+
+    /**
+     * Sets the notification title.
+     *
+     * @param string $title
+     */
+    public function setTitle($title);
+
+    /**
      * Returns the notification message.
      *
      * @return string
