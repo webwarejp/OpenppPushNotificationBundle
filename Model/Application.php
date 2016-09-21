@@ -4,6 +4,7 @@ namespace Openpp\PushNotificationBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
+use Doctrine\Common\Collections\Criteria;
 
 /**
  * Represents a Application model
@@ -74,6 +75,11 @@ class Application implements ApplicationInterface
     protected $users;
 
     /**
+     * @var ArrayCollection
+     */
+    protected $devices;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -93,7 +99,8 @@ class Application implements ApplicationInterface
      */
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->users   = new ArrayCollection();
+        $this->devices = new ArrayCollection();
     }
 
     /**
@@ -296,6 +303,43 @@ class Application implements ApplicationInterface
     public function removeUser(UserInterface $user)
     {
         $this->users->removeElement($user);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDevices()
+    {
+        return $this->devices;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function addDevice(DeviceInterface $device)
+    {
+        if (!$this->devices->contains($device)) {
+            $this->devices->add($device);
+        }
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function removeDevice(DeviceInterface $device)
+    {
+         $this->devices->removeElement($device);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function countActiveDevices()
+    {
+        $criteria = Criteria::create()
+            ->where(Criteria::expr()->isNull('unregisteredAt'));
+
+        return $this->devices->matching($criteria)->count();
     }
 
     /**

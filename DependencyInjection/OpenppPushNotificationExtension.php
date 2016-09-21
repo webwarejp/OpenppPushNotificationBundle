@@ -238,7 +238,18 @@ class OpenppPushNotificationExtension extends Extension
             'orphanRemoval' => false,
         ));
 
-        // Many-To-One Unidirectional for Application and Device
+        // Many-To-One Bidirectional for Application and Device
+        $collector->addAssociation($config['class']['application'], 'mapOneToMany', array(
+            'fieldName'     => 'devices',
+            'targetEntity'  => $config['class']['device'],
+            'cascade'       => array(
+                'remove',
+                'persist',
+            ),
+            'mappedBy'      => 'application',
+            'orphanRemoval' => false,
+        ));
+
         $collector->addAssociation($config['class']['device'], 'mapManyToOne', array(
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],

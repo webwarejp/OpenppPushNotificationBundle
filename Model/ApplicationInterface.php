@@ -174,16 +174,44 @@ interface ApplicationInterface
     /**
      * Adds a user.
      *
-     * @param DeviceInterface $user
+     * @param UserInterface $user
      */
     public function addUser(UserInterface $user);
 
     /**
      * Removes a user.
      *
-     * @param DeviceInterface $user
+     * @param UserInterface $user
      */
     public function removeUser(UserInterface $user);
+
+    /**
+     * Returns the devices.
+     *
+     * @return \Doctrine\Common\Collections\ArrayCollection
+     */
+    public function getDevices();
+
+    /**
+     * Adds a device.
+     *
+     * @param DeviceInterface $device
+     */
+    public function addDevice(DeviceInterface $device);
+
+    /**
+     * Removes a device.
+     *
+     * @param DeviceInterface $device
+     */
+    public function removeDevice(DeviceInterface $device);
+
+    /**
+     * Returns the count of active devices.
+     *
+     * @return integer
+     */
+    public function countActiveDevices();
 
     /**
      * Returns the APNS certificate file.
