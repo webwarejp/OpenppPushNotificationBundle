@@ -295,7 +295,7 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],
             'cascade' => array(
-                'remove',
+                'persist',
             ),
             'joinColumns'   =>  array(
                 array(
