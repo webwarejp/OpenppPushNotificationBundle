@@ -256,6 +256,7 @@ class OpenppPushNotificationExtension extends Extension
             'cascade' => array(
                 'persist',
             ),
+            'inversedBy'    => 'devices',
             'joinColumns'   =>  array(
                 array(
                     'name'  => 'application_id',
