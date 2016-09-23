@@ -32,6 +32,7 @@ abstract class BaseCondition extends ModelCondition
             $this->setEndDate(null);
             $this->setIntervalType(null);
             $this->setIntervalTime(null);
+            sort($this->specificDates);
         } else if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
             $this->setSpecificDates(array());
         }
