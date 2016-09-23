@@ -22,6 +22,11 @@ class PushResultEvent extends Event
     protected $message;
 
     /**
+     * @var array
+     */
+    protected $options;
+
+    /**
      * @var \DateTime
      */
     protected $timestamp;
@@ -36,13 +41,15 @@ class PushResultEvent extends Event
      *
      * @param ApplicationInterface $application
      * @param string               $message
+     * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
      */
-    public function __construct(ApplicationInterface $application, $message, \DateTime $timestamp, $devices)
+    public function __construct(ApplicationInterface $application, $message, array $options, \DateTime $timestamp, $devices)
     {
         $this->application = $application;
         $this->message     = $message;
+        $this->options     = $options;
         $this->timestamp   = $timestamp;
         $this->devices     = $devices;
     }
@@ -61,6 +68,14 @@ class PushResultEvent extends Event
     public function getMessage()
     {
         return $this->message;
+    }
+
+    /**
+     * @return array
+     */
+    public function getOptions()
+    {
+        return $this->options;
     }
 
     /**

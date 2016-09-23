@@ -97,6 +97,7 @@ class OwnPusher extends AbstractPusher
 
         $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
         $timestamp   = new \DateTime();
+        $optionsResult = $options;
 
         foreach (array_values(Device::getTypeChoices()) as $type) {
             $targetDevices = $devices->getByType($type);
@@ -110,13 +111,14 @@ class OwnPusher extends AbstractPusher
             }
             $deviceCollection = new DeviceCollection($targetDevices->toArray());
 
-            $messageObj  = $this->createMessage($application, $type, $message, $options);
+            $messageObj = $this->createMessage($application, $type, $message, $options);
+            $optionsResult = array_merge($optionsResult, $messageObj->getOptions());
             $push = new Push($this->getAdapter($application, $type), $deviceCollection, $messageObj);
             $pushManager->add($push);
             $pushManager->push();
         }
 
-        $this->dispatchPushResult($application, $message, $timestamp, $devices);
+        $this->dispatchPushResult($application, $message, $optionsResult, $timestamp, $devices);
     }
 
     /**

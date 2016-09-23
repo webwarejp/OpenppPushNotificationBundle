@@ -132,12 +132,13 @@ abstract class AbstractPusher implements PusherInterface
      *
      * @param ApplicationInterface $application
      * @param string               $message
+     * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
      */
-    protected function dispatchPushResult(ApplicationInterface $application, $message, $timestamp, $devices)
+    protected function dispatchPushResult(ApplicationInterface $application, $message, array $options, $timestamp, $devices)
     {
-        $event = new PushResultEvent($application, $message, $timestamp, $devices);
+        $event = new PushResultEvent($application, $message, $options, $timestamp, $devices);
         $this->dispatcher->dispatch(PushResultEvent::EVENT_NAME, $event);
     }
 }
