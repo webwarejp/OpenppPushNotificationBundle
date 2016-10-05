@@ -35,7 +35,7 @@
         <target>ハブ名</target>
       </trans-unit>
       <trans-unit id="form.label_name">
-        <source>form.form.label_name</source>
+        <source>form.label_name</source>
         <target>名前</target>
       </trans-unit>
       <trans-unit id="form.label_package_name">
@@ -111,7 +111,7 @@
         <target>ID</target>
       </trans-unit>
       <trans-unit id="show.label_name">
-        <source>show.label_title</source>
+        <source>show.label_name</source>
         <target>名前</target>
       </trans-unit>
       <trans-unit id="show.label_package_name">

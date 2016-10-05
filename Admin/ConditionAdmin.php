@@ -111,6 +111,7 @@ class ConditionAdmin extends Admin
                     'choices' => Condition::getIntervalTypeChoices(),
                     'choices_as_values' => true,
                     'choice_translation_domain' => 'OpenppPushNotificationBundle',
+                    'translation_domain' => 'OpenppPushNotificationBundle',
                     'placeholder' => false,
                     'label' => false,
                 ))
