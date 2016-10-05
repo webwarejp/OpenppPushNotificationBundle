@@ -91,17 +91,19 @@ class ConditionAdmin extends Admin
                     'by_reference' => false,
                     'required' => false,
                     'options' => array(
-                        'dp_use_seconds' => false,
+                        'format' => 'yyyy/MM/dd H:mm',
+                        'dp_min_date' => 'new Date()',
                     ),
                 ))
                 ->add('startDate', 'sonata_type_datetime_picker', array(
                     'required' => false,
-                    'dp_use_seconds' => false,
-                    'dp_language' => 'ja',
+                    'format' => 'yyyy/MM/dd H:mm',
+                    'dp_min_date' => 'new Date()',
                 ))
                 ->add('endDate', 'sonata_type_datetime_picker', array(
                     'required' => false,
-                    'dp_use_seconds' => false,
+                    'format' => 'yyyy/MM/dd H:mm',
+                    'dp_min_date' => 'new Date()',
                 ))
                 ->add('IntervalType', 'choice', array(
                     'expanded' => true,

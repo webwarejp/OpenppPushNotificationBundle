@@ -317,12 +317,7 @@ class Condition implements ConditionInterface
      */
     public function setSpecificDates(array $specificDates)
     {
-        $dates = array();
-        foreach ($specificDates as $date) {
-            $dates[] = new \DateTime($date->format('Y-m-d H:i'));
-        }
-
-        $this->specificDates = $dates;
+        $this->specificDates = $specificDates;
     }
 
     /**
