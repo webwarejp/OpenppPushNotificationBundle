@@ -90,6 +90,11 @@ class Condition implements ConditionInterface
     protected $intervalTime;
 
     /**
+     * @var \Sonata\MediaBundle\Model\MediaInterface
+     */
+    protected $icon;
+
+    /**
      * @var \Openpp\MapBundle\Model\CircleInterface
      */
     protected $areaCircle;
@@ -318,6 +323,22 @@ class Condition implements ConditionInterface
     public function setSpecificDates(array $specificDates)
     {
         $this->specificDates = $specificDates;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getIcon()
+    {
+        return $this->icon;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setIcon(\Sonata\MediaBundle\Model\MediaInterface $icon = null)
+    {
+        $this->icon = $icon;
     }
 
     /**

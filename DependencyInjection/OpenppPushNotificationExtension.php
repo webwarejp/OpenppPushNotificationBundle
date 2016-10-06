@@ -307,6 +307,22 @@ class OpenppPushNotificationExtension extends Extension
             'orphanRemoval' => false,
         ));
 
+        // Many-To-One Unidirectional for Condition and Media
+        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', array(
+            'fieldName'     => 'icon',
+            'targetEntity'  => $config['class']['media'],
+            'cascade' => array(
+                'persist',
+            ),
+            'joinColumns'   =>  array(
+                array(
+                    'name'  => 'icon_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
         if ($mapBundleEnable) {
             // One-To-One, Unidirectional Device and Point
             $collector->addAssociation($config['class']['device'], 'mapOneToOne', array(

@@ -210,6 +210,20 @@ interface ConditionInterface
     public function getDateInterval();
 
     /**
+     * Returns the icon for the notification of Web Push.
+     *
+     * @return \Sonata\MediaBundle\Model\MediaInterface
+     */
+    public function getIcon();
+
+    /**
+     * Sets the icon for the notification of Web Push.
+     *
+     * @param \Sonata\MediaBundle\Model\MediaInterface $icon
+     */
+    public function setIcon(\Sonata\MediaBundle\Model\MediaInterface $icon = null);
+
+    /**
      * Returns the circle area.
      *
      * @return CircleInterface
