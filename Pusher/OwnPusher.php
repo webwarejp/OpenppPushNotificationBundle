@@ -97,6 +97,8 @@ class OwnPusher extends AbstractPusher
 
         $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
         $timestamp   = new \DateTime();
+        $notificationId = $this->generateNotificationId();
+        $options['tag'] = $notificationId;
         $optionsResult = $options;
 
         foreach (array_values(Device::getTypeChoices()) as $type) {
@@ -118,7 +120,7 @@ class OwnPusher extends AbstractPusher
             $pushManager->push();
         }
 
-        $this->dispatchPushResult($application, $message, $optionsResult, $timestamp, $devices);
+        $this->dispatchPushResult($application, $notificationId, $message, $optionsResult, $timestamp, $devices);
     }
 
     /**
@@ -185,7 +187,7 @@ class OwnPusher extends AbstractPusher
                 if (!empty($application->getIcon())) {
                     $defaultOptions['icon'] = $this->mediaExtension->path($application->getIcon(), 'reference');
                 }
-                $options = array_merge($options, $defaultOptions);
+                $options = array_merge($defaultOptions, $options);
                 break;
 
             default:

@@ -19,6 +19,11 @@ class PushResultEvent extends Event
     /**
      * @var string
      */
+    protected $notificationId;
+
+    /**
+     * @var string
+     */
     protected $message;
 
     /**
@@ -40,18 +45,20 @@ class PushResultEvent extends Event
      * Constructor
      *
      * @param ApplicationInterface $application
+     * @param string               $notificationId
      * @param string               $message
      * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
      */
-    public function __construct(ApplicationInterface $application, $message, array $options, \DateTime $timestamp, $devices)
+    public function __construct(ApplicationInterface $application, $notificationId, $message, array $options, \DateTime $timestamp, $devices)
     {
-        $this->application = $application;
-        $this->message     = $message;
-        $this->options     = $options;
-        $this->timestamp   = $timestamp;
-        $this->devices     = $devices;
+        $this->application    = $application;
+        $this->notificationId = $notificationId;
+        $this->message        = $message;
+        $this->options        = $options;
+        $this->timestamp      = $timestamp;
+        $this->devices        = $devices;
     }
 
     /**
@@ -60,6 +67,14 @@ class PushResultEvent extends Event
     public function getApplication()
     {
         return $this->application;
+    }
+
+    /**
+     * @return string
+     */
+    public function getNotificationId()
+    {
+        return $this->notificationId;
     }
 
     /**

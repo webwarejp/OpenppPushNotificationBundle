@@ -6,6 +6,7 @@ use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
+use Sonata\MediaBundle\Twig\Extension\MediaExtension;
 
 /**
  * 
@@ -17,6 +18,7 @@ class ConditionTask
     protected $conditionManager;
     protected $pushServiceManager;
     protected $deviceManager;
+    protected $mediaExtension;
 
     /**
      * Constructor
@@ -25,11 +27,12 @@ class ConditionTask
      * @param PushServiceManagerInterface $pushServiceManager
      * @param DeviceManagerInterface      $deviceManager
      */
-    public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, DeviceManagerInterface $deviceManager)
+    public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, DeviceManagerInterface $deviceManager, MediaExtension $mediaExtension)
     {
         $this->conditionManager   = $conditionManager;
         $this->pushServiceManager = $pushServiceManager;
         $this->deviceManager      = $deviceManager;
+        $this->mediaExtension     = $mediaExtension;
     }
 
     /**
@@ -46,8 +49,15 @@ class ConditionTask
 
         foreach ($conditions as $condition) {
             $options = array();
+            if (!empty($condition->getTitle()))
+            {
+                $options['title'] = $condition->getTitle();
+            }
             if (!empty($condition->getUrl())) {
                 $options['url'] = $condition->getUrl();
+            }
+            if (!empty($condition->getIcon())) {
+                $options['icon'] = $this->mediaExtension->path($condition->getIcon(), 'reference');
             }
 
             if ($condition->getAreaCircle()) {

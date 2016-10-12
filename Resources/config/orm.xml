@@ -9,6 +9,7 @@
         <parameter key="openpp.push_notification.manager.device.class">Openpp\PushNotificationBundle\Entity\DeviceManager</parameter>
         <parameter key="openpp.push_notification.manager.user.class">Openpp\PushNotificationBundle\Entity\UserManager</parameter>
         <parameter key="openpp.push_notification.manager.condition.class">Openpp\PushNotificationBundle\Entity\ConditionManager</parameter>
+        <parameter key="openpp.push_notification.manager.history.class">Openpp\PushNotificationBundle\Entity\HistoryManager</parameter>
         <parameter key="openpp.push_notification.apns_certificate.directory">%kernel.root_dir%/../web/uploads/push_notification/apns_certificate</parameter>
     </parameters>
 
@@ -32,11 +33,23 @@
             <argument type="service" id="doctrine" />
             <argument>%openpp.push_notification.condition.class%</argument>
         </service>
+         <service id="openpp.push_notification.manager.history" class="%openpp.push_notification.manager.history.class%">
+            <argument type="service" id="doctrine" />
+            <argument>%openpp.push_notification.history.class%</argument>
+        </service>
+
+        <service id="openpp.push_notification.manipurator.register" class="Openpp\PushNotificationBundle\Manipurator\RegistrationManipurator" >
+            <argument type="service" id="openpp.push_notification.manager.application" />
+            <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="openpp.push_notification.manager.user" />
+            <argument type="service" id="openpp.push_notification.manager.tag" />
+        </service>
 
         <service id="openpp.push_notification.task.condition" class="Openpp\PushNotificationBundle\Task\ConditionTask">
             <argument type="service" id="openpp.push_notification.manager.condition" />
             <argument type="service" id="openpp.push_notification.push_service_manager" />
             <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="sonata.media.twig.extension" />
         </service>
 
         <service id="openpp.push_notification.listener.device_registration" class="Openpp\PushNotificationBundle\Listener\DeviceRegistrationSubscriber">

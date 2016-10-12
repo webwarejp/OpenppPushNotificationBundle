@@ -128,17 +128,28 @@ abstract class AbstractPusher implements PusherInterface
     }
 
     /**
+     * Generate the notification id.
+     *
+     * @return string
+     */
+    protected function generateNotificationId()
+    {
+        return sha1(uniqid());
+    }
+
+    /**
      * Dispatch the push result event.
      *
      * @param ApplicationInterface $application
+     * @param string               $notificaitonId
      * @param string               $message
      * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
      */
-    protected function dispatchPushResult(ApplicationInterface $application, $message, array $options, $timestamp, $devices)
+    protected function dispatchPushResult(ApplicationInterface $application, $notificaitonId, $message, array $options, $timestamp, $devices)
     {
-        $event = new PushResultEvent($application, $message, $options, $timestamp, $devices);
+        $event = new PushResultEvent($application, $notificaitonId, $message, $options, $timestamp, $devices);
         $this->dispatcher->dispatch(PushResultEvent::EVENT_NAME, $event);
     }
 }

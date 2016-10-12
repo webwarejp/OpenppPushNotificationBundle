@@ -7,14 +7,7 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Controller\Annotations\Post;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
-use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
-use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
-use Openpp\PushNotificationBundle\Model\TagManagerInterface;
-use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
-
 
 /**
  *
@@ -23,42 +16,6 @@ use Symfony\Component\DependencyInjection\Exception\ServiceNotFoundException;
  */
 class DeviceController extends FOSRestController
 {
-    /**
-     * @var ApplicationManagerInterface
-     */
-    protected $applicationManager;
-
-    /**
-     * @var DeviceManagerInterface
-     */
-    protected $deviceManager;
-
-    /**
-     * @var UserManagerInterface
-     */
-    protected $userManager;
-
-    /**
-     * @var TagManagerInterface
-     */
-    protected $tagManager;
-
-    /**
-     * Constructor
-     *
-     * @param ApplicationManagerInterface $applicationManager
-     * @param DeviceManagerInterface $deviceManager
-     * @param UserManagerInterface $userManager
-     * @param TagManagerInterface $tagManager
-     */
-    public function __construct(ApplicationManagerInterface $applicationManager, DeviceManagerInterface $deviceManager, UserManagerInterface $userManager, TagManagerInterface $tagManager)
-    {
-        $this->applicationManager = $applicationManager;
-        $this->deviceManager      = $deviceManager;
-        $this->userManager        = $userManager;
-        $this->tagManager         = $tagManager;
-    }
-
     /**
      * @ApiDoc(
      *  description="Registers an Android Device",
@@ -75,7 +32,7 @@ class DeviceController extends FOSRestController
      */
     public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->registerDevice(
+        return $this->getManipurator()->registerDevice(
             $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier'),
             $paramFetcher->get('registration_id'),
@@ -102,7 +59,7 @@ class DeviceController extends FOSRestController
      */
     public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->registerDevice(
+        return $this->getManipurator()->registerDevice(
             $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier'),
             $paramFetcher->get('device_token'),
@@ -130,7 +87,7 @@ class DeviceController extends FOSRestController
      */
     public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->registerDevice(
+        return $this->getManipurator()->registerDevice(
                 $paramFetcher->get('application_id'),
                 $paramFetcher->get('endpoint'),
                 $paramFetcher->get('endpoint'),
@@ -155,7 +112,7 @@ class DeviceController extends FOSRestController
      */
     public function unregisterDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->unregisterDevice(
+        return $this->getManipurator()->unregisterDevice(
             $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier')
         );
@@ -173,7 +130,7 @@ class DeviceController extends FOSRestController
      */
     public function unregisterDeviceIosAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->unregisterDevice(
+        return $this->getManipurator()->unregisterDevice(
             $paramFetcher->get('application_id'),
             $paramFetcher->get('device_identifier')
         );
@@ -191,142 +148,17 @@ class DeviceController extends FOSRestController
      */
     public function unregisterDeviceWebAction(ParamFetcherInterface $paramFetcher)
     {
-        return $this->unregisterDevice(
+        return $this->getManipurator()->unregisterDevice(
             $paramFetcher->get('application_id'),
             $paramFetcher->get('endpoint')
         );
     }
 
     /**
-     * Registers a device to the application.
-     *
-     * @param string  $applicationId
-     * @param string  $deviceIdentifier
-     * @param string  $token
-     * @param string  $uid
-     * @param integer $type
-     * @param float   $locationLatitude
-     * @param float   $locationLongitude
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return array
+     * @return object
      */
-    protected function registerDevice($applicationId, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
+    protected function getManipurator()
     {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
-
-        if (is_null($application)) {
-            throw new ApplicationNotFoundException('Application ' . $applicationId . ' is not found.');
-        }
-
-        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
-
-        if (is_null($device)) {
-            // This implementation is assumed that the device identifier is device's AdvertisingID.
-            // So, the device identifier may be changed.
-            // Let us search the device by the token.
-            $device = $this->deviceManager->findDeviceByToken($application, $token);
-
-            if (is_null($device)) {
-                $device = $this->deviceManager->create();
-            }
-        }
-
-        $device->setApplication($application);
-        $device->setDeviceIdentifier($deviceIdentifier);
-        $device->setToken($token);
-        $device->setType($type);
-        $device->setPublicKey($key);
-        $device->setAuthtoken($auth);
-        if (!$device->getRegisteredAt()) {
-            $device->setRegisteredAt(new \DateTime());
-        }
-        $device->setUnregisteredAt(null);
-
-        if (null !== $locationLatitude && null !== $locationLongitude) {
-            if ($location = $device->getLocation()) {
-                $point = $location->getPoint();
-                if ($point->getLatitude() != $locationLatitude || $point->getLongitude() != $locationLongitude) {
-                    $newPoint = clone $point;
-                    $newPoint
-                        ->setLatitude($locationLatitude)
-                        ->setLongitude($locationLongitude)
-                    ;
-                    $location->setPoint($newPoint);
-                }
-            } else {
-                try {
-                    $pointManager = $this->get('openpp.map.manager.point');
-                    $device->setLocation($pointManager->createFromLonLat($locationLongitude, $locationLatitude));
-                } catch (ServiceNotFoundException $e) {
-                    // do nothing
-                }
-            }
-        }
-
-        $user = $device->getUser();
-        if (is_null($user) || $user->getUid() != $uid) {
-            if ($uid) {
-                $user = $this->userManager->findUserByUid($application, $uid);
-            }
-            if (is_null($user)) {
-                $user = $this->userManager->create();
-                if (is_null($uid)) {
-                    $uid = uniqid('pseudo_');
-                }
-            }
-        }
-
-        $user->setApplication($application);
-        $user->setUid($uid);
-
-        $device->setUser($user);
-        $user->addDevice($device);
-
-        $application->addUser($user);
-
-        $this->deviceManager->save($device);
-
-        return array(
-            'deviceIdentifier' => $deviceIdentifier,
-            'uid' => $uid,
-            'registrationDate' => $device->getUpdatedAt(),
-        );
-    }
-
-    /**
-     * Unregisters a device from the application.
-     *
-     * @param string $applicationId
-     * @param string $deviceIdentifier
-     *
-     * @throws ApplicationNotFoundException
-     *
-     * @return array
-     */
-    protected function unregisterDevice($applicationId, $deviceIdentifier)
-    {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
-
-        if (is_null($application)) {
-            throw new ApplicationNotFoundException('Application ' . $applicationId . ' is not found.');
-        }
-
-        $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
-
-        if (!is_null($device)) {
-            $device->setUnregisteredAt(new \DateTime());
-            $device->getUser()->setBadge(0);
-            $this->deviceManager->save($device);
-
-            return array(
-                'deviceIdentifier' => $deviceIdentifier,
-                'uid' => $device->getUser()->getUid(),
-                'unregistrationDate' => $device->getUnregisteredAt(),
-            );
-        }
-
-        return array('message' => 'No device.');
+        return $this->get('openpp.push_notification.manipurator.register');
     }
 }

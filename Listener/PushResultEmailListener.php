@@ -4,7 +4,7 @@ namespace Openpp\PushNotificationBundle\Listener;
 
 use Openpp\PushNotificationBundle\Event\PushResultEvent;
 
-class PushResultListener
+class PushResultEmailListener
 {
     /**
      * @var \Swift_Mailer

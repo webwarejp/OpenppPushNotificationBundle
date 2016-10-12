@@ -28,40 +28,44 @@ class OpenppPushNotificationExtension extends Extension
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
         $loader->load('orm_tag.xml');
         $loader->load('push_service_manager.xml');
+        $loader->load('orm.xml');
+
+        $mapBundleEnable = false;
+        if (isset($bundles['OpenppMapBundle'])) {
+            $mapBundleEnable = true;
+        }
+
+        if (isset($bundles['SonataAdminBundle'])) {
+            $loader->load('admin.xml');
+            $this->configureAdmin($mapBundleEnable, $config, $container);
+        }
+
+        $this->configureClass($config, $container);
+        $this->configurePushServiceManager($config, $container);
+
+        $this->configureORMManager($mapBundleEnable, $container);
+        $this->registerDoctrineMapping($config, $mapBundleEnable);
+
+        if ($mapBundleEnable) {
+            $container->getDefinition('openpp.push_notification.manipurator.register')
+                ->addMethodCall('setPointManager', array(new Reference('openpp.map.manager.point')));
+        }
 
         if ($config['consumer']) {
-            $loader->load('orm.xml');
             $loader->load('pusher.xml');
             $loader->load('consumer.xml');
-            $loader->load('api_controllers.xml');
             $loader->load('report.xml');
 
-            $mapBundleEnable = false;
-            if (isset($bundles['OpenppMapBundle'])) {
-                $mapBundleEnable = true;
-            }
-
-            if (isset($bundles['SonataAdminBundle'])) {
-                $loader->load('admin.xml');
-                $this->configureAdmin($mapBundleEnable, $config, $container);
-            }
-
-            $this->configureORMManager($mapBundleEnable, $container);
-            $this->registerDoctrineMapping($config, $mapBundleEnable);
-
             if (isset($config['report'])) {
-                $container->getDefinition('openpp.push_notification.listener.push_result')
+                $container->getDefinition('openpp.push_notification.listener.push_result_email')
                     ->replaceArgument(2, $config['report']);
             } else {
-                $container->getDefinition('openpp.push_notification.listener.push_result')
+                $container->getDefinition('openpp.push_notification.listener.push_result_email')
                     ->replaceArgument(2, array());
             }
 
             $this->configurePusher($config, $container);
         }
-
-        $this->configureClass($config, $container);
-        $this->configurePushServiceManager($config, $container);
     }
 
     /**
@@ -106,6 +110,7 @@ class OpenppPushNotificationExtension extends Extension
         $container->setParameter('openpp.push_notification.tag.class', $config['class']['tag']);
         $container->setParameter('openpp.push_notification.user.class', $config['class']['user']);
         $container->setParameter('openpp.push_notification.condition.class', $config['class']['condition']);
+        $container->setParameter('openpp.push_notification.history.class', $config['class']['history']);
 
         // admin configuration
         $container->setParameter('openpp.push_notification.admin.applicaiton.entity', $config['class']['application']);
@@ -317,6 +322,22 @@ class OpenppPushNotificationExtension extends Extension
             'joinColumns'   =>  array(
                 array(
                     'name'  => 'icon_id',
+                    'referencedColumnName' => 'id',
+                ),
+            ),
+            'orphanRemoval' => false,
+        ));
+
+        // Many-To-One Unidirectional for Application and History
+        $collector->addAssociation($config['class']['history'], 'mapManyToOne', array(
+            'fieldName' => 'application',
+            'targetEntity' => $config['class']['application'],
+            'cascade' => array(
+                'persist',
+            ),
+            'joinColumns'   =>  array(
+                array(
+                    'name'  => 'application_id',
                     'referencedColumnName' => 'id',
                 ),
             ),

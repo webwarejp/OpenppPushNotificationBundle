@@ -5,15 +5,20 @@
            xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
     <parameters>
-        <parameter key="openpp.push_notification.listener.push_result.class">Openpp\PushNotificationBundle\Listener\PushResultListener</parameter>
+        <parameter key="openpp.push_notification.listener.push_result_email.class">Openpp\PushNotificationBundle\Listener\PushResultEmailListener</parameter>
     </parameters>
 
     <services>
-        <service id="openpp.push_notification.listener.push_result" class="%openpp.push_notification.listener.push_result.class%">
+        <service id="openpp.push_notification.listener.push_result_email" class="%openpp.push_notification.listener.push_result_email.class%">
             <tag name="kernel.event_listener" event="openpp.push_notification.event.push_result" method="onPushed" />
             <argument type="service" id="mailer" />
             <argument type="service" id="twig" />
             <argument  />
+        </service>
+
+        <service id="openpp.push_notification.listener.push_history" class="Openpp\PushNotificationBundle\Listener\PushHistoryListener">
+            <tag name="kernel.event_listener" event="openpp.push_notification.event.push_result" method="onPushed" />
+            <argument type="service" id="openpp.push_notification.manager.history" />
         </service>
     </services>
 
