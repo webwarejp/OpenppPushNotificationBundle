@@ -108,9 +108,9 @@ class DeviceRegistrationSubscriber implements EventSubscriber
             if ($entity instanceof DeviceInterface) {
                 $original = $uow->getOriginalEntityData($entity);
 
-                if ($original['unregisterdAt'] && !$entity->getUnregisteredAt()) {
+                if ($original['unregisteredAt'] && !$entity->getUnregisteredAt()) {
                     $this->creates->add($entity);
-                } else if (!$original['unregisterdAt'] && $entity->getUnregisteredAt()) {
+                } else if (!$original['unregisteredAt'] && $entity->getUnregisteredAt()) {
                     $this->deletes->add($entity);
                 }
 
