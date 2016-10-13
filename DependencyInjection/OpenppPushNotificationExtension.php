@@ -128,11 +128,11 @@ class OpenppPushNotificationExtension extends Extension
     {
         if ($config['consumer']) {
             $container->getDefinition('openpp.push_notification.push_service_manager')
-                ->replaceArgument(2, new Reference($config['pusher']))
+                ->replaceArgument(3, new Reference($config['pusher']))
             ;
         } else {
             $container->getDefinition('openpp.push_notification.push_service_manager')
-                ->replaceArgument(2, null)
+                ->replaceArgument(3, null)
             ;
         }
     }

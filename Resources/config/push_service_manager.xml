@@ -10,6 +10,7 @@
 
     <services>
         <service id="openpp.push_notification.push_service_manager" class="%openpp.push_notification.push_service_manager.class%">
+            <argument type="service" id="event_dispatcher" />
             <argument type="service" id="sonata.notification.backend" />
             <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument />

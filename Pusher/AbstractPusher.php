@@ -9,7 +9,7 @@ use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Openpp\PushNotificationBundle\Event\PushResultEvent;
+use Openpp\PushNotificationBundle\Event\PostPushEvent;
 
 abstract class AbstractPusher implements PusherInterface
 {
@@ -149,7 +149,7 @@ abstract class AbstractPusher implements PusherInterface
      */
     protected function dispatchPushResult(ApplicationInterface $application, $notificaitonId, $message, array $options, $timestamp, $devices)
     {
-        $event = new PushResultEvent($application, $notificaitonId, $message, $options, $timestamp, $devices);
-        $this->dispatcher->dispatch(PushResultEvent::EVENT_NAME, $event);
+        $event = new PostPushEvent($application, $notificaitonId, $message, $options, $timestamp, $devices);
+        $this->dispatcher->dispatch(PostPushEvent::EVENT_NAME, $event);
     }
 }

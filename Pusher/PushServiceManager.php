@@ -2,14 +2,17 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Sonata\NotificationBundle\Backend\BackendInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 use Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer;
+use Openpp\PushNotificationBundle\Event\PrePushEvent;
 
 
 class PushServiceManager implements PushServiceManagerInterface
 {
+    protected $dispatcher;
     protected $backend;
     protected $tagManager;
     protected $pusher;
@@ -17,15 +20,18 @@ class PushServiceManager implements PushServiceManagerInterface
     /**
      * Constructor
      *
-     * @param BackendInterface $backend
-     * @param TagManagerInterface $tagManager
-     * @param PusherInterface $pusher
+     * @param EventDispatcherInterface $dispatcher
+     * @param BackendInterface         $backend
+     * @param TagManagerInterface      $tagManager
+     * @param PusherInterface          $pusher
      */
     public function __construct(
-        BackendInterface    $backend,
-        TagManagerInterface $tagManager,
-        PusherInterface     $pusher = null
+        EventDispatcherInterface $dispatcher,
+        BackendInterface         $backend,
+        TagManagerInterface      $tagManager,
+        PusherInterface          $pusher = null
     ) {
+        $this->dispatcher = $dispatcher;
         $this->backend    = $backend;
         $this->tagManager = $tagManager;
         $this->pusher     = $pusher;
@@ -40,6 +46,14 @@ class PushServiceManager implements PushServiceManagerInterface
             $te = new TagExpression($tagExpression);
             $te->validate();
         }
+
+        list(
+            $applicationName,
+            $tagExpression,
+            $message,
+            $options,
+            $devices
+        ) = $this->dispatchPrePushEvent($applicationName, $tagExpression, $message, $options);
 
         $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application'   => $applicationName,
@@ -63,6 +77,14 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function pushToDevices($applicationName, $devices, $message, array $options = array())
     {
+        list(
+            $applicationName,
+            $tagExpression,
+            $message,
+            $options,
+            $devices
+        ) = $this->dispatchPrePushEvent($applicationName, null, $message, $options, $devices);
+
         $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
             'application' => $applicationName,
             'devices'     => $devices,
@@ -224,5 +246,28 @@ class PushServiceManager implements PushServiceManagerInterface
     public function getPusher()
     {
         return $this->pusher;
+    }
+
+    /**
+     * @param string $applicationName
+     * @param string $tagExpression
+     * @param string $message
+     * @param array $options
+     * @param array $devices
+     *
+     * @return array
+     */
+    protected function dispatchPrePushEvent($applicationName, $tagExpression, $message, array $options = array(), $devices = array())
+    {
+        $event = new PrePushEvent($applicationName, $tagExpression, $message, $options, $devices);
+        $event = $this->dispatcher->dispatch(PrePushEvent::EVENT_NAME, $event);
+
+        return array(
+            $event->getApplicationName(),
+            $event->getTagExpression(),
+            $event->getMessage(),
+            $event->getOptions(),
+            $event->getDevices(),
+        );
     }
 }

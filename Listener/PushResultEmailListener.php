@@ -2,7 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Listener;
 
-use Openpp\PushNotificationBundle\Event\PushResultEvent;
+use Openpp\PushNotificationBundle\Event\PostPushEvent;
 
 class PushResultEmailListener
 {
@@ -38,9 +38,9 @@ class PushResultEmailListener
     /**
      * Handle event.
      *
-     * @param PushResultEvent $event
+     * @param PostPushEvent $event
      */
-    public function onPushed(PushResultEvent $event)
+    public function onPushed(PostPushEvent $event)
     {
         if (isset($this->config['email'])) {
             $context = array(

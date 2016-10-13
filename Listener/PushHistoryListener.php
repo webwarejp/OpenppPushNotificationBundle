@@ -2,7 +2,7 @@
 
 namespace Openpp\PushNotificationBundle\Listener;
 
-use Openpp\PushNotificationBundle\Event\PushResultEvent;
+use Openpp\PushNotificationBundle\Event\PostPushEvent;
 use Openpp\PushNotificationBundle\model\HistoryManagerInterface;
 
 class PushHistoryListener
@@ -25,9 +25,9 @@ class PushHistoryListener
     /**
      * Handle event.
      *
-     * @param PushResultEvent $event
+     * @param PostPushEvent $event
      */
-    public function onPushed(PushResultEvent $event)
+    public function onPushed(PostPushEvent $event)
     {
         $history = $this->historyManager->create();
         $history->setApplication($event->getApplication())

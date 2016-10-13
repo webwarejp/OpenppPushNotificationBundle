@@ -7,9 +7,9 @@ use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
 use Openpp\PushNotificationBundle\Model\Device;
 
-class PushResultEvent extends Event
+class PostPushEvent extends Event
 {
-    const EVENT_NAME = 'openpp.push_notification.event.push_result';
+    const EVENT_NAME = 'openpp.push_notification.event.post_push';
 
     /**
      * @var ApplicationInterface
