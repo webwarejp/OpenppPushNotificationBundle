@@ -10,6 +10,7 @@
         <parameter key="openpp.push_notification.manager.user.class">Openpp\PushNotificationBundle\Entity\UserManager</parameter>
         <parameter key="openpp.push_notification.manager.condition.class">Openpp\PushNotificationBundle\Entity\ConditionManager</parameter>
         <parameter key="openpp.push_notification.manager.history.class">Openpp\PushNotificationBundle\Entity\HistoryManager</parameter>
+        <parameter key="openpp.push_notification.task.condition.class">Openpp\PushNotificationBundle\Task\ConditionTask</parameter>
         <parameter key="openpp.push_notification.apns_certificate.directory">%kernel.root_dir%/../web/uploads/push_notification/apns_certificate</parameter>
     </parameters>
 
@@ -45,7 +46,7 @@
             <argument type="service" id="openpp.push_notification.manager.tag" />
         </service>
 
-        <service id="openpp.push_notification.task.condition" class="Openpp\PushNotificationBundle\Task\ConditionTask">
+        <service id="openpp.push_notification.task.condition" class="%openpp.push_notification.task.condition.class%">
             <argument type="service" id="openpp.push_notification.manager.condition" />
             <argument type="service" id="openpp.push_notification.push_service_manager" />
             <argument type="service" id="openpp.push_notification.manager.device" />
