@@ -133,6 +133,22 @@ interface HistoryInterface
     public function getSentCount();
 
     /**
+     * Set delivered count.
+     *
+     * @param integer $deliveredCount
+     *
+     * @return History
+     */
+    public function setDeliveredCount($deliveredCount);
+
+    /**
+     * Get delivered count.
+     *
+     * @return integer
+     */
+    public function getDeliveredCount();
+
+    /**
      * Set click count
      *
      * @param integer $clickCount

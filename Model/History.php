@@ -47,6 +47,11 @@ class History implements HistoryInterface
     /**
      * @var integer
      */
+    protected $deliveredCount = 0;
+
+    /**
+     * @var integer
+     */
     protected $clickCount = 0;
 
     /**
@@ -201,6 +206,24 @@ class History implements HistoryInterface
     public function getSentCount()
     {
         return $this->sentCount;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setDeliveredCount($deliveredCount)
+    {
+        $this->deliveredCount = $deliveredCount;
+
+        return $this;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getDeliveredCount()
+    {
+        return $this->deliveredCount;
     }
 
     /**

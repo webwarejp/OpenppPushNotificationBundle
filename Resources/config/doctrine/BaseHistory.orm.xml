@@ -9,6 +9,7 @@
         <field name="url" type="string" column="url" length="255" nullable="true" />
         <field name="pushedAt" type="datetime" column="pushed_at"/>
         <field name="sentCount" type="integer" column="sent_count" nullable="true" />
+        <field name="deliveredCount" type="integer" column="delivered_count" nullable="true" />
         <field name="clickCount" type="integer" column="click_count" nullable="true" />
         <field name="createdAt" type="datetime" column="created_at"/>
         <field name="updatedAt" type="datetime" column="updated_at"/>

@@ -12,6 +12,7 @@
 
         <field name="registeredAt"   type="datetime"   column="registered_at" />
         <field name="unregisteredAt" type="datetime"   column="unregistered_at"  nullable="true" />
+        <field name="lastDeliveredNotificationId" type="string"   column="last_delivered_notification_id"  nullable="true" />
         <field name="createdAt"      type="datetime"   column="created_at" />
         <field name="updatedAt"      type="datetime"   column="updated_at" />
 

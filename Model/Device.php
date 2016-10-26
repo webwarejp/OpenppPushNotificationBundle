@@ -71,6 +71,11 @@ class Device implements DeviceInterface
     protected $unregisteredAt;
 
     /**
+     * @var string
+     */
+    protected $lastDeliveredNotificationId;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -309,6 +314,22 @@ class Device implements DeviceInterface
     public function setUnregisteredAt(\DateTime $unregisteredAt = null)
     {
         $this->unregisteredAt = $unregisteredAt;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setLastDeliveredNotificationId($lastDeliveredNotificationId)
+    {
+        $this->lastDeliveredNotificationId = $lastDeliveredNotificationId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getLastDeliveredNotificationId()
+    {
+        return $this->lastDeliveredNotificationId;
     }
 
     /**

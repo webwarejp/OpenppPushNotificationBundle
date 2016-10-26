@@ -174,6 +174,20 @@ interface DeviceInterface extends BaseDeviceInterface
     public function setUnregisteredAt(\DateTime $unregisteredAt);
 
     /**
+     * Set the last delivered notification ID.
+     *
+     * @param string $lastDeliveredNotificationId
+     */
+    public function setLastDeliveredNotificationId($lastDeliveredNotificationId);
+
+    /**
+     * Get the last delivered notification ID.
+     *
+     * @return string
+     */
+    public function getLastDeliveredNotificationId();
+
+    /**
      * Returns the type choices.
      *
      * @return array
