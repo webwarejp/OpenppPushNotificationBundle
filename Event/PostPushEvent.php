@@ -42,6 +42,11 @@ class PostPushEvent extends Event
     protected $devices;
 
     /**
+     * @var mixed
+     */
+    protected $notRegisteredDevices;
+
+    /**
      * Constructor
      *
      * @param ApplicationInterface $application
@@ -50,15 +55,17 @@ class PostPushEvent extends Event
      * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
+     * @param mixed                $notRegisteredDevices
      */
-    public function __construct(ApplicationInterface $application, $notificationId, $message, array $options, \DateTime $timestamp, $devices)
+    public function __construct(ApplicationInterface $application, $notificationId, $message, array $options, \DateTime $timestamp, $devices, $notRegisteredDevices = array())
     {
-        $this->application    = $application;
-        $this->notificationId = $notificationId;
-        $this->message        = $message;
-        $this->options        = $options;
-        $this->timestamp      = $timestamp;
-        $this->devices        = $devices;
+        $this->application          = $application;
+        $this->notificationId       = $notificationId;
+        $this->message              = $message;
+        $this->options              = $options;
+        $this->timestamp            = $timestamp;
+        $this->devices              = $devices;
+        $this->notRegisteredDevices = $notRegisteredDevices;
     }
 
     /**
@@ -107,6 +114,14 @@ class PostPushEvent extends Event
     public function getDevices()
     {
         return $this->devices;
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getNotRegisteredDevices()
+    {
+        return $this->notRegisteredDevices;
     }
 
     /**

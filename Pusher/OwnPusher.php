@@ -13,6 +13,7 @@ use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\Device;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection as Devices;
 use Openpp\WebPushAdapter\Adapter\Web;
+use Sly\NotificationPusher\Collection\PushCollection;
 
 class OwnPusher extends AbstractPusher
 {
@@ -100,6 +101,7 @@ class OwnPusher extends AbstractPusher
         $notificationId = $this->generateNotificationId();
         $options['tag'] = $notificationId;
         $optionsResult = $options;
+        $notRegisteredDevices = array();
 
         foreach (array_values(Device::getTypeChoices()) as $type) {
             $targetDevices = $devices->getByType($type);
@@ -117,10 +119,11 @@ class OwnPusher extends AbstractPusher
             $optionsResult = array_merge($optionsResult, $messageObj->getOptions());
             $push = new Push($this->getAdapter($application, $type), $deviceCollection, $messageObj);
             $pushManager->add($push);
-            $pushManager->push();
+            $result = $pushManager->push();
+            $notRegisteredDevices += $this->getNotRegisteredDevices($result);
         }
 
-        $this->dispatchPushResult($application, $notificationId, $message, $optionsResult, $timestamp, $devices);
+        $this->dispatchPushResult($application, $notificationId, $message, $optionsResult, $timestamp, $devices, $notRegisteredDevices);
     }
 
     /**
@@ -195,5 +198,27 @@ class OwnPusher extends AbstractPusher
         }
 
         return new Message($message, $options);
+    }
+
+    /**
+     * Get 'NotRegistered' devices.
+     *
+     * @param PushCollection $pushCollection
+     * @return \Openpp\PushNotificationBundle\Model\DeviceInterface[]
+     */
+    protected function getNotRegisteredDevices(PushCollection $pushCollection)
+    {
+        $result = array();
+        foreach ($pushCollection as $push) {
+            $adapter = $push->getAdapter();
+            if (method_exists($adapter, 'getNotRegisteredDevices')) {
+                $notRegisteredDevices = $adapter->getNotRegisteredDevices();
+                foreach ($notRegisteredDevices as $device) {
+                    $result[] = $device;
+                }
+            }
+        }
+
+        return $result;
     }
 }

@@ -63,5 +63,10 @@
 
             <argument type="service" id="service_container" />
         </service>
+
+        <service id="openpp.push_notification.listener.not_registered_devices" class="Openpp\PushNotificationBundle\Listener\NotRegisteredDevicesListener">
+            <tag name="kernel.event_listener" event="openpp.push_notification.event.post_push" method="onPushed" />
+            <argument type="service" id="openpp.push_notification.manager.device" />
+        </service>
     </services>
 </container>

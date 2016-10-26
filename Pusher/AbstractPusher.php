@@ -146,10 +146,11 @@ abstract class AbstractPusher implements PusherInterface
      * @param array                $options
      * @param \DateTime            $timestamp
      * @param mixed                $devices
+     * @param mixed                $notRegisteredDevices
      */
-    protected function dispatchPushResult(ApplicationInterface $application, $notificaitonId, $message, array $options, $timestamp, $devices)
+    protected function dispatchPushResult(ApplicationInterface $application, $notificaitonId, $message, array $options, $timestamp, $devices, $notRegisteredDevices)
     {
-        $event = new PostPushEvent($application, $notificaitonId, $message, $options, $timestamp, $devices);
+        $event = new PostPushEvent($application, $notificaitonId, $message, $options, $timestamp, $devices, $notRegisteredDevices);
         $this->dispatcher->dispatch(PostPushEvent::EVENT_NAME, $event);
     }
 }
