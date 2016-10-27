@@ -30,6 +30,7 @@
 
         let defaults = {
             swPath: '/serviceworker.js',
+            swScope: './',
             keyPath: '/api/push/key/publicKey',
             registerPath: '/api/push/device/web/register',
             unregisterPath: '/api/push/device/web/unregister',
@@ -45,6 +46,7 @@
         }
 
         this.swPath = params.swPath;
+        this.swScope = params.swScope;
         this.keyPath = params.keyPath;
         this.registerPath = params.registerPath;
         this.unregisterPath = params.unregisterPath;
@@ -152,7 +154,7 @@
 
     p.initialize = function() {
         if (self.isServiceWorkerSupported()) {
-            navigator.serviceWorker.register(self.swPath)
+            navigator.serviceWorker.register(self.swPath, { scope: self.swScope })
                 .then(self._checkSubscription)
                 .catch(function(e) {
                    let message = 'Failed to register the service worker.';
@@ -232,7 +234,7 @@
                 .catch(function(e) {
                     let message = 'Failed to subscribe.';
                     console.log(message + e);
-                    self._triggerErrorEvent(message)
+                    self._triggerErrorEvent(message);
                 });
             } else {
                 let message = 'ServiceWorker is not registered.';
@@ -257,7 +259,7 @@
     p._decodeBase64URL = function(str) {
         let dec = atob(str.replace(/\-/g, '+').replace(/_/g, '/'));
         let buffer = new Uint8Array(dec.length);
-        for (let i = 0 ; i < dec.length ; i++) {
+        for (let i = 0; i < dec.length; i++) {
             buffer[i] = dec.charCodeAt(i);
         }
         return buffer;
