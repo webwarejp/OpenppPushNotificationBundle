@@ -10,5 +10,12 @@
 
             <argument type="service" id="openpp.push_notification.push_service_manager" />
         </service>
+
+        <service id="openpp.push_notification.consumer.track" class="Openpp\PushNotificationBundle\Consumer\TrackConsumer">
+            <tag name="sonata.notification.consumer" type="openpp.push_notification.track" />
+
+            <argument type="service" id="openpp.push_notification.manager.device" />
+            <argument type="service" id="openpp.push_notification.manager.history" />
+        </service>
     </services>
 </container>

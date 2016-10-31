@@ -119,9 +119,13 @@ abstract class AbstractPusher implements PusherInterface
             return $application;
         }
 
-        $application = $this->applicationManager->findApplicationByPackageName($application);
-        if (!$application) {
-            throw new ApplicationNotFoundException($application . ' is not found.');
+        $name = $application;
+        $application = $this->applicationManager->findApplicationByPackageName($name);
+        if (empty($application)) {
+            $application = $this->applicationManager->findApplicationBy(array('slug' => $name));
+            if (empty($application)) {
+                throw new ApplicationNotFoundException($application . ' is not found.');
+            }
         }
 
         return $application;
