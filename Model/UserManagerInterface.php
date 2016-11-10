@@ -57,7 +57,7 @@ interface UserManagerInterface
      *
      * @param ApplicationInterface $application
      * @param string $uid
-     * @param TagInterface|array $tag
+     * @param TagInterface|array $tags
      * @param boolean $andFlush
      */
     public function addTagToUser(ApplicationInterface $application, $uid, $tags, $andFlush = true);
@@ -67,7 +67,7 @@ interface UserManagerInterface
      *
      * @param ApplicationInterface $application
      * @param string $uid
-     * @param TagInterface|array $tag
+     * @param TagInterface|array $tags
      * @param boolean $andFlush
      */
     public function removeTagFromUser(ApplicationInterface $application, $uid, $tags, $andFlush = true);

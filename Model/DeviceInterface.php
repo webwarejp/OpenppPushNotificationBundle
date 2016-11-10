@@ -155,9 +155,9 @@ interface DeviceInterface extends BaseDeviceInterface
     /**
      * Sets the registration date.
      *
-     * @param \DateTime $registeredAt
+     * @param \DateTime|null $registeredAt
      */
-    public function setRegisteredAt(\DateTime $registeredAt);
+    public function setRegisteredAt(\DateTime $registeredAt = null);
 
     /**
      * Returns the unregistration date.
@@ -169,9 +169,9 @@ interface DeviceInterface extends BaseDeviceInterface
     /**
      * Sets the unregistration date.
      *
-     * @param \DateTime $unregisteredAt
+     * @param \DateTime|null $unregisteredAt
      */
-    public function setUnregisteredAt(\DateTime $unregisteredAt);
+    public function setUnregisteredAt(\DateTime $unregisteredAt = null);
 
     /**
      * Set the last delivered notification ID.
