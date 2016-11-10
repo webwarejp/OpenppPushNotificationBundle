@@ -119,6 +119,8 @@ class DeviceManager extends BaseManager
         $rsm->addFieldResult('d', 'device_id', 'id');
         $rsm->addFieldResult('d', 'device_type', 'type');
         $rsm->addFieldResult('d', 'device_token', 'token');
+        $rsm->addFieldResult('d', 'device_public_key', 'publicKey');
+        $rsm->addFieldResult('d', 'device_auth_token', 'authToken');
         $rsm->addJoinedEntityResult($this->userClass, 'u', 'd', 'user');
         $rsm->addFieldResult('u', 'user_id', 'id');
         $rsm->addFieldResult('u', 'user_uid', 'uid');
@@ -129,6 +131,8 @@ WITH _device_user_tag AS (
     d.id AS device_id,
     d.type AS device_type,
     d.token AS device_token,
+    d.public_key AS device_public_key,
+    d.auth_token AS device_auth_token,
     u.id AS user_id,
     u.uid AS user_uid,
     ARRAY(

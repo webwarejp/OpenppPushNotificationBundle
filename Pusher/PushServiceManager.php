@@ -42,7 +42,7 @@ class PushServiceManager implements PushServiceManagerInterface
      */
     public function push($applicationName, $tagExpression, $message, array $options = array())
     {
-        if ($tagExpression != '') {
+        if (!empty($tagExpression)) {
             $te = new TagExpression($tagExpression);
             $te->validate();
         }
@@ -52,7 +52,6 @@ class PushServiceManager implements PushServiceManagerInterface
             $tagExpression,
             $message,
             $options,
-            $devices
         ) = $this->dispatchPrePushEvent($applicationName, $tagExpression, $message, $options);
 
         $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
@@ -79,7 +78,7 @@ class PushServiceManager implements PushServiceManagerInterface
     {
         list(
             $applicationName,
-            $tagExpression,
+            ,
             $message,
             $options,
             $devices

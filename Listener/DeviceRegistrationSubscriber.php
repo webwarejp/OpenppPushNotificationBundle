@@ -90,6 +90,8 @@ class DeviceRegistrationSubscriber implements EventSubscriber
                 $deviceTypeTag = $this->getTagManager()->getTagObject(Device::getTypeName($entity->getType()));
                 $user->addTag($deviceTypeTag);
 
+                $em->persist($user);
+                $uow->computeChangeSet($em->getClassMetadata(get_class($user)), $user);
                 $em->persist($deviceTypeTag);
                 $uow->computeChangeSet($em->getClassMetadata(get_class($deviceTypeTag)), $deviceTypeTag);
 

@@ -31,10 +31,11 @@
         let defaults = {
             swPath: '/serviceworker.js',
             swScope: './',
-            keyPath: '/api/push/key/publicKey',
-            registerPath: '/api/push/device/web/register',
-            unregisterPath: '/api/push/device/web/unregister',
-            applicationId: null
+            keyPath: '/api/key/publicKey',
+            registerPath: '/api/device/web/register',
+            unregisterPath: '/api/device/web/unregister',
+            getRegistrationPath: '/api/device/registration',
+            applicationId: new URL(location.href).origin
         };
 
         params = params || {};
@@ -50,11 +51,13 @@
         this.keyPath = params.keyPath;
         this.registerPath = params.registerPath;
         this.unregisterPath = params.unregisterPath;
+        this.getRegistrationPath = params.getRegistrationPath;
         this.applicationId = params.applicationId;
 
         this._serverPublicKey = null;
         this._subscription = null;
         this._registration = null;
+        this._state = 'unknown';
 
         this._listeners = null;
 
@@ -135,20 +138,24 @@
     };
 
     p._triggerUnsupportedEvent = function(message) {
+        self._state = 'unsupported';
         let event = new OpenppWebPush.Event("unsupported");
         event.message = message;
         self.dispatchEvent(event);
     };
 
     p._triggerErrorEvent = function(message) {
+        self._state = 'error';
         let event = new OpenppWebPush.Event("error");
         event.message = message;
         self.dispatchEvent(event);
     };
 
     p._triggerStateChangeEvent = function(state) {
+        self._state = state;
         let event = new OpenppWebPush.Event("statechange");
         event.state = state;
+        event.data  = self._registration;
         self.dispatchEvent(event);
     };
 
@@ -174,6 +181,17 @@
         }
         return false;
     };
+
+    p.getStatus = function() {
+        return self._state;
+    }
+
+    p.getUid = function() {
+        if (self._registration) {
+            return self._registration.uid;
+        }
+        return null;
+    }
 
     p.setApplicationId = function(applicationId) {
         this.applicationId = applicationId;
@@ -201,17 +219,25 @@
                 registration.pushManager.getSubscription().then(subscription => {
                     if (subscription) {
                         self._subscription = subscription;
-                        self._triggerStateChangeEvent("subscribing");
+                        if (!self._registration) {
+                            self._fetchRegistration(subscription).then(registration => {
+                                self._triggerStateChangeEvent("subscribing");
+                            }).catch(e => {
+                                self._register(subscription).then(registration => {
+                                    self._triggerStateChangeEvent("subscribing");
+                                });
+                            });
+                        } else {
+                            self._triggerStateChangeEvent("subscribing");
+                        }
                     } else {
                         self._triggerStateChangeEvent("unsubscribing");
                     }
-                })
-                .catch(error => {
-                    self._triggerErrorEvent(error);
+                }).catch(e => {
+                    self._triggerErrorEvent(e);
                 });
-            })
-            .catch(error => {
-                self._triggerErrorEvent(error);
+            }).catch(e => {
+                self._triggerErrorEvent(e);
             });
         } else {
             let message = 'Unsupported property "pushManager" in ServiceWorkerRegistration.';
@@ -229,9 +255,10 @@
                 };
                 registration.pushManager.subscribe(opt).then(subscription => {
                     self._subscription = subscription;
-                    self._register(subscription);
-                })
-                .catch(function(e) {
+                    self._register(subscription).then(registration => {
+                        self._triggerStateChangeEvent("subscribing");
+                    });
+                }).catch(function(e) {
                     let message = 'Failed to subscribe.';
                     console.log(message + e);
                     self._triggerErrorEvent(message);
@@ -245,10 +272,16 @@
 
     p._unsubscribe = function() {
         if (self._subscription) {
-            self._unregister(self._subscription);
-            self._subscription.unsubscribe();
-            self._subscription = null;
-            self._triggerStateChangeEvent("unsubscribing");
+            self._unregister(self._subscription).then(result => {
+                self._subscription.unsubscribe().then(result => {
+                    self._subscription = null;
+                    self._triggerStateChangeEvent("unsubscribing");
+                }).catch (e => {
+                    let message = 'Failed to unsubscribe.';
+                    console.log(message + e);
+                    self._triggerErrorEvent(message);
+                });
+            });
         }
     };
 
@@ -267,7 +300,9 @@
 
     p._fetchServerPublicKey = function() {
         return new Promise((resolve, reject) => {
-            fetch(self.keyPath).then(resp => {
+            fetch(self.keyPath, {
+                headers: { 'X-APPLICATION': self.applicationId }
+            }).then(resp => {
                 return resp.text();
             }).then(text => {
                 try {
@@ -278,81 +313,125 @@
                     console.log(message + e);
                     reject(message);
                 }
+            }).catch (e => {
+                let message = 'Failed to fetch the server public key.';
+                console.log(message + e);
+                reject(message);
             });
         });
     };
 
     p._register = function(subscription) {
-        if ('getKey' in subscription) {
-            var key = self._encodeBase64URL(subscription.getKey('p256dh'));
-            try {
-                var auth = self._encodeBase64URL(subscription.getKey('auth'));
-            } catch(e) {
-                let message = 'Failed to get authorization token.';
-                console.log(message + e);
+        return new Promise((resolve, reject) => {
+            if ('getKey' in subscription) {
+                var key = self._encodeBase64URL(subscription.getKey('p256dh'));
+                try {
+                    var auth = self._encodeBase64URL(subscription.getKey('auth'));
+                } catch(e) {
+                    let message = 'Failed to get authorization token.';
+                    console.log(message + e);
+                    self._triggerUnsupportedEvent(message);
+                    reject(message);
+                    return;
+                }
+            } else {
+                let message = 'Undefined function "getKey" in PushSubscription.';
+                console.log(message);
                 self._triggerUnsupportedEvent(message);
+                reject(message);
+                return;
             }
-        } else {
-            let message = 'Undefined function "getKey" in PushSubscription.';
-            console.log(message);
-            self._triggerUnsupportedEvent(message);
-            return;
-        }
 
-        let arg = {
-            application_id: new URL(location.href).origin,
-            endpoint: subscription.endpoint,
-            key: key,
-            auth: auth
-        };
+            let arg = {
+                application_id: self.applicationId,
+                endpoint: subscription.endpoint,
+                key: key,
+                auth: auth
+            };
 
-        if (self.applicationId) {
-            arg.application_id = self.applicationId;
-        }
-
-        fetch(self.registerPath, {
-            method: 'POST',
-            body: JSON.stringify(arg),
-            headers: { 'Content-Type': 'application/json' }
-        }).then(resp => {
-            return resp.json();
-        }).then(json => {
-            if ('code' in json) {
-                console.log(json.message);
-                self._triggerErrorEvent('Faild to register to the server. ' + json.message);
-            }
-            else {
-                self._registration = json;
-            }
+            fetch(self.registerPath, {
+                method: 'POST',
+                body: JSON.stringify(arg),
+                headers: { 'Content-Type': 'application/json', 'X-APPLICATION': self.applicationId }
+            }).then(resp => {
+                return resp.json();
+            }).then(json => {
+                if ('code' in json) {
+                   let message = 'Faild to register to the server.';
+                    console.log(message + json.message);
+                    self._triggerErrorEvent(message);
+                    reject(message);
+                } else {
+                    self._registration = json;
+                    resolve(json);
+                }
+            }).catch (e => {
+                let message = 'Faild to register to the server.';
+                console.log(message + e);
+                self._triggerErrorEvent(message);
+                reject(message);
+            });
         });
     };
 
     p._unregister = function(subscription) {
-        let arg = {
-            application_id: new URL(location.href).origin,
-            endpoint: subscription.endpoint
-        };
+        return new Promise((resolve, reject) => {
+            let arg = {
+                application_id: self.applicationId,
+                endpoint: subscription.endpoint
+            };
 
-        if (self.applicationId) {
-            arg.application_id = self.applicationId;
-        }
-
-        fetch(self.unregisterPath, {
-            method: 'POST',
-            body: JSON.stringify(arg),
-            headers: { 'Content-Type': 'application/json' }
-        }).then(resp => {
-            return resp.json();
-        }).then(json => {
-            if ('code' in json) {
-                console.log(json.message);
-                self._triggerErrorEvent('Faild to unregister from the server. ' + json.message);
-            }
-            else {
-                self._registration = null;
-            }
+            fetch(self.unregisterPath, {
+                method: 'POST',
+                body: JSON.stringify(arg),
+                headers: { 'Content-Type': 'application/json', 'X-APPLICATION': self.applicationId }
+            }).then(resp => {
+                return resp.json();
+            }).then(json => {
+                if ('code' in json) {
+                    let message = 'Faild to unregister from the server.';
+                    console.log(message + json.message);
+                    self._triggerErrorEvent(message);
+                    reject(message);
+                }
+                else {
+                    self._registration = null;
+                    resolve(json);
+                }
+            }).catch (e => {
+                let message = 'Faild to unregister from the server.';
+                console.log(message + e);
+                self._triggerErrorEvent(message);
+                reject(message);
+            });
         });
     };
+
+    p._fetchRegistration = function(subscription) {
+        return new Promise((resolve, reject) => {
+            var arg = {
+                application_id: self.applicationId,
+                device_identifier: subscription.endpoint
+            };
+
+            let params = new URLSearchParams();
+            Object.keys(arg).forEach(key => params.set(key, arg[key]));
+
+            fetch(self.getRegistrationPath + '?' + params.toString(), {
+                headers: { 'Content-Type': 'application/json', 'X-APPLICATION': self.applicationId }
+            }).then(resp => {
+                return resp.json();
+            }).then(json => {
+                self._registration = json;
+                resolve(json);
+            }).catch(e => {
+                let message = 'Faild to fetch registration from the server.';
+                console.log(message + e);
+                self._triggerErrorEvent(message);
+                reject(message);
+            });
+        });
+    }
 
     window.OpenppWebPush = OpenppWebPush;
 

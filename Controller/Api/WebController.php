@@ -18,8 +18,8 @@ class WebController extends FOSRestController
      * )
      *
      * @Post("/web/track-delivered", defaults={"_format"="json"})
-     * @RequestParam(name="tag", description="The notification ID.", strict=true)
-     * @RequestParam(name="subscription_id", description="The subscription ID.", strict=true)
+     * @RequestParam(name="tag", description="Notification ID", strict=true)
+     * @RequestParam(name="subscription_id", description="Subscription ID (endpoint)", strict=true)
      */
     public function trackDeliveredAction(ParamFetcherInterface $paramFetcher)
     {
@@ -42,8 +42,8 @@ class WebController extends FOSRestController
      * )
      *
      * @Post("/web/track-click", defaults={"_format"="json"})
-     * @RequestParam(name="tag", description="The notification ID.", strict=true)
-     * @RequestParam(name="subscription_id", description="The subscription ID.", strict=true)
+     * @RequestParam(name="tag", description="Notification ID", strict=true)
+     * @RequestParam(name="subscription_id", description="Subscription ID (endpoint)", strict=true)
      */
     public function trackClickAction(ParamFetcherInterface $paramFetcher)
     {

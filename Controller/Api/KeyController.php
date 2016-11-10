@@ -14,7 +14,7 @@ class KeyController extends FOSRestController
 {
     /**
      * @ApiDoc(
-     *  description="Retrieve the server public key for web push.",
+     *  description="Retrieve the server public key for web push",
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *

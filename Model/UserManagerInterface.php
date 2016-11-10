@@ -58,8 +58,9 @@ interface UserManagerInterface
      * @param ApplicationInterface $application
      * @param string $uid
      * @param TagInterface|array $tag
+     * @param boolean $andFlush
      */
-    public function addTagToUser(ApplicationInterface $application, $uid, $tag);
+    public function addTagToUser(ApplicationInterface $application, $uid, $tags, $andFlush = true);
 
     /**
      * Removes the tag(s) from user.
@@ -67,8 +68,9 @@ interface UserManagerInterface
      * @param ApplicationInterface $application
      * @param string $uid
      * @param TagInterface|array $tag
+     * @param boolean $andFlush
      */
-    public function removeTagFromUser(ApplicationInterface $application, $uid, $tag);
+    public function removeTagFromUser(ApplicationInterface $application, $uid, $tags, $andFlush = true);
 
     /**
      * Returns whether the user having the tag exists.

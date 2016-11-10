@@ -78,7 +78,6 @@ class OwnPusher extends AbstractPusher
         $application = $this->getApplication($application);
 
         $devices = $this->deviceManager->findDevicesByTagExpression($application, $tagExpression);
-
         if (!empty($devices)) {
             $this->pushToDevice($application, $devices, $message, $options);
         }
