@@ -6,6 +6,7 @@ use Sonata\NotificationBundle\Consumer\ConsumerInterface;
 use Sonata\NotificationBundle\Consumer\ConsumerEvent;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\HistoryManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TrackConsumer implements ConsumerInterface
 {

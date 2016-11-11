@@ -9,6 +9,7 @@ use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\MapBundle\Model\PointManagerInterface;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
 use Openpp\PushNotificationBundle\Model\Device;
+use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 
 class RegistrationManipurator
 {
@@ -28,6 +29,11 @@ class RegistrationManipurator
     protected $userManager;
 
     /**
+     * @var TagManagerInterface
+     */
+    protected $tagManager;
+
+    /**
      * @var string
      */
     protected $uidAutoPrefix;
@@ -43,17 +49,20 @@ class RegistrationManipurator
      * @param ApplicationManagerInterface $applicationManager
      * @param DeviceManagerInterface $deviceManager
      * @param UserManagerInterface $userManager
+     * @param TagManagerInterface $tagManager
      * @param string $uidAutoPrefix
      */
     public function __construct(
         ApplicationManagerInterface $applicationManager,
         DeviceManagerInterface $deviceManager,
         UserManagerInterface $userManager,
+        TagManagerInterface $tagManager,
         $uidAutoPrefix = 'op_'
     ) {
         $this->applicationManager = $applicationManager;
         $this->deviceManager      = $deviceManager;
         $this->userManager        = $userManager;
+        $this->tagManager         = $tagManager;
         $this->uidAutoPrefix      = $uidAutoPrefix;
     }
 
@@ -82,11 +91,7 @@ class RegistrationManipurator
      */
     public function registerDevice($applicationId, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
     {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
-
-        if (is_null($application)) {
-            throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));
-        }
+        $application = $this->getApplicaiton($applicationId);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
@@ -151,12 +156,21 @@ class RegistrationManipurator
 
         $application->addUser($user);
 
+        $tags = $this->tagManager->getTagObjects(array(
+            Device::getTypeName($device->getType()),
+            $device->getUser()->getUidTag()
+        ));
+
+        foreach ($tags as $tag) {
+            $user->addTag($tag);
+        }
+
         $this->deviceManager->save($device);
 
         return array(
             'deviceIdentifier' => $deviceIdentifier,
             'uid' => $uid,
-            'tags' => array_unique($user->getTagNames()->toArray() + Device::getTypeName($device->getType())),
+            'tags' => $user->getTagNames()->toArray(),
             'registrationDate' => $device->getRegisteredAt(),
         );
     }
@@ -173,11 +187,7 @@ class RegistrationManipurator
      */
     public function unregisterDevice($applicationId, $deviceIdentifier)
     {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
-
-        if (is_null($application)) {
-            throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));
-        }
+        $application = $this->getApplicaiton($applicationId);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
@@ -209,11 +219,7 @@ class RegistrationManipurator
      */
     public function getRegistration($applicationId, $deviceIdentifier)
     {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
-
-        if (is_null($application)) {
-            throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));
-        }
+        $application = $this->getApplicaiton($applicationId);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
@@ -227,5 +233,21 @@ class RegistrationManipurator
         }
 
         throw new DeviceNotFoundException(sprintf('Device %s is not found.', $deviceIdentifier));
+    }
+
+    /**
+     * @param string $applicationId
+     * @throws ApplicationNotFoundException
+     * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
+     */
+    protected function getApplicaiton($applicationId)
+    {
+        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
+
+        if (is_null($application)) {
+            throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));
+        }
+
+        return $application;
     }
 }

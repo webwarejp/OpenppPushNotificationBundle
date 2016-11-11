@@ -43,6 +43,7 @@
             <argument type="service" id="openpp.push_notification.manager.application" />
             <argument type="service" id="openpp.push_notification.manager.device" />
             <argument type="service" id="openpp.push_notification.manager.user" />
+            <argument type="service" id="openpp.push_notification.manager.tag" />
             <argument />
         </service>
 

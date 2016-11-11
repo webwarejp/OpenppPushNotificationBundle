@@ -6,11 +6,9 @@ use Doctrine\Common\EventSubscriber;
 use Doctrine\ORM\Events;
 use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\ORM\EntityManager;
 use Doctrine\ORM\UnitOfWork;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\Device;
 use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\TagInterface;
@@ -67,44 +65,32 @@ class DeviceRegistrationSubscriber implements EventSubscriber
      */
     public function onFlush(OnFlushEventArgs $eventArgs)
     {
-        $em = $eventArgs->getEntityManager();
-        $uow = $em->getUnitOfWork();
+        $uow = $eventArgs->getEntityManager()->getUnitOfWork();
 
-        $this->processInsersions($em, $uow);
-        $this->processUpdates($em, $uow);
-        $this->processDeletions($em, $uow);
+        $this->processInsersions($uow);
+        $this->processUpdates($uow);
+        $this->processDeletions($uow);
+        $this->processCollectionUpdates($uow);
 
         $this->executeRegistration();
     }
 
     /**
-     * @param EntityManager $em
      * @param UnitOfWork    $uow
      */
-    protected function processInsersions(EntityManager $em, UnitOfWork $uow)
+    protected function processInsersions(UnitOfWork $uow)
     {
         foreach ($uow->getScheduledEntityInsertions() as $entity) {
             if ($entity instanceof DeviceInterface) {
-                $user = $entity->getUser();
-                // Add device type tag
-                $deviceTypeTag = $this->getTagManager()->getTagObject(Device::getTypeName($entity->getType()));
-                $user->addTag($deviceTypeTag);
-
-                $em->persist($user);
-                $uow->computeChangeSet($em->getClassMetadata(get_class($user)), $user);
-                $em->persist($deviceTypeTag);
-                $uow->computeChangeSet($em->getClassMetadata(get_class($deviceTypeTag)), $deviceTypeTag);
-
                 $this->creates->add($entity);
             }
         }
     }
 
     /**
-     * @param EntityManager $em
-     * @param UnitOfWork    $uow
+     * @param UnitOfWork $uow
      */
-    protected function processUpdates(EntityManager $em, UnitOfWork $uow)
+    protected function processUpdates(UnitOfWork $uow)
     {
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof DeviceInterface) {
@@ -124,10 +110,9 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     }
 
     /**
-     * @param EntityManager $em
-     * @param UnitOfWork    $uow
+     * @param UnitOfWork $uow
      */
-    protected function processDeletions(EntityManager $em, UnitOfWork $uow)
+    protected function processDeletions(UnitOfWork $uow)
     {
         foreach ($uow->getScheduledEntityDeletions() as $entity) {
             if ($entity instanceof DeviceInterface) {
@@ -137,10 +122,9 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     }
 
     /**
-     * @param EntityManager $em
-     * @param UnitOfWork    $uow
+     * @param UnitOfWork $uow
      */
-    protected function processCollectionUpdates(EntityManager $em, UnitOfWork $uow)
+    protected function processCollectionUpdates(UnitOfWork $uow)
     {
         $deletions = $uow->getScheduledCollectionDeletions();
         $updates   = $uow->getScheduledCollectionUpdates();
@@ -150,7 +134,10 @@ class DeviceRegistrationSubscriber implements EventSubscriber
             if ($col->getOwner() instanceof UserInterface && $col->first() instanceof TagInterface) {
                 $user = $col->getOwner();
                 foreach ($user->getDevices() as $device) {
-                    if (!$this->updates->contains($device)) {
+                    if (!$this->updates->contains($device)
+                        && !$this->creates->contains($device)
+                        && !$this->deletes->contains($device)
+                    ) {
                         $this->updates->add($device);
                     }
                 }
@@ -164,7 +151,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function executeRegistration()
     {
         foreach ($this->creates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray() + array($device->getUser()->getUidTag());
+            $tags = $device->getUser()->getTagNames()->toArray();
             $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->createRegistration(
@@ -174,7 +161,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
             );
         }
         foreach ($this->updates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray() + array($device->getUser()->getUidTag());
+            $tags = $device->getUser()->getTagNames()->toArray();
             $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
 
             $this->getPushServiceManager()->updateRegistration(
@@ -201,16 +188,6 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function getPushServiceManager()
     {
         return $this->container->get('openpp.push_notification.push_service_manager');
-    }
-
-    /**
-     * Gets the Tag Manager.
-     *
-     * @return \Openpp\PushNotificationBundle\Model\TagManagerInterface
-     */
-    protected function getTagManager()
-    {
-        return $this->container->get('openpp.push_notification.manager.tag');
     }
 
     /**

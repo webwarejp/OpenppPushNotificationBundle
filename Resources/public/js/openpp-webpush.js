@@ -393,8 +393,7 @@
                     console.log(message + json.message);
                     self._triggerErrorEvent(message);
                     reject(message);
-                }
-                else {
+                } else {
                     self._registration = null;
                     resolve(json);
                 }
@@ -422,8 +421,13 @@
             }).then(resp => {
                 return resp.json();
             }).then(json => {
-                self._registration = json;
-                resolve(json);
+                if ('code' in json) {
+                    console.log(json.message);
+                    reject(json.message);
+                } else {
+                    self._registration = json;
+                    resolve(json);
+                }
             }).catch(e => {
                 let message = 'Faild to fetch registration from the server.';
                 console.log(message + e);

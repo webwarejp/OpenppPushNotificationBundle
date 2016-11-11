@@ -51,7 +51,7 @@ class OpenppPushNotificationExtension extends Extension
                 ->addMethodCall('setPointManager', array(new Reference('openpp.map.manager.point')));
         }
         $container->getDefinition('openpp.push_notification.manipurator.register')
-            ->replaceArgument(3, $config['uid_auto_prefix']);
+            ->replaceArgument(4, $config['uid_auto_prefix']);
 
         if ($config['consumer']) {
             $loader->load('pusher.xml');
