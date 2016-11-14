@@ -118,7 +118,7 @@ class PushServiceManager implements PushServiceManagerInterface
                 unset($tag[$idx]);
             }
         }
-        if (!$tag) {
+        if (empty($tag)) {
             return;
         }
 
@@ -155,7 +155,7 @@ class PushServiceManager implements PushServiceManagerInterface
                 unset($tag[$idx]);
             }
         }
-        if (!$tag) {
+        if (empty($tag)) {
             return;
         }
 

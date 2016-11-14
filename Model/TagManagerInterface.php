@@ -16,7 +16,7 @@ interface TagManagerInterface
      *
      * @param string $name
      *
-     * @return TagInterface or null
+     * @return TagInterface|null
      */
     public function findTagByName($name);
 
@@ -25,7 +25,7 @@ interface TagManagerInterface
      *
      * @param array $criteria
      *
-     * @return TagInterface or null
+     * @return TagInterface|null
      */
     public function findTagBy(array $criteria);
 

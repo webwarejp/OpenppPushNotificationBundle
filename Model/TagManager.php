@@ -76,7 +76,7 @@ abstract class TagManager implements TagManagerInterface
 
         foreach ($tags as $tag) {
             $object = $this->getTagObject($tag, $creation);
-            if ($object) {
+            if (!empty($object)) {
                 $objects[] = $object;
             }
         }
@@ -91,7 +91,7 @@ abstract class TagManager implements TagManagerInterface
     {
         $object = $this->findTagByName($tag);
 
-        if (!$object && $creation) {
+        if (empty($object) && $creation) {
             $object = $this->create();
             $object->setName($tag);
         }
