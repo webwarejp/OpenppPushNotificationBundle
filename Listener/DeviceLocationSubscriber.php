@@ -22,7 +22,7 @@ use CrEOF\Spatial\PHP\Types\Geometry\Point;
 class DeviceLocationSubscriber implements EventSubscriber
 {
     /**
-     * @var ContainerIneterface
+     * @var ContainerInterface
      */
     protected $container;
 

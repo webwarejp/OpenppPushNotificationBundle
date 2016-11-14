@@ -168,7 +168,7 @@ SQL;
         $whereClause = str_replace('%s', 'dut.tags', $whereClause);
 
         $deviceWhereClause = '';
-        if ($devices) {
+        if (!empty($devices)) {
             $deviceWhereClause = 'AND d.id in (?)';
         }
         $sql = sprintf($sql, $tagTableName, $userTagTableName, $deviceTableName, $userTableName, $deviceWhereClause, $whereClause);
@@ -176,7 +176,7 @@ SQL;
 
         $params = array();
         $params[] = $application->getId();
-        if ($devices) {
+        if (!empty($devices)) {
             $params[] = $devices;
         }
 
