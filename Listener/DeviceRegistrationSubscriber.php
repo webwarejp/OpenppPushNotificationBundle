@@ -151,23 +151,17 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function executeRegistration()
     {
         foreach ($this->creates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray();
-            $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
-
             $this->getPushServiceManager()->createRegistration(
                 $device->getApplication()->getName(),
                 $device->getDeviceIdentifier(),
-                $tags
+                $this->getDeviceTags($device)
             );
         }
         foreach ($this->updates as $device) {
-            $tags = $device->getUser()->getTagNames()->toArray();
-            $tags = $this->unsetDifferentDeviceTag($device->getType(), $tags);
-
             $this->getPushServiceManager()->updateRegistration(
                 $device->getApplication()->getName(),
                 $device->getDeviceIdentifier(),
-                $tags
+                $this->getDeviceTags($device)
             );
         }
         foreach ($this->deletes as $device) {
@@ -188,6 +182,18 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function getPushServiceManager()
     {
         return $this->container->get('openpp.push_notification.push_service_manager');
+    }
+
+    /**
+     * Get the device's tags.
+     *
+     * @param DeviceInterface $device
+     */
+    protected function getDeviceTags(DeviceInterface $device)
+    {
+        $tags = $device->getUser()->getTagNames()->toArray();
+
+        return $this->unsetDifferentDeviceTag($device->getType(), $tags);
     }
 
     /**

@@ -162,7 +162,6 @@ SQL;
         $deviceTableName  = $this->objectManager->getClassMetadata($this->class)->getTableName();
         $userTableName    = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
 
-        $tagsColumn = 'dut.tags';
         $te = new TagExpression($tagExpression);
         $whereClause = $te->toNativeSQLWhereClause();
         $whereClause = str_replace('%s', 'dut.tags', $whereClause);

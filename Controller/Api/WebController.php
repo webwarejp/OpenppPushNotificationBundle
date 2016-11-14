@@ -23,14 +23,7 @@ class WebController extends FOSRestController
      */
     public function trackDeliveredAction(ParamFetcherInterface $paramFetcher)
     {
-        $this->get('sonata.notification.backend')->createAndPublish(
-            TrackConsumer::TYPE_NAME,
-            array(
-                'operation' => TrackConsumer::OPERATION_DELIVERED,
-                'notificationId' => $paramFetcher->get('tag'),
-                'subscriptionId' => $paramFetcher->get('subscription_id'),
-            )
-        );
+        $this->createAndPush(TrackConsumer::OPERATION_DELIVERED, $paramFetcher->get('tag'), $paramFetcher->get('subscription_id'));
 
         return array('result' => true);
     }
@@ -47,15 +40,23 @@ class WebController extends FOSRestController
      */
     public function trackClickAction(ParamFetcherInterface $paramFetcher)
     {
+        $this->createAndPush(TrackConsumer::OPERATION_CLICK, $paramFetcher->get('tag'), $paramFetcher->get('subscription_id'));
+
+        return array('result' => true);
+    }
+
+    /**
+     * @param string $operation
+     */
+    protected function createAndPush($operation, $notificationId, $subscriptionId)
+    {
         $this->get('sonata.notification.backend')->createAndPublish(
             TrackConsumer::TYPE_NAME,
             array(
-                'operation' => TrackConsumer::OPERATION_CLICK,
-                'notificationId' => $paramFetcher->get('tag'),
-                'subscriptionId' => $paramFetcher->get('subscription_id'),
+                'operation' => $operation,
+                'notificationId' => $notificationId,
+                'subscriptionId' => $subscriptionId,
             )
         );
-
-        return array('result' => true);
     }
 }
