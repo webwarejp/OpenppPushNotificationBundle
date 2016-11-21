@@ -72,7 +72,11 @@ class TagExpression
      */
     public function toNativeSQLWhereClause()
     {
-        return $this->parse();
+        try {
+            return $this->parse();
+        } catch (Exception $e) {
+            throw new InvalidTagExpressionException($e->getMessage());
+        }
     }
 
     /**
