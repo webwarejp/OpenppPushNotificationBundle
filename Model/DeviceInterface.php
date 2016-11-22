@@ -188,6 +188,20 @@ interface DeviceInterface extends BaseDeviceInterface
     public function getLastDeliveredNotificationId();
 
     /**
+     * Set the user agent.
+     *
+     * @param string $userAgent
+     */
+    public function setUserAgent($userAgent);
+
+    /**
+     * Get the user agent.
+     *
+     * @return string
+     */
+    public function getUserAgent();
+
+    /**
      * Returns the type choices.
      *
      * @return array

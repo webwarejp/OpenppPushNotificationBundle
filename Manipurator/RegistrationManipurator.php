@@ -81,16 +81,29 @@ class RegistrationManipurator
      * @param string  $deviceIdentifier
      * @param string  $token
      * @param string  $uid
-     * @param integer $type
      * @param float   $locationLatitude
      * @param float   $locationLongitude
+     * @param string  $userAgent
+     * @param integer $type
+     * @param string  $key
+     * @param string  $auth
      *
      * @throws ApplicationNotFoundException
      *
      * @return array
      */
-    public function registerDevice($applicationId, $deviceIdentifier, $token, $uid, $locationLatitude, $locationLongitude, $type, $key = null, $auth = null)
-    {
+    public function registerDevice(
+        $applicationId,
+        $deviceIdentifier,
+        $token,
+        $uid,
+        $locationLatitude,
+        $locationLongitude,
+        $userAgent,
+        $type,
+        $key = null,
+        $auth = null
+    ) {
         $application = $this->getApplicaiton($applicationId);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
@@ -109,6 +122,7 @@ class RegistrationManipurator
         $device->setApplication($application);
         $device->setDeviceIdentifier($deviceIdentifier);
         $device->setToken($token);
+        $device->setUserAgent($userAgent);
         $device->setType($type);
         $device->setPublicKey($key);
         $device->setAuthtoken($auth);

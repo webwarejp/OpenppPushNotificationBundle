@@ -10,6 +10,7 @@ use FOS\RestBundle\Controller\Annotations\Post;
 use FOS\RestBundle\Controller\Annotations\Get;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
@@ -32,7 +33,7 @@ class DeviceController extends FOSRestController
      * @RequestParam(name="location_latitude", description="Latitude of device's location", strict=false)
      * @RequestParam(name="location_longitude", description="Longitude of device's location", strict=false)
      */
-    public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher)
+    public function registerDeviceAndroidAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
         return $this->getManipurator()->registerDevice(
             $paramFetcher->get('application_id'),
@@ -41,6 +42,7 @@ class DeviceController extends FOSRestController
             $paramFetcher->get('uid'),
             $paramFetcher->get('location_latitude'),
             $paramFetcher->get('location_longitude'),
+            $request->server->get('HTTP_USER_AGENT'),
             DeviceInterface::TYPE_ANDROID
         );
     }
@@ -59,7 +61,7 @@ class DeviceController extends FOSRestController
      * @RequestParam(name="location_latitude", description="Latitude of device's location", strict=false)
      * @RequestParam(name="location_longitude", description="Longitude of device's location", strict=false)
      */
-    public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher)
+    public function registerDeviceIosAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
         return $this->getManipurator()->registerDevice(
             $paramFetcher->get('application_id'),
@@ -68,6 +70,7 @@ class DeviceController extends FOSRestController
             $paramFetcher->get('uid'),
             $paramFetcher->get('location_latitude'),
             $paramFetcher->get('location_longitude'),
+            $request->server->get('HTTP_USER_AGENT'),
             DeviceInterface::TYPE_IOS
         );
     }
@@ -87,7 +90,7 @@ class DeviceController extends FOSRestController
      * @RequestParam(name="location_latitude", description="Latitude of device's location", strict=false)
      * @RequestParam(name="location_longitude", description="Longitude of device's location", strict=false)
      */
-    public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher)
+    public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
         return $this->getManipurator()->registerDevice(
                 $paramFetcher->get('application_id'),
@@ -96,6 +99,7 @@ class DeviceController extends FOSRestController
                 $paramFetcher->get('uid'),
                 $paramFetcher->get('location_latitude'),
                 $paramFetcher->get('location_longitude'),
+                $request->server->get('HTTP_USER_AGENT'),
                 DeviceInterface::TYPE_WEB,
                 $paramFetcher->get('key'),
                 $paramFetcher->get('auth')

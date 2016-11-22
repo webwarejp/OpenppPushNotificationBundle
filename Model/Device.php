@@ -76,6 +76,11 @@ class Device implements DeviceInterface
     protected $lastDeliveredNotificationId;
 
     /**
+     * @var string
+     */
+    protected $userAgent;
+
+    /**
      * @var \DateTime
      */
     protected $createdAt;
@@ -330,6 +335,22 @@ class Device implements DeviceInterface
     public function getLastDeliveredNotificationId()
     {
         return $this->lastDeliveredNotificationId;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function setUserAgent($userAgent)
+    {
+        $this->userAgent = $userAgent;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function getUserAgent()
+    {
+        return $this->userAgent;
     }
 
     /**
