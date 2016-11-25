@@ -87,6 +87,15 @@ interface DeviceManagerInterface
     public function findActiveDevices(ApplicationInterface $application);
 
     /**
+     * Counts active devices for the application.
+     *
+     * @param ApplicationInterface $application
+     *
+     * @return array
+     */
+    public function countActiveDevices(ApplicationInterface $application);
+
+    /**
      * Finds the devices which match the given tag expression.
      *
      * @param ApplicationInterface $application

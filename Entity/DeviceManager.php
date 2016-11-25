@@ -100,9 +100,24 @@ class DeviceManager extends BaseManager
             ->setParameter('application', $application)
         ;
 
-        $result = $qb->getQuery()->getResult();
+        return $qb->getQuery()->getResult();
+    }
 
-        return $result;
+    /**
+     * {@inheritDoc}
+     */
+    public function countActiveDevices(ApplicationInterface $application)
+    {
+        $qb = $this->repository->createQueryBuilder('d');
+        /* @var $qb \Doctrine\ORM\QueryBuilder */
+        $qb
+            ->select('COUNT(d.id)')
+            ->where($qb->expr()->eq('d.application', ':application'))
+            ->andWhere($qb->expr()->isNull('d.unregisteredAt'))
+            ->setParameter('application', $application)
+        ;
+
+        return $qb->getQuery()->getSingleScalarResult();
     }
 
     /**
@@ -147,6 +162,7 @@ WITH _device_user_tag AS (
     %s d JOIN %s u ON d.user_id = u.id
   WHERE
     u.application_id = ?
+    AND d.unregistered_at IS NULL
     %s
 )
 SELECT 
@@ -222,6 +238,7 @@ FROM
     ON d.user_id = u.id
   WHERE
     d.application_id = ?
+    AND d.unregistered_at IS NULL
     AND ST_DWithin(p.point::geography, ST_GeographyFromText(?), ?)
 SQL;
 
