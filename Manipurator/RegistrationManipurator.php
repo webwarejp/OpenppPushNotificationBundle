@@ -194,27 +194,36 @@ class RegistrationManipurator
      *
      * @param string $applicationId
      * @param string $deviceIdentifier
+     * @param boolean $deletion
      *
      * @throws ApplicationNotFoundException
      *
      * @return array
      */
-    public function unregisterDevice($applicationId, $deviceIdentifier)
+    public function unregisterDevice($applicationId, $deviceIdentifier, $deletion = false)
     {
         $application = $this->getApplicaiton($applicationId);
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
         if (!is_null($device)) {
+            $result = array(
+                'deviceIdentifier' => $deviceIdentifier,
+                'uid' => $device->getUser()->getUid(),
+            );
+            if ($deletion) {
+                $this->deviceManager->delete($device);
+
+                return $result;
+            }
+
             $device->setUnregisteredAt(new \DateTime());
             $device->getUser()->setBadge(0);
             $this->deviceManager->save($device);
 
-            return array(
-                'deviceIdentifier' => $deviceIdentifier,
-                'uid' => $device->getUser()->getUid(),
-                'unregistrationDate' => $device->getUnregisteredAt(),
-            );
+            $result['unregistrationDate'] = $device->getUnregisteredAt();
+
+            return $result;
         }
 
         return array('message' => 'No device.');

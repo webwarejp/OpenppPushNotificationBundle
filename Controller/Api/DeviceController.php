@@ -156,7 +156,8 @@ class DeviceController extends FOSRestController
     {
         return $this->getManipurator()->unregisterDevice(
             $paramFetcher->get('application_id'),
-            $paramFetcher->get('endpoint')
+            $paramFetcher->get('endpoint'),
+            true
         );
     }
 
