@@ -12,7 +12,7 @@
         </property>
         <getter property="specificSettingValid">
             <constraint name="IsTrue">
-                <option name="message">openpp_push_notification.condition.no_specific</option>
+                <option name="message">openpp_push_notification.condition.invalid_specific</option>
             </constraint>
         </getter>
         <getter property="periodicSettingValid">

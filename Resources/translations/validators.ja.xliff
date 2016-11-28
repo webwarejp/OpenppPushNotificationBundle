@@ -6,9 +6,9 @@
         <source>openpp_push_notification.condition.no_application</source>
         <target>アプリケーションを指定してください</target>
       </trans-unit>
-      <trans-unit id="openpp_push_notification.condition.no_specific">
-        <source>openpp_push_notification.condition.no_specific</source>
-        <target>送信日時を指定してください</target>
+      <trans-unit id="openpp_push_notification.condition.invalid_specific">
+        <source>openpp_push_notification.condition.invalid_specific</source>
+        <target>未来の送信日時を指定してください</target>
       </trans-unit>
       <trans-unit id="openpp_push_notification.condition.invalid_periodic">
         <source>openpp_push_notification.condition.invalid_periodic</source>

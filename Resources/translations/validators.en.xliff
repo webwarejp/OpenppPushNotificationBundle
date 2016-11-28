@@ -6,9 +6,9 @@
         <source>openpp_push_notification.condition.no_application</source>
         <target>Please specify a applicaiton</target>
       </trans-unit>
-      <trans-unit id="openpp_push_notification.condition.no_specific">
-        <source>openpp_push_notification.condition.no_specific</source>
-        <target>Please specify at least one date to send the notification</target>
+      <trans-unit id="openpp_push_notification.condition.invalid_specific">
+        <source>openpp_push_notification.condition.invalid_specific</source>
+        <target>Please specify at least one future date to send the notification</target>
       </trans-unit>
       <trans-unit id="openpp_push_notification.condition.invalid_periodic">
         <source>openpp_push_notification.condition.invalid_periodic</source>

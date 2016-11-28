@@ -473,6 +473,15 @@ class Condition implements ConditionInterface
             if (empty($this->specificDates)) {
                 return false;
             }
+
+            $now = new \DateTime();
+            foreach ($this->specificDates as $date) {
+                if ($now < $date) {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         return true;
