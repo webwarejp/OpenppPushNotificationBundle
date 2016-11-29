@@ -11,6 +11,9 @@ use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Exception\UserNotFoundException;
 
+/**
+ *
+ */
 class UserController extends FOSRestController
 {
     /**
@@ -19,25 +22,29 @@ class UserController extends FOSRestController
      *  section="Openpp Push Notifications (Common)"
      * )
      *
-     * @Post("/user/tags/add", defaults={"_format"="json"})
+     * @Post("/{version}/user/tags/add", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="uid", description="User identifier", strict=true)
-     * @RequestParam(name="tags", array=true, description="Array of tags to add", strict=true)
+     * @RequestParam(name="tags", description="Array of tags to add", strict=true)
      */
     public function addUserTagsAction(ParamFetcherInterface $paramFetcher)
     {
         $application = $this->getApplication($paramFetcher->get('application_id'));
         $user = $this->getApplicationUser($application, $paramFetcher->get('uid'));
+        $tags = $paramFetcher->get('tags');
+        if (!is_array($tags)) {
+            $tags = array($tags);
+        }
 
         $this->get('openpp.push_notification.push_service_manager')->addTagToUser(
-             $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $paramFetcher->get('tags')
+             $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $tags
         );
 
         $result = array(
             'application_id' => $application->getSlug(),
             'uid'            => $user->getUid(),
         );
-        $result['tags'] = array_unique(array_merge($user->getTagNames()->toArray(), $paramFetcher->get('tags')));
+        $result['tags'] = array_unique(array_merge($user->getTagNames()->toArray(), $tags));
 
         return $result;
     }
@@ -48,25 +55,29 @@ class UserController extends FOSRestController
      *  section="Openpp Push Notifications (Common)"
      * )
      *
-     * @Post("/user/tags/remove", defaults={"_format"="json"})
+     * @Post("/{version}/user/tags/remove", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="uid", description="User identifier", strict=true)
-     * @RequestParam(name="tags", array=true, description="Array of tags to remove", strict=true)
+     * @RequestParam(name="tags", description="Array of tags to remove", strict=true)
      */
     public function removeUserTagsAction(ParamFetcherInterface $paramFetcher)
     {
         $application = $this->getApplication($paramFetcher->get('application_id'));
         $user = $this->getApplicationUser($application, $paramFetcher->get('uid'));
+        $tags = $paramFetcher->get('tags');
+        if (!is_array($tags)) {
+            $tags = array($tags);
+        }
 
         $this->get('openpp.push_notification.push_service_manager')->removeTagFromUser(
-             $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $paramFetcher->get('tags')
+             $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $tags
         );
 
         $result = array(
             'application_id' => $application->getSlug(),
             'uid'            => $user->getUid(),
         );
-        $result['tags'] = array_diff($user->getTagNames()->toArray(), $paramFetcher->get('tags'));
+        $result['tags'] = array_diff($user->getTagNames()->toArray(), $tags);
 
         return $result;
     }

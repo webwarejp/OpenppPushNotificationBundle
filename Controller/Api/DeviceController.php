@@ -14,8 +14,6 @@ use Symfony\Component\HttpFoundation\Request;
 
 /**
  *
- * @author shiroko@webware.co.jp
- *
  */
 class DeviceController extends FOSRestController
 {
@@ -25,7 +23,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (GCM)"
      * )
      *
-     * @Post("/device/android/register", defaults={"_format"="json"})
+     * @Post("/{version}/device/android/register", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="device_identifier", description="Vendor device identifier of the Android device", strict=true)
      * @RequestParam(name="registration_id", description="Registration id returned from GCM", strict=true)
@@ -53,7 +51,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/register", defaults={"_format"="json"})
+     * @Post("/{version}/device/ios/register", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="device_identifier", description="Vendor device identifier of the iOS device", strict=true)
      * @RequestParam(name="device_token", description="Device token returned from Apple", strict=true)
@@ -81,7 +79,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/device/web/register", defaults={"_format"="json"})
+     * @Post("/{version}/device/web/register", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="endpoint", description="URL that allows an application server to request delivery of a push message to a webapp", strict=true)
      * @RequestParam(name="key", description="Keying material used to encrypt push messages", strict=true)
@@ -112,7 +110,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (GCM)"
      * )
      *
-     * @Post("/device/android/unregister", defaults={"_format"="json"})
+     * @Post("/{version}/device/android/unregister", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="device_identifier", description="Vendor device identifier of the Android device", strict=true)
      */
@@ -130,7 +128,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (iOS)"
      * )
      *
-     * @Post("/device/ios/unregister", defaults={"_format"="json"})
+     * @Post("/{version}/device/ios/unregister", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="device_identifier", description="Vendor device identifier of the iOS device", strict=true)
      */
@@ -148,7 +146,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/device/web/unregister", defaults={"_format"="json"})
+     * @Post("/{version}/device/web/unregister", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="endpoint", description="URL that allows an application server to request delivery of a push message to a webapp", strict=true)
      */
@@ -167,7 +165,7 @@ class DeviceController extends FOSRestController
      *  section="Openpp Push Notifications (Common)"
      * )
      *
-     * @Get("/device/registration", defaults={"_format"="json"})
+     * @Get("/{version}/device/registration", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @QueryParam(name="application_id", description="Application ID", strict=true)
      * @QueryParam(name="device_identifier", description="Device identifier", strict=true)
      */

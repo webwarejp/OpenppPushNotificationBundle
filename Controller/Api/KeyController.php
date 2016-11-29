@@ -18,7 +18,7 @@ class KeyController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Get("/key/publicKey", defaults={"_format"="json"})
+     * @Get("/{version}/key/publicKey", requirements={"version" = "v1"}, defaults={"_format"="json"})
      */
     public function getPublicKeyAction()
     {

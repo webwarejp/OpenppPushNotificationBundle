@@ -17,7 +17,7 @@ class WebController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/web/track-delivered", defaults={"_format"="json"})
+     * @Post("/{version}/web/track-delivered", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="tag", description="Notification ID", strict=true)
      * @RequestParam(name="subscription_id", description="Subscription ID (endpoint)", strict=true)
      */
@@ -34,7 +34,7 @@ class WebController extends FOSRestController
      *  section="Openpp Push Notifications (Web Push)"
      * )
      *
-     * @Post("/web/track-click", defaults={"_format"="json"})
+     * @Post("/{version}/web/track-click", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="tag", description="Notification ID", strict=true)
      * @RequestParam(name="subscription_id", description="Subscription ID (endpoint)", strict=true)
      */

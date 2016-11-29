@@ -9,6 +9,9 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 
+/**
+ *
+ */
 class NotificationController extends FOSRestController
 {
     /**
@@ -17,7 +20,7 @@ class NotificationController extends FOSRestController
      *  section="Openpp Push Notifications (Common)"
      * )
      *
-     * @Post("/notification/send", defaults={"_format"="json"})
+     * @Post("/{version}/notification/send", requirements={"version" = "v1"}, defaults={"_format"="json"})
      * @RequestParam(name="application_id", description="Application ID", strict=true)
      * @RequestParam(name="title", description="Title of the push notification", strict=false)
      * @RequestParam(name="message", description="Message to be displayed in the push notification", strict=true)

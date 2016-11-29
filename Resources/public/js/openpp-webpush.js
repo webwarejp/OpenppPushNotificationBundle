@@ -31,10 +31,10 @@
         let defaults = {
             swPath: '/serviceworker.js',
             swScope: './',
-            keyPath: '/api/key/publicKey',
-            registerPath: '/api/device/web/register',
-            unregisterPath: '/api/device/web/unregister',
-            getRegistrationPath: '/api/device/registration',
+            keyPath: '/api/v1/key/publicKey',
+            registerPath: '/api/v1/device/web/register',
+            unregisterPath: '/api/v1/device/web/unregister',
+            getRegistrationPath: '/api/v1/device/registration',
             applicationId: new URL(location.href).origin
         };
 
