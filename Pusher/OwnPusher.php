@@ -97,7 +97,7 @@ class OwnPusher extends AbstractPusher
 
         $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
         $timestamp   = new \DateTime();
-        $notificationId = $this->generateNotificationId();
+        $notificationId = $this->generateNotificationId($options);
         $options['tag'] = $notificationId;
         $optionsResult = $options;
         $notRegisteredDevices = array();

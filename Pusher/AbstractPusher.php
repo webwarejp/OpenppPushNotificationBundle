@@ -134,10 +134,19 @@ abstract class AbstractPusher implements PusherInterface
     /**
      * Generate the notification id.
      *
+     * @param array $options
+     *
      * @return string
      */
-    protected function generateNotificationId()
+    protected function generateNotificationId(array $options)
     {
+        if (isset($options['notification_id'])) {
+            $notificationId = $options['notification_id'];
+            unset($options['notification_id']);
+
+            return $notificationId;
+        }
+
         return sha1(uniqid());
     }
 
