@@ -4,6 +4,10 @@
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://symfony.com/schema/dic/services http://symfony.com/schema/dic/services/services-1.0.xsd">
 
+    <parameters>
+        <parameter key="openpp.push_notification.consumer.class">Openpp\PushNotificationBundle\Consumer\TrackConsumer</parameter>
+    </parameters>
+
     <services>
         <service id="openpp.push_notification.consumer.push" class="Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer">
             <tag name="sonata.notification.consumer" type="openpp.push_notification.push" />
@@ -11,7 +15,7 @@
             <argument type="service" id="openpp.push_notification.push_service_manager" />
         </service>
 
-        <service id="openpp.push_notification.consumer.track" class="Openpp\PushNotificationBundle\Consumer\TrackConsumer">
+        <service id="openpp.push_notification.consumer.track" class="%openpp.push_notification.consumer.class%">
             <tag name="sonata.notification.consumer" type="openpp.push_notification.track" />
 
             <argument type="service" id="openpp.push_notification.manager.device" />
