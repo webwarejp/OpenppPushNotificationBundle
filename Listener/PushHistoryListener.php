@@ -3,7 +3,7 @@
 namespace Openpp\PushNotificationBundle\Listener;
 
 use Openpp\PushNotificationBundle\Event\PostPushEvent;
-use Openpp\PushNotificationBundle\model\HistoryManagerInterface;
+use Openpp\PushNotificationBundle\Model\HistoryManagerInterface;
 
 class PushHistoryListener
 {
