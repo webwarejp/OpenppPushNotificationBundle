@@ -46,6 +46,13 @@ interface TagManagerInterface
     public function isReservedTag($tag);
 
     /**
+     * Returns the reserved tags.
+     *
+     * @return array
+     */
+    public function getReservedTags();
+
+    /**
      * Converts the array of tag names to the array of tag objects.
      *
      * @param string|array  $tags

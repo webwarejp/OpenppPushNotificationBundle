@@ -156,7 +156,7 @@ class RegistrationManipurator
             }
             if (is_null($user)) {
                 $user = $this->userManager->create();
-                if (is_null($uid)) {
+                if (empty($uid)) {
                     $uid = uniqid($this->uidAutoPrefix);
                 }
             }

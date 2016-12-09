@@ -66,6 +66,14 @@ abstract class TagManager implements TagManagerInterface
     /**
      * {@inheritDoc}
      */
+    public function getReservedTags()
+    {
+        return $this->reservedTags;
+    }
+
+    /**
+     * {@inheritDoc}
+     */
     public function getTagObjects($tags, $creation = true)
     {
         $objects = array();
