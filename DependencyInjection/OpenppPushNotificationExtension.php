@@ -181,6 +181,7 @@ class OpenppPushNotificationExtension extends Extension
                 'remove',
                 'persist',
             ),
+            '',
             'mappedBy'      => 'application',
             'orphanRemoval' => false,
         ));
@@ -190,6 +191,7 @@ class OpenppPushNotificationExtension extends Extension
             'fieldName'     => 'icon',
             'targetEntity'  => $config['class']['media'],
             'cascade' => array(
+                'remove',
                 'persist',
             ),
             'joinColumns'   =>  array(
@@ -309,6 +311,7 @@ class OpenppPushNotificationExtension extends Extension
                 array(
                     'name'  => 'application_id',
                     'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE',
                 ),
             ),
             'orphanRemoval' => false,
@@ -341,6 +344,7 @@ class OpenppPushNotificationExtension extends Extension
                 array(
                     'name'  => 'application_id',
                     'referencedColumnName' => 'id',
+                    'onDelete' => 'CASCADE',
                 ),
             ),
             'orphanRemoval' => false,
