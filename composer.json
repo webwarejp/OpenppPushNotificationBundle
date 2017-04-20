@@ -19,6 +19,7 @@
 		"sonata-project/notification-bundle" : "^3.0",
 		"sonata-project/admin-bundle" : "^3.0",
 		"sonata-project/media-bundle" : "^3.0",
+		"sonata-project/datagrid-bundle": "^2.2",
 		"friendsofsymfony/rest-bundle" : "^2.1",
 		"nelmio/api-doc-bundle" : "^2.4",
 		"openpp/map-bundle" : "~0.4",
@@ -33,4 +34,3 @@
 		}
 	}
 }
-
