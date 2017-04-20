@@ -3,9 +3,12 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Sonata\DatagridBundle\Pager\Doctrine\Pager;
+use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
 use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
 use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
+use Doctrine\ORM\Query\Expr;
 
 class UserManager extends BaseManager
 {
@@ -53,6 +56,51 @@ class UserManager extends BaseManager
     public function findUserBy(array $criteria)
     {
         return $this->repository->findOneBy($criteria);
+    }
+
+    /**
+     * @param array $criteria
+     * @param int   $page
+     * @param int   $limit
+     * @param array $sort
+     *
+     * @return PagerInterface
+     */
+    public function getPager(array $criteria, $page, $limit = 10, array $sort = array())
+    {
+        $query = $this->repository
+            ->createQueryBuilder('u')
+            ->select('u');
+
+        $fields = $this->objectManager->getClassMetadata($this->class)->getFieldNames();
+        foreach ($sort as $field => $direction) {
+            if (!in_array($field, $fields)) {
+                throw new \RuntimeException(sprintf("Invalid sort field '%s' in '%s' class", $field, $this->class));
+            }
+        }
+
+        if (count($sort) == 0) {
+            $sort = array('uid' => 'ASC');
+        }
+
+        foreach ($sort as $field => $direction) {
+            $query->orderBy(sprintf('u.%s', $field), strtoupper($direction));
+        }
+
+        if (isset($criteria['application'])) {
+            $query->andWhere('u.application = :application');
+            $query->setParameter('application', $criteria['application']);
+        }
+
+        $query->innerJoin('u.devices', 'd', Expr\Join::WITH, $query->expr()->isNull('d.unregisteredAt'));
+
+        $pager = new Pager();
+        $pager->setMaxPerPage($limit);
+        $pager->setQuery(new ProxyQuery($query));
+        $pager->setPage($page);
+        $pager->init();
+
+        return $pager;
     }
 
     /**

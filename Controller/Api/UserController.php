@@ -3,7 +3,9 @@
 namespace Openpp\PushNotificationBundle\Controller\Api;
 
 use FOS\RestBundle\Controller\FOSRestController;
+use FOS\RestBundle\Controller\Annotations\Get;
 use FOS\RestBundle\Controller\Annotations\Post;
+use FOS\RestBundle\Controller\Annotations\QueryParam;
 use FOS\RestBundle\Controller\Annotations\RequestParam;
 use FOS\RestBundle\Request\ParamFetcherInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
@@ -16,6 +18,39 @@ use Openpp\PushNotificationBundle\Exception\UserNotFoundException;
  */
 class UserController extends FOSRestController
 {
+    /**
+     * @ApiDoc(
+     *  description="Get a paginated list of uids",
+     *  section="Openpp Push Notifications (Common)"
+     * )
+     *
+     * @Get("/{version}/user/uids", requirements={"version" = "v1"}, defaults={"_format"="json"})
+     * @QueryParam(name="application_id", description="Application ID", strict=true)
+     * @QueryParam(name="page", requirements="\d+", default="1", description="Page for uids list pagination (1-indexed)", strict=false)
+     * @QueryParam(name="count", requirements="\d+", default="1024", description="Number of uids by page", strict=false)
+     */
+    public function getUidsAction(ParamFetcherInterface $paramFetcher)
+    {
+        $application = $this->getApplication($paramFetcher->get('application_id'));
+        $page = $paramFetcher->get('page');
+        $limit = $paramFetcher->get('count');
+
+        $pager = $this->getUserManager()->getPager(array('application' => $application), $page, $limit);
+
+        $uids = array();
+        foreach ($pager->getResults() as $user) {
+            $uids[] = $user->getUid();
+        }
+
+        return array(
+            'page'      => $page,
+            'last_page' => $pager->getLastPage(),
+            'per_page'  => $limit,
+            'total'     => $pager->getNbResults(),
+            'uids'      => $uids,
+        );
+    }
+
     /**
      * @ApiDoc(
      *  description="Add tags to user",
@@ -111,12 +146,21 @@ class UserController extends FOSRestController
      */
     protected function getApplicationUser(ApplicationInterface $application, $uid)
     {
-        $userManager = $this->get('openpp.push_notification.manager.user');
-        $user = $userManager->findUserByUid($application, $uid);
+        $user = $this->getUserManager()->findUserByUid($application, $uid);
         if (empty($user)) {
             throw new UserNotFoundException(sprintf('User %s is not found.', $uid));
         }
 
         return $user;
+    }
+
+    /**
+     * Get user manager
+     *
+     * @return \Openpp\PushNotificationBundle\Model\UserManagerInterface
+     */
+    protected function getUserManager()
+    {
+        return $this->get('openpp.push_notification.manager.user');
     }
 }
