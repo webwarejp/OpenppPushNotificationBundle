@@ -43,7 +43,7 @@ class UserController extends FOSRestController
         }
 
         return array(
-            'page'      => $page,
+            'page'      => $pager->getPage(),
             'last_page' => $pager->getLastPage(),
             'per_page'  => $limit,
             'total'     => $pager->getNbResults(),
