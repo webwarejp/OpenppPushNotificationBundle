@@ -4,6 +4,7 @@ namespace Openpp\PushNotificationBundle\Collections;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Criteria;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
 
 class DeviceCollection extends ArrayCollection
 {
@@ -13,7 +14,7 @@ class DeviceCollection extends ArrayCollection
      */
     public function getByType($type)
     {
-        return $this->filter(function ($d) use ($type) {
+        return $this->filter(function (DeviceInterface $d) use ($type) {
             return $d->getType() == $type;
         });
     }
@@ -32,7 +33,7 @@ class DeviceCollection extends ArrayCollection
      */
     public function toIdArray()
     {
-        return $this->map(function($d) {
+        return $this->map(function(DeviceInterface $d) {
             return $d->getId();
         });
     }

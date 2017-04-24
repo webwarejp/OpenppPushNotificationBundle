@@ -205,7 +205,7 @@ class User implements UserInterface
      */
     public function getDeviceByIdentifier($deviceIdentifier)
     {
-        $p = function($element) use ($deviceIdentifier) {
+        $p = function(DeviceInterface $element) use ($deviceIdentifier) {
             return $element->getDeviceIdentifier() == $deviceIdentifier;
         };
 
@@ -222,7 +222,7 @@ class User implements UserInterface
      */
     public function getDeviceByToken($token)
     {
-        $p = function($element) use ($token) {
+        $p = function(DeviceInterface $element) use ($token) {
             return $element->getToken() == $token;
         };
 
@@ -247,7 +247,7 @@ class User implements UserInterface
      */
     public function getTagNames()
     {
-        return $this->tags->map(function($t) {
+        return $this->tags->map(function(TagInterface $t) {
             return $t->getName();
         });
     }
