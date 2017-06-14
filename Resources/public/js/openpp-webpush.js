@@ -161,13 +161,13 @@
 
     p.initialize = function() {
         if (self.isServiceWorkerSupported()) {
-            navigator.serviceWorker.register(self.swPath, { scope: self.swScope })
-                .then(self._checkSubscription)
-                .catch(function(e) {
-                   let message = 'Failed to register the service worker.';
-                    console.log(message + e);
-                    self._triggerErrorEvent(message);
-                });
+            navigator.serviceWorker.getRegistration(self.swScope).then(registration => {
+                if (registration) {
+                    self._checkSubscription(registration);
+                } else {
+                    self._triggerStateChangeEvent("unsubscribing");
+                }
+            });
         } else {
             let message = 'Unsupported property "serviceWorker" in navigator.';
             console.log(message);
@@ -247,26 +247,25 @@
     };
 
     p._subscribe = function() {
-        navigator.serviceWorker.getRegistration().then(registration => {
-            if (registration) {
-                let opt = {
-                    userVisibleOnly: true,
-                    applicationServerKey: self._serverPublicKey
-                };
-                registration.pushManager.subscribe(opt).then(subscription => {
-                    self._subscription = subscription;
-                    self._register(subscription).then(registration => {
-                        self._triggerStateChangeEvent("subscribing");
-                    });
-                }).catch(function(e) {
-                    let message = 'Failed to subscribe.';
-                    console.log(message + e);
-                    self._triggerErrorEvent(message);
+        navigator.serviceWorker.register(self.swPath, { scope: self.swScope }).then(registration => {
+            let opt = {
+                userVisibleOnly: true,
+                applicationServerKey: self._serverPublicKey
+            };
+            registration.pushManager.subscribe(opt).then(subscription => {
+                self._subscription = subscription;
+                self._register(subscription).then(registration => {
+                    self._triggerStateChangeEvent("subscribing");
                 });
-            } else {
-                let message = 'ServiceWorker is not registered.';
+            }).catch(function(e) {
+                let message = 'Failed to subscribe.';
+                console.log(message + e);
                 self._triggerErrorEvent(message);
-            }
+            });
+        }).catch(function(e) {
+            let message = 'Failed to register the service worker.';
+            console.log(message + e);
+            self._triggerErrorEvent(message);
         });
     };
 
