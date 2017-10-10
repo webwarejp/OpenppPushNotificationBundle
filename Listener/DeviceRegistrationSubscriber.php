@@ -165,6 +165,10 @@ class DeviceRegistrationSubscriber implements EventSubscriber
             );
         }
         foreach ($this->deletes as $device) {
+            //TODO: I'm not sure, but sometimes $device->getApplication() returns null.
+            if (!$device->getApplication()) {
+                continue;
+            }
             $this->getPushServiceManager()->deleteRegistration(
                 $device->getApplication()->getName(),
                 $device->getType(),
