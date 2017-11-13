@@ -1,4 +1,6 @@
 OpenppPushNotificationBundle
+===
+[![StyleCI](https://styleci.io/repos/32437874/shield?branch=master)](https://styleci.io/repos/32437874)
 
 License
 -------
