@@ -2,10 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Consumer;
 
-use Sonata\NotificationBundle\Consumer\ConsumerInterface;
-use Sonata\NotificationBundle\Consumer\ConsumerEvent;
 use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\HistoryManagerInterface;
+use Sonata\NotificationBundle\Consumer\ConsumerEvent;
+use Sonata\NotificationBundle\Consumer\ConsumerInterface;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TrackConsumer implements ConsumerInterface
@@ -61,11 +61,13 @@ class TrackConsumer implements ConsumerInterface
                 }
                 $history->setDeliveredCount($history->getDeliveredCount() + 1);
                 $this->historyManager->save($history);
+
                 break;
 
             case self::OPERATION_CLICK:
                 $history->setClickCount($history->getClickCount() + 1);
                 $this->historyManager->save($history);
+
                 break;
         }
     }

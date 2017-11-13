@@ -2,18 +2,18 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Sly\NotificationPusher\PushManager;
-use Sly\NotificationPusher\Model\Message;
-use Sly\NotificationPusher\Collection\DeviceCollection;
-use Sly\NotificationPusher\Model\Push;
-use Sly\NotificationPusher\Adapter\Gcm;
-use Sly\NotificationPusher\Adapter\Apns;
-use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\PushNotificationBundle\Collections\DeviceCollection as Devices;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\Device;
-use Openpp\PushNotificationBundle\Collections\DeviceCollection as Devices;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\WebPushAdapter\Adapter\Web;
+use Sly\NotificationPusher\Adapter\Apns;
+use Sly\NotificationPusher\Adapter\Gcm;
+use Sly\NotificationPusher\Collection\DeviceCollection;
 use Sly\NotificationPusher\Collection\PushCollection;
+use Sly\NotificationPusher\Model\Message;
+use Sly\NotificationPusher\Model\Push;
+use Sly\NotificationPusher\PushManager;
 
 class OwnPusher extends AbstractPusher
 {
@@ -90,7 +90,7 @@ class OwnPusher extends AbstractPusher
     {
         $application = $this->getApplication($application);
 
-        if (is_integer($devices[0])) {
+        if (is_int($devices[0])) {
             $devices = $this->deviceManager->findDevicesBy(['id' => $devices]);
         }
         $devices = new Devices($devices);
@@ -140,12 +140,14 @@ class OwnPusher extends AbstractPusher
                 $adapter = new Gcm([
                     'apiKey' => $application->getGcmApiKey(),
                 ]);
+
                 break;
 
             case DeviceInterface::TYPE_IOS:
                 $adapter = new Apns([
                     'certificate' => $application->getApnsCertificate(),
                 ]);
+
                 break;
 
             case DeviceInterface::TYPE_WEB:
@@ -160,6 +162,7 @@ class OwnPusher extends AbstractPusher
                     $parameters['ttl'] = $this->ttl;
                 }
                 $adapter = new Web($parameters);
+
                 break;
 
             default:
@@ -190,6 +193,7 @@ class OwnPusher extends AbstractPusher
                     $defaultOptions['icon'] = $this->mediaExtension->path($application->getIcon(), 'reference');
                 }
                 $options = array_merge($defaultOptions, $options);
+
                 break;
 
             default:

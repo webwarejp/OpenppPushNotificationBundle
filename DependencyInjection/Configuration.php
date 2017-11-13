@@ -54,14 +54,18 @@ class Configuration implements ConfigurationInterface
                         ->scalarNode('public_key_path')
                             ->cannotBeEmpty()
                             ->validate()
-                            ->ifTrue(function ($v) { return !\file_exists($v); })
+                            ->ifTrue(function ($v) {
+                                return !\file_exists($v);
+                            })
                                 ->thenInvalid('Public key file %s is not found')
                             ->end()
                         ->end()
                         ->scalarNode('private_key_path')
                             ->cannotBeEmpty()
                             ->validate()
-                            ->ifTrue(function ($v) { return !\file_exists($v); })
+                            ->ifTrue(function ($v) {
+                                return !\file_exists($v);
+                            })
                                 ->thenInvalid('Private key file %s is not found')
                             ->end()
                         ->end()

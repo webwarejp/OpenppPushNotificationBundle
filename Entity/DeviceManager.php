@@ -4,13 +4,13 @@ namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
 use Doctrine\ORM\Query\ResultSetMapping;
-use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
-use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\PushNotificationBundle\TagExpression\TagExpression;
-use Openpp\PushNotificationBundle\Collections\DeviceCollection;
-use Openpp\MapBundle\Model\CircleInterface;
 use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
+use Openpp\MapBundle\Model\CircleInterface;
+use Openpp\PushNotificationBundle\Collections\DeviceCollection;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
+use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 
 class DeviceManager extends BaseManager
 {
@@ -163,7 +163,7 @@ class DeviceManager extends BaseManager
         $rsm->addFieldResult('u', 'user_id', 'id');
         $rsm->addFieldResult('u', 'user_uid', 'uid');
 
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 WITH _device_user_tag AS ( 
   SELECT 
     d.id AS device_id,
@@ -246,7 +246,7 @@ SQL;
         $rsm->addFieldResult('u', 'user_id', 'id');
         $rsm->addFieldResult('u', 'uid', 'uid');
 
-        $sql = <<<SQL
+        $sql = <<<'SQL'
 SELECT
   d.id,
   d.type,

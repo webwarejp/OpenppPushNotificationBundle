@@ -2,10 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Event;
 
-use Symfony\Component\EventDispatcher\Event;
-use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\Device;
+use Symfony\Component\EventDispatcher\Event;
 
 class PostPushEvent extends Event
 {

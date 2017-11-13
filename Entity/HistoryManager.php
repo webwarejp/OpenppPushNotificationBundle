@@ -3,8 +3,8 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Openpp\PushNotificationBundle\Model\HistoryManagerInterface;
 use Openpp\PushNotificationBundle\Model\HistoryInterface;
+use Openpp\PushNotificationBundle\Model\HistoryManagerInterface;
 
 class HistoryManager implements HistoryManagerInterface
 {

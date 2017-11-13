@@ -2,14 +2,14 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
+use Openpp\PushNotificationBundle\Event\PostPushEvent;
+use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
 use Openpp\PushNotificationBundle\Model\UserManagerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
-use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Openpp\PushNotificationBundle\Event\PostPushEvent;
 
 abstract class AbstractPusher implements PusherInterface
 {

@@ -2,12 +2,12 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Symfony\Component\EventDispatcher\EventDispatcherInterface;
-use Sonata\NotificationBundle\Backend\BackendInterface;
-use Openpp\PushNotificationBundle\Model\TagManagerInterface;
-use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 use Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer;
 use Openpp\PushNotificationBundle\Event\PrePushEvent;
+use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\TagExpression\TagExpression;
+use Sonata\NotificationBundle\Backend\BackendInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class PushServiceManager implements PushServiceManagerInterface
 {
