@@ -8,11 +8,6 @@ use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Sonata\NotificationBundle\Exception\HandlingException;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class PushNotificationConsumer implements ConsumerInterface
 {
     const TYPE_NAME = 'openpp.push_notification.push';
@@ -23,7 +18,7 @@ class PushNotificationConsumer implements ConsumerInterface
     protected $pushServiceManager;
 
     /**
-     * Constructor
+     * Initializes a new PushNotificationConsumer.
      *
      * @param PushServiceManagerInterface $pushServiceManager
      */
@@ -38,14 +33,14 @@ class PushNotificationConsumer implements ConsumerInterface
     public function process(ConsumerEvent $event)
     {
         $application = $event->getMessage()->getValue('application');
-        $operation   = $event->getMessage()->getValue('operation');
+        $operation = $event->getMessage()->getValue('operation');
 
         try {
             switch ($operation) {
                 case PushServiceManagerInterface::OPERATION_PUSH:
                     $tagExpression = $event->getMessage()->getValue('tagExpression');
-                    $message       = $event->getMessage()->getValue('message');
-                    $options       = $event->getMessage()->getValue('options');
+                    $message = $event->getMessage()->getValue('message');
+                    $options = $event->getMessage()->getValue('options');
                     $this->pushServiceManager->pushExecute($application, $tagExpression, $message, $options);
                     break;
 
@@ -70,20 +65,20 @@ class PushNotificationConsumer implements ConsumerInterface
 
                 case PushServiceManagerInterface::OPERATION_CREATE_REGISTRATION:
                     $deviceIdentifier = $event->getMessage()->getValue('deviceIdentifier');
-                    $tags             = $event->getMessage()->getValue('tags');
+                    $tags = $event->getMessage()->getValue('tags');
                     $this->pushServiceManager->createRegistrationExecute($application, $deviceIdentifier, $tags);
                     break;
 
                 case PushServiceManagerInterface::OPERATION_UPDATE_REGISTRATION:
                     $deviceIdentifier = $event->getMessage()->getValue('deviceIdentifier');
-                    $tags             = $event->getMessage()->getValue('tags');
+                    $tags = $event->getMessage()->getValue('tags');
                     $this->pushServiceManager->updateRegistrationExecute($application, $deviceIdentifier, $tags);
                     break;
 
                 case PushServiceManagerInterface::OPERATION_DELETE_REGISTRATION:
-                    $type           = $event->getMessage()->getValue('type');
+                    $type = $event->getMessage()->getValue('type');
                     $registrationId = $event->getMessage()->getValue('registrationId');
-                    $eTag           = $event->getMessage()->getValue('eTag');
+                    $eTag = $event->getMessage()->getValue('eTag');
                     $this->pushServiceManager->deleteRegistrationExecute($application, $type, $registrationId, $eTag);
                     break;
 

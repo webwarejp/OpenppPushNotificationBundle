@@ -13,7 +13,7 @@ class TagExpression
     protected $tagExpression;
 
     /**
-     * Constructor
+     * Initializes a new TagExpression.
      *
      * @param string $tagExpression
      */
@@ -23,14 +23,23 @@ class TagExpression
     }
 
     /**
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->tagExpression;
+    }
+
+    /**
      * Validate tag expressions.
      *
      * Tag expressions are limited to 20 tags if they contain only ORs; otherwise they are limited to 6 tags.
      *
-     * @param boolean $exceptionOnInvalid
+     * @param bool $exceptionOnInvalid
      *
      * @throws InvalidTagExpressionException
-     * @return boolean
+     *
+     * @return bool
      */
     public function validate($exceptionOnInvalid = true)
     {
@@ -40,29 +49,13 @@ class TagExpression
             if ($exceptionOnInvalid) {
                 throw new InvalidTagExpressionException($e->getMessage());
             }
+
             return false;
         }
 
         if (!$exceptionOnInvalid) {
             return true;
         }
-    }
-
-    /**
-     * Parse a tag expression.
-     *
-     * @return string
-     */
-    protected function parse()
-    {
-        $lexer = new Lexer($this->tagExpression);
-        $parser = new Parser();
-        while ($lexer->yylex()) {
-            $parser->doParse($lexer->token, $lexer->value);
-        }
-        $parser->doParse(0, 0);
-
-        return $parser->getResult();
     }
 
     /**
@@ -86,6 +79,7 @@ class TagExpression
      * the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’.
      *
      * @param string $tag
+     *
      * @throws InvalidTagExpressionException
      */
     public static function validateSingleTag($tag)
@@ -95,15 +89,24 @@ class TagExpression
         }
 
         if (!preg_match('/^[a-zA-Z0-9_@#\.:\-]+$/', $tag)) {
-            throw new InvalidTagExpressionException("A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: " . $tag);
+            throw new InvalidTagExpressionException('A tag can be containing alphanumeric and the following non-alphanumeric characters: ‘_’, ‘@’, ‘#’, ‘.’, ‘:’, ‘-’: '.$tag);
         }
     }
 
     /**
+     * Parse a tag expression.
+     *
      * @return string
      */
-    public function __toString()
+    protected function parse()
     {
-        return $this->tagExpression;
+        $lexer = new Lexer($this->tagExpression);
+        $parser = new Parser();
+        while ($lexer->yylex()) {
+            $parser->doParse($lexer->token, $lexer->value);
+        }
+        $parser->doParse(0, 0);
+
+        return $parser->getResult();
     }
 }

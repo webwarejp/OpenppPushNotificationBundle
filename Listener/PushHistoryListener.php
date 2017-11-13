@@ -13,9 +13,9 @@ class PushHistoryListener
     protected $historyManager;
 
     /**
-     * Constructor
+     * Initializes a new PushHistoryListener.
      *
-     * @param HistoryManagerInterface     $historyManager
+     * @param HistoryManagerInterface $historyManager
      */
     public function __construct(HistoryManagerInterface $historyManager)
     {

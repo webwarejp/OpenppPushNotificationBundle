@@ -8,31 +8,27 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class ConditionSendCommand extends ContainerAwareCommand
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function configure()
     {
-        $this->setName('openpp:push:condition-send')
-             ->setDescription('Send the push notification according to the conditions.')
-             ->setHelp(<<<EOF
+        $this
+            ->setName('openpp:push:condition-send')
+            ->setDescription('Send the push notification according to the conditions.')
+            ->setHelp(<<<EOF
 The <info>%command.name%</info> command sends the push notification according to the conditions.
 EOF
-             )
-             ->addOption('time', null, InputOption::VALUE_OPTIONAL, 'The execution time. (default: "now")', null)
-             ->addOption('margin', null, InputOption::VALUE_OPTIONAL, 'The margin of minutes.', null)
+            )
+            ->addOption('time', null, InputOption::VALUE_OPTIONAL, 'The execution time. (default: "now")', null)
+            ->addOption('margin', null, InputOption::VALUE_OPTIONAL, 'The margin of minutes.', null)
         ;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
@@ -49,7 +45,7 @@ EOF
         if (!$conditions) {
             $output->writeln('No conditions match.');
         } else {
-            $output->writeln(count($conditions) . ' condition(s) match.');
+            $output->writeln(count($conditions).' condition(s) match.');
         }
     }
 }

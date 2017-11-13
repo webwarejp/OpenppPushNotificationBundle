@@ -5,10 +5,10 @@ namespace Openpp\PushNotificationBundle\Model;
 abstract class ApplicationManager implements ApplicationManagerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findApplicationByPackageName($packageName)
     {
-        return $this->findApplicationBy(array('packageName' => $packageName));
+        return $this->findApplicationBy(['packageName' => $packageName]);
     }
 }

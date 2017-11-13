@@ -14,22 +14,28 @@ use Openpp\NotificationHubsRest\Registration\RegistrationFactory;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class AzurePusher extends AbstractPusher
 {
     const APNS_TEMPLATE_DEFAULT = '{"aps":{"alert":"$(message)"}}';
-    const GCM_TEMPLATE_DEFAULT  = '{"data":{"message":"$(message)"}}';
+    const GCM_TEMPLATE_DEFAULT = '{"data":{"message":"$(message)"}}';
 
+    /**
+     * @var NotificationHub[]
+     */
     protected $hubs;
+
+    /**
+     * @var NotificationFactory
+     */
     protected $notificationFactory;
+
+    /**
+     * @var RegistrationFactory
+     */
     protected $registrationFactory;
 
     /**
-     * Constructor
+     * Initializes a new AzurePusher.
      *
      * @param ApplicationManagerInterface $applicationManager
      * @param TagManagerInterface         $tagManager
@@ -56,7 +62,7 @@ class AzurePusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function push($application, $tagExpression, $message, array $options = array())
+    public function push($application, $tagExpression, $message, array $options = [])
     {
         $application = $this->getApplication($application);
 
@@ -70,63 +76,22 @@ class AzurePusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function pushToDevice($application, $devices, $message, array $options = array())
+    public function pushToDevice($application, $devices, $message, array $options = [])
     {
         $application = $this->getApplication($application);
 
         if (is_integer($devices[0])) {
-            $devices = $this->deviceManager->findDevicesBy(array('id' => $devices));
+            $devices = $this->deviceManager->findDevicesBy(['id' => $devices]);
         }
 
         foreach (array_chunk($devices, 20) as $chunk) {
             $tagExpression = '';
             foreach ($chunk as $device) {
                 //TODO: specify unique device tag.
-                $tagExpression = $tagExpression ? $tagExpression . ' || ' . $device->getUser()->getUidTag() : $device->getUser()->getUidTag();
+                $tagExpression = $tagExpression ? $tagExpression.' || '.$device->getUser()->getUidTag() : $device->getUser()->getUidTag();
             }
             $this->push($application, $tagExpression, $message, $options);
         }
-    }
-
-    /**
-     * Gets a Notification Hub for the application.
-     *
-     * @param ApplicationInterface $application
-     *
-     * @return NotificationHub
-     */
-    protected function getHub(ApplicationInterface $application)
-    {
-        if (!isset($this->hubs[$application->getHubName()])) {
-            $this->hubs[$application->getHubName()] = new NotificationHub($application->getConnectionString(), $application->getHubName());
-        }
-
-        return $this->hubs[$application->getHubName()];
-    }
-
-    /**
-     * Creates Notifications.
-     *
-     * @param ApplicationInterface $application
-     * @param string $tagExpression
-     * @param string $message
-     * @param array $options
-     *
-     * @return \Openpp\NotificationHubsRest\Notification\NotificationInterface[]
-     */
-    protected function createNotifications(ApplicationInterface $application, $tagExpression, $message, array $options)
-    {
-        $notifications = array();
-
-        if (is_string($message)) {
-            $message = array('message' => $message);
-        } else if (!is_array($message)) {
-            throw new \InvalidArgumentException('Invalid message type.');
-        }
-
-        $notifications[] = $this->notificationFactory->createNotification('template', $message, $options, $tagExpression);
-
-        return $notifications;
     }
 
     /**
@@ -146,14 +111,14 @@ class AzurePusher extends AbstractPusher
 
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
         if (!$device) {
-            throw new DeviceNotFoundException($applicationName . "'s device " . $deviceIdentifier . 'is not found.');
+            throw new DeviceNotFoundException($applicationName."'s device ".$deviceIdentifier.'is not found.');
         }
 
-        if ($device->getType() === DeviceInterface::TYPE_IOS) {
-            $type = "apple";
+        if (DeviceInterface::TYPE_IOS === $device->getType()) {
+            $type = 'apple';
             $template = $application->getApnsTemplate() ? $application->getApnsTemplate() : self::APNS_TEMPLATE_DEFAULT;
         } else {
-            $type = "gcm";
+            $type = 'gcm';
             $template = $application->getGcmTemplate() ? $application->getGcmTemplate() : self::GCM_TEMPLATE_DEFAULT;
         }
 
@@ -185,12 +150,53 @@ class AzurePusher extends AbstractPusher
     {
         $application = $this->getApplication($applicationName);
 
-        $deviceType = $type === DeviceInterface::TYPE_IOS ? "apple" : "gcm";
+        $deviceType = DeviceInterface::TYPE_IOS === $type ? 'apple' : 'gcm';
 
         $registration = $this->registrationFactory->createRegistration($deviceType);
         $registration->setRegistrationId($registrationId)
                      ->setETag($eTag);
 
         $this->getHub($application)->deleteRegistration($registration);
+    }
+
+    /**
+     * Gets a Notification Hub for the application.
+     *
+     * @param ApplicationInterface $application
+     *
+     * @return NotificationHub
+     */
+    protected function getHub(ApplicationInterface $application)
+    {
+        if (!isset($this->hubs[$application->getHubName()])) {
+            $this->hubs[$application->getHubName()] = new NotificationHub($application->getConnectionString(), $application->getHubName());
+        }
+
+        return $this->hubs[$application->getHubName()];
+    }
+
+    /**
+     * Creates Notifications.
+     *
+     * @param ApplicationInterface $application
+     * @param string               $tagExpression
+     * @param string               $message
+     * @param array                $options
+     *
+     * @return \Openpp\NotificationHubsRest\Notification\NotificationInterface[]
+     */
+    protected function createNotifications(ApplicationInterface $application, $tagExpression, $message, array $options)
+    {
+        $notifications = [];
+
+        if (is_string($message)) {
+            $message = ['message' => $message];
+        } elseif (!is_array($message)) {
+            throw new \InvalidArgumentException('Invalid message type.');
+        }
+
+        $notifications[] = $this->notificationFactory->createNotification('template', $message, $options, $tagExpression);
+
+        return $notifications;
     }
 }

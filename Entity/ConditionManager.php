@@ -6,22 +6,28 @@ use Doctrine\Common\Persistence\ManagerRegistry;
 use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 use Openpp\PushNotificationBundle\Model\ConditionInterface;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class ConditionManager implements ConditionManagerInterface
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected $repository;
+
+    /**
+     * @var string
+     */
     protected $class;
 
     /**
-     * Constructor
+     * Initializes a new ConditionManager.
      *
      * @param ManagerRegistry $managerRegistry
-     * @param string $class
+     * @param string          $class
      */
     public function __construct(ManagerRegistry $managerRegistry, $class)
     {
@@ -33,7 +39,7 @@ class ConditionManager implements ConditionManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClass()
     {
@@ -41,19 +47,11 @@ class ConditionManager implements ConditionManagerInterface
     }
 
     /**
-     * Returns the related Object Repository.
+     * Returns the conditions which match the specified time and which has the periodic condition.
      *
-     * @return ObjectRepository
-     */
-    protected function getRepository()
-    {
-        return $this->repository;
-    }
-
-    /**
-     * 
      * @param \DateTime $preTime
      * @param \DateTime $now
+     *
      * @return ConditionInterface[]
      */
     public function findConditionByTime(\DateTime $preTime, \DateTime $now)
@@ -75,29 +73,31 @@ class ConditionManager implements ConditionManagerInterface
                     ),
                     $qb->expr()->orX(
                         $qb->expr()->like(
-                            'c.specificDates', $qb->expr()->literal('%'. $preTime->format('Y-m-d') . '%')
+                            'c.specificDates', $qb->expr()->literal('%'.$preTime->format('Y-m-d').'%')
                         ),
                         $qb->expr()->like(
-                            'c.specificDates', $qb->expr()->literal('%'. $now->format('Y-m-d') . '%')
+                            'c.specificDates', $qb->expr()->literal('%'.$now->format('Y-m-d').'%')
                         )
                     )
                 )
             )
         ;
 
-        $qb->setParameters(array(
-            'now'       => $now,
-            'pre'       => $preTime,
-            'timeTypes' => array(ConditionInterface::TIME_TYPE_PERIODIC, ConditionInterface::TIME_TYPE_SPECIFIC),
-        ));
+        $qb->setParameters([
+            'now' => $now,
+            'pre' => $preTime,
+            'timeTypes' => [ConditionInterface::TIME_TYPE_PERIODIC, ConditionInterface::TIME_TYPE_SPECIFIC],
+        ]);
 
         return $qb->getQuery()->getResult();
     }
 
     /**
-     * 
-     * @param \DateTime $now
+     * Returns the conditions which reach in time to send.
+     *
+     * @param \DateTime     $now
      * @param \DateInterval $margin
+     *
      * @return ConditionInterface[]
      */
     public function matchConditionByTime(\DateTime $now, \DateInterval $margin = null)
@@ -109,10 +109,10 @@ class ConditionManager implements ConditionManagerInterface
 
         $conditions = $this->findConditionByTime($preTime, $now);
 
-        $result = array();
+        $result = [];
         foreach ($conditions as $condition) {
-            /* @var $condition \Openpp\PushNotificationBundle\Model\ConditionInterface */
-            switch($condition->getTimeType()) {
+            /** @var $condition \Openpp\PushNotificationBundle\Model\ConditionInterface */
+            switch ($condition->getTimeType()) {
                 case ConditionInterface::TIME_TYPE_SPECIFIC:
                     foreach ($condition->getSpecificDates() as $date) {
                         if ($preTime < $date && $now >= $date) {
@@ -167,5 +167,15 @@ class ConditionManager implements ConditionManagerInterface
         ;
 
         return $qb->getQuery()->getResult();
+    }
+
+    /**
+     * Returns the related Object Repository.
+     *
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected function getRepository()
+    {
+        return $this->repository;
     }
 }

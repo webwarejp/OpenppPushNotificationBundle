@@ -12,9 +12,6 @@ use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Symfony\Component\HttpFoundation\Request;
 
-/**
- *
- */
 class DeviceController extends FOSRestController
 {
     /**
@@ -91,16 +88,16 @@ class DeviceController extends FOSRestController
     public function registerDeviceWebAction(ParamFetcherInterface $paramFetcher, Request $request)
     {
         return $this->getManipurator()->registerDevice(
-                $paramFetcher->get('application_id'),
-                $paramFetcher->get('endpoint'),
-                $paramFetcher->get('endpoint'),
-                $paramFetcher->get('uid'),
-                $paramFetcher->get('location_latitude'),
-                $paramFetcher->get('location_longitude'),
-                $request->server->get('HTTP_USER_AGENT'),
-                DeviceInterface::TYPE_WEB,
-                $paramFetcher->get('key'),
-                $paramFetcher->get('auth')
+            $paramFetcher->get('application_id'),
+            $paramFetcher->get('endpoint'),
+            $paramFetcher->get('endpoint'),
+            $paramFetcher->get('uid'),
+            $paramFetcher->get('location_latitude'),
+            $paramFetcher->get('location_longitude'),
+            $request->server->get('HTTP_USER_AGENT'),
+            DeviceInterface::TYPE_WEB,
+            $paramFetcher->get('key'),
+            $paramFetcher->get('auth')
         );
     }
 
@@ -178,6 +175,8 @@ class DeviceController extends FOSRestController
     }
 
     /**
+     * Returns the registration manipurator.
+     *
      * @return object
      */
     protected function getManipurator()

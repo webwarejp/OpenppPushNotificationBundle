@@ -11,7 +11,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class TagAdmin extends Admin
 {
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -21,23 +21,23 @@ class TagAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->add('name')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'delete' => array(),
-                )
-            ))
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -47,7 +47,7 @@ class TagAdmin extends Admin
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {

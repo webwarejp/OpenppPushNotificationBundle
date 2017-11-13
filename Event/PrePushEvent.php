@@ -8,26 +8,47 @@ class PrePushEvent extends Event
 {
     const EVENT_NAME = 'openpp.push_notification.event.pre_push';
 
+    /**
+     * @var ApplicationInterface
+     */
     protected $applicationName;
+
+    /**
+     * @var string
+     */
     protected $tagExpression;
+
+    /**
+     * @var string
+     */
     protected $message;
+
+    /**
+     * @var array
+     */
     protected $options;
+
+    /**
+     * @var array
+     */
     protected $devices;
 
     /**
+     * Initializes a new PrePushEvent.
+     *
      * @param string $applicationName
      * @param string $tagExpression
      * @param string $message
-     * @param array $options
-     * @param array $devices
+     * @param array  $options
+     * @param array  $devices
      */
-    public function __construct($applicationName, $tagExpression, $message, array $options = array(), array $devices = array())
+    public function __construct($applicationName, $tagExpression, $message, array $options = [], array $devices = [])
     {
         $this->applicationName = $applicationName;
-        $this->tagExpression   = $tagExpression;
-        $this->message         = $message;
-        $this->options         = $options;
-        $this->devices         = $devices;
+        $this->tagExpression = $tagExpression;
+        $this->message = $message;
+        $this->options = $options;
+        $this->devices = $devices;
     }
 
     /**
@@ -109,6 +130,7 @@ class PrePushEvent extends Event
 
         return $this;
     }
+
     /**
      * @return array
      */

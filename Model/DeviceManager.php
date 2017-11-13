@@ -5,29 +5,29 @@ namespace Openpp\PushNotificationBundle\Model;
 abstract class DeviceManager implements DeviceManagerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create()
     {
         $class = $this->getClass();
-        $device = new $class;
+        $device = new $class();
 
         return $device;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findDeviceByIdentifier(ApplicationInterface $application, $deviceIdentifier)
     {
-        return $this->findDeviceBy(array('application' => $application, 'deviceIdentifier' => $deviceIdentifier));
+        return $this->findDeviceBy(['application' => $application, 'deviceIdentifier' => $deviceIdentifier]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findDeviceByToken(ApplicationInterface $application, $token)
     {
-        return $this->findDeviceBy(array('application' => $application, 'token' => $token));
+        return $this->findDeviceBy(['application' => $application, 'token' => $token]);
     }
 }

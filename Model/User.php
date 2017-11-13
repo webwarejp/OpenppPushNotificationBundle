@@ -4,12 +4,6 @@ namespace Openpp\PushNotificationBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
 
-/**
- * Represents a User model
- *
- * @author shiroko@webware.co.jp
- *
- */
 class User implements UserInterface
 {
     /**
@@ -33,7 +27,7 @@ class User implements UserInterface
     protected $tags;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $badge;
 
@@ -48,12 +42,22 @@ class User implements UserInterface
     protected $updatedAt;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
-        $this->tags    = new ArrayCollection();
+        $this->tags = new ArrayCollection();
         $this->devices = new ArrayCollection();
+    }
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getUid();
     }
 
     /**
@@ -161,7 +165,7 @@ class User implements UserInterface
     }
 
     /**
-     * Returns the creation date
+     * Returns the creation date.
      *
      * @return \DateTime|null
      */
@@ -171,7 +175,7 @@ class User implements UserInterface
     }
 
     /**
-     * Sets the creation date
+     * Sets the creation date.
      *
      * @param \DateTime|null $createdAt
      */
@@ -181,7 +185,7 @@ class User implements UserInterface
     }
 
     /**
-     * Returns the last update date
+     * Returns the last update date.
      *
      * @return \DateTime|null
      */
@@ -191,7 +195,7 @@ class User implements UserInterface
     }
 
     /**
-     * Sets the last update date
+     * Sets the last update date.
      *
      * @param \DateTime|null $updatedAt
      */
@@ -205,7 +209,7 @@ class User implements UserInterface
      */
     public function getDeviceByIdentifier($deviceIdentifier)
     {
-        $p = function(DeviceInterface $element) use ($deviceIdentifier) {
+        $p = function (DeviceInterface $element) use ($deviceIdentifier) {
             return $element->getDeviceIdentifier() == $deviceIdentifier;
         };
 
@@ -222,7 +226,7 @@ class User implements UserInterface
      */
     public function getDeviceByToken($token)
     {
-        $p = function(DeviceInterface $element) use ($token) {
+        $p = function (DeviceInterface $element) use ($token) {
             return $element->getToken() == $token;
         };
 
@@ -239,7 +243,7 @@ class User implements UserInterface
      */
     public function getUidTag()
     {
-        return TagInterface::UID_TAG_PREFIX . $this->getUid();
+        return TagInterface::UID_TAG_PREFIX.$this->getUid();
     }
 
     /**
@@ -247,18 +251,8 @@ class User implements UserInterface
      */
     public function getTagNames()
     {
-        return $this->tags->map(function(TagInterface $t) {
+        return $this->tags->map(function (TagInterface $t) {
             return $t->getName();
         });
-    }
-
-    /**
-     * Returns a string representation
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getUid();
     }
 }

@@ -5,26 +5,26 @@ namespace Openpp\PushNotificationBundle\Model;
 abstract class UserManager implements UserManagerInterface
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create()
     {
         $class = $this->getClass();
-        $user = new $class;
+        $user = new $class();
 
         return $user;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findUserByUid(ApplicationInterface $application, $uid)
     {
-        return $this->findUserBy(array('application' => $application, 'uid' => $uid));
+        return $this->findUserBy(['application' => $application, 'uid' => $uid]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function hasUserWithTag(ApplicationInterface $application, $target, $type = null)
     {

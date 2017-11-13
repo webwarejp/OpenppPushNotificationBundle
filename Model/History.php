@@ -40,17 +40,17 @@ class History implements HistoryInterface
     protected $pushedAt;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $sentCount = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $deliveredCount = 0;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $clickCount = 0;
 

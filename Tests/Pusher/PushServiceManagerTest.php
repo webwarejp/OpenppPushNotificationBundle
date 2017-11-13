@@ -35,13 +35,13 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                        array('openpp.push_notification.push', array(
-                              'application'   => 'viewer',
+                        ['openpp.push_notification.push', [
+                              'application' => 'viewer',
                               'tagExpression' => 'ios && female',
-                              'message'       => 'TEST',
-                              'options'       => array(),
-                              'operation'     => PushServiceManagerInterface::OPERATION_PUSH,
-                )));
+                              'message' => 'TEST',
+                              'options' => [],
+                              'operation' => PushServiceManagerInterface::OPERATION_PUSH,
+                ]]);
 
         $this->manager->push('viewer', 'ios && female', 'TEST');
     }
@@ -50,67 +50,65 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->pusher->expects($this->once())
                      ->method('push')
-                     ->withConsecutive(array('viewer', 'ios && female', 'TEST', array()));
+                     ->withConsecutive(['viewer', 'ios && female', 'TEST', []]);
 
         $this->manager->pushExecute('viewer', 'ios && female', 'TEST');
     }
 
     public function publishParamProvider()
     {
-        return array(
-            array('viewer', '1234', array('friend_4321', 'friend_2345')),
-            array('viewer', '1234', array('friend_4321', 'friend_2345', 'broadcast')),
-            array('viewer', '1234', array('friend_4321', 'friend_2345', 'uid_1234'))
-        );
+        return [
+            ['viewer', '1234', ['friend_4321', 'friend_2345']],
+            ['viewer', '1234', ['friend_4321', 'friend_2345', 'broadcast']],
+            ['viewer', '1234', ['friend_4321', 'friend_2345', 'uid_1234']],
+        ];
     }
 
     /**
-     * 
      * @dataProvider publishParamProvider
      */
     public function testAddTagToUserWithPublish($applicationName, $uid, $tag)
     {
-        $valueMap = array(
-            array('friend_4321', false),
-            array('friend_2345', false),
-            array('broadcast', true),
-            array('uid_1234', true),
-        );
+        $valueMap = [
+            ['friend_4321', false],
+            ['friend_2345', false],
+            ['broadcast', true],
+            ['uid_1234', true],
+        ];
         $this->tagManager->expects($this->any())
                          ->method('isReservedTag')
                          ->will($this->returnValueMap($valueMap));
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                              array('openpp.push_notification.push', array(
+                              ['openpp.push_notification.push', [
                                     'application' => $applicationName,
-                                    'uid'         => $uid,
-                                    'tag'         => array('friend_4321', 'friend_2345'),
-                                    'operation'   => PushServiceManagerInterface::OPERATION_ADDTAGTOUSER,
-                               )));
+                                    'uid' => $uid,
+                                    'tag' => ['friend_4321', 'friend_2345'],
+                                    'operation' => PushServiceManagerInterface::OPERATION_ADDTAGTOUSER,
+                               ]]);
         $this->manager->addTagToUser($applicationName, $uid, $tag);
     }
 
     public function noPublishParamProvider()
     {
-        return array(
-            array('viewer', '1234', array('uid_1234', 'broadcast')),
-            array('viewer', '1234', 'uid_1234')
-        );
+        return [
+            ['viewer', '1234', ['uid_1234', 'broadcast']],
+            ['viewer', '1234', 'uid_1234'],
+        ];
     }
 
     /**
-     *
      * @dataProvider noPublishParamProvider
      */
     public function testAddTagToUserWithNoPublish($applicationName, $uid, $tag)
     {
-        $valueMap = array(
-            array('friend_4321', false),
-            array('friend_2345', false),
-            array('broadcast', true),
-            array('uid_1234', true),
-        );
+        $valueMap = [
+            ['friend_4321', false],
+            ['friend_2345', false],
+            ['broadcast', true],
+            ['uid_1234', true],
+        ];
         $this->tagManager->expects($this->any())
                          ->method('isReservedTag')
                          ->will($this->returnValueMap($valueMap));
@@ -124,13 +122,12 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->pusher->expects($this->once())
                      ->method('addTagToUser')
-                     ->withConsecutive(array('viewer', '1234', array('friend_4321', 'friend_2345')));
+                     ->withConsecutive(['viewer', '1234', ['friend_4321', 'friend_2345']]);
 
-        $this->manager->addTagToUserExecute('viewer', '1234', array('friend_4321', 'friend_2345'));
+        $this->manager->addTagToUserExecute('viewer', '1234', ['friend_4321', 'friend_2345']);
     }
 
     /**
-     *
      * @dataProvider publishParamProvider
      */
     public function testRemoveTagFromUser($applicationName, $uid, $tag)
@@ -138,12 +135,12 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                          array('openpp.push_notification.push', array(
+                          ['openpp.push_notification.push', [
                                 'application' => $applicationName,
-                                'uid'         => $uid,
-                                'tag'         => $tag,
-                                'operation'   => PushServiceManagerInterface::OPERATION_REMOVETAGFROMUSER,
-                          )));
+                                'uid' => $uid,
+                                'tag' => $tag,
+                                'operation' => PushServiceManagerInterface::OPERATION_REMOVETAGFROMUSER,
+                          ]]);
         $this->manager->removeTagFromUser($applicationName, $uid, $tag);
     }
 
@@ -151,9 +148,9 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->pusher->expects($this->once())
                      ->method('removeTagFromUser')
-                     ->withConsecutive(array('viewer', '1234', array('friend_4321', 'friend_2345')));
+                     ->withConsecutive(['viewer', '1234', ['friend_4321', 'friend_2345']]);
 
-        $this->manager->removeTagFromUserExecute('viewer', '1234', array('friend_4321', 'friend_2345'));
+        $this->manager->removeTagFromUserExecute('viewer', '1234', ['friend_4321', 'friend_2345']);
     }
 
     public function testCreateRegistration()
@@ -161,22 +158,22 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                          array('openpp.push_notification.push', array(
-                                'application'      => 'viewer',
+                          ['openpp.push_notification.push', [
+                                'application' => 'viewer',
                                 'deviceIdentifier' => 'ABCDEF',
-                                'tags'             => array('uid_1234', 'android', 'male'),
-                                'operation'   => PushServiceManagerInterface::OPERATION_CREATE_REGISTRATION,
-                )));
-        $this->manager->createRegistration('viewer', 'ABCDEF', array('uid_1234', 'android', 'male'));
+                                'tags' => ['uid_1234', 'android', 'male'],
+                                'operation' => PushServiceManagerInterface::OPERATION_CREATE_REGISTRATION,
+                ]]);
+        $this->manager->createRegistration('viewer', 'ABCDEF', ['uid_1234', 'android', 'male']);
     }
 
     public function testCreateRegistrationExecute()
     {
         $this->pusher->expects($this->once())
                      ->method('createRegistration')
-                     ->withConsecutive(array('viewer', 'ABCDEF', array('uid_1234', 'android', 'male')));
+                     ->withConsecutive(['viewer', 'ABCDEF', ['uid_1234', 'android', 'male']]);
 
-        $this->manager->createRegistrationExecute('viewer', 'ABCDEF', array('uid_1234', 'android', 'male'));
+        $this->manager->createRegistrationExecute('viewer', 'ABCDEF', ['uid_1234', 'android', 'male']);
     }
 
     public function testUpdateRegistration()
@@ -184,22 +181,22 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                          array('openpp.push_notification.push', array(
-                          'application'      => 'viewer',
+                          ['openpp.push_notification.push', [
+                          'application' => 'viewer',
                           'deviceIdentifier' => 'ABCDEF',
-                          'tags'             => array('uid_1234', 'android', 'male'),
-                          'operation'   => PushServiceManagerInterface::OPERATION_UPDATE_REGISTRATION,
-                       )));
-        $this->manager->updateRegistration('viewer', 'ABCDEF', array('uid_1234', 'android', 'male'));
+                          'tags' => ['uid_1234', 'android', 'male'],
+                          'operation' => PushServiceManagerInterface::OPERATION_UPDATE_REGISTRATION,
+                       ]]);
+        $this->manager->updateRegistration('viewer', 'ABCDEF', ['uid_1234', 'android', 'male']);
     }
 
     public function testUpdateRegistrationExecute()
     {
         $this->pusher->expects($this->once())
                      ->method('updateRegistration')
-                     ->withConsecutive(array('viewer', 'ABCDEF', array('uid_1234', 'android', 'male')));
+                     ->withConsecutive(['viewer', 'ABCDEF', ['uid_1234', 'android', 'male']]);
 
-        $this->manager->updateRegistrationExecute('viewer', 'ABCDEF', array('uid_1234', 'android', 'male'));
+        $this->manager->updateRegistrationExecute('viewer', 'ABCDEF', ['uid_1234', 'android', 'male']);
     }
 
     public function testDeleteRegistration()
@@ -207,13 +204,13 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
         $this->backend->expects($this->once())
                       ->method('createAndPublish')
                       ->withConsecutive(
-                          array('openpp.push_notification.push', array(
-                          'application'      => 'viewer',
-                          'type'             => 0,
-                          'registrationId'   => '1234567890',
-                          'eTag'             => '4',
-                          'operation'   => PushServiceManagerInterface::OPERATION_DELETE_REGISTRATION,
-                      )));
+                          ['openpp.push_notification.push', [
+                          'application' => 'viewer',
+                          'type' => 0,
+                          'registrationId' => '1234567890',
+                          'eTag' => '4',
+                          'operation' => PushServiceManagerInterface::OPERATION_DELETE_REGISTRATION,
+                      ]]);
         $this->manager->deleteRegistration('viewer', 0, '1234567890', '4');
     }
 
@@ -221,7 +218,7 @@ class PushServiceManagerTest extends \PHPUnit_Framework_TestCase
     {
         $this->pusher->expects($this->once())
                      ->method('deleteRegistration')
-                     ->withConsecutive(array('viewer', 0, '1234567890', '4'));
+                     ->withConsecutive(['viewer', 0, '1234567890', '4']);
 
         $this->manager->deleteRegistrationExecute('viewer', 0, '1234567890', '4');
     }

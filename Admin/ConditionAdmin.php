@@ -12,10 +12,23 @@ use Sonata\AdminBundle\Route\RouteCollection;
 
 class ConditionAdmin extends Admin
 {
+    /**
+     * @var bool
+     */
     protected $mapBundleEnable = false;
 
     /**
-     * @param DatagridMapper $datagridMapper
+     * Sets whether the OpenppMapBundle is enabled or not.
+     *
+     * @param bool $mapBundleEnable
+     */
+    public function setMapBundleEnable($mapBundleEnable)
+    {
+        $this->mapBundleEnable = $mapBundleEnable;
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -25,87 +38,87 @@ class ConditionAdmin extends Admin
             ->add('enable')
             ->add('message')
             ->add('tagExpression')
-            ->add('timeType', 'doctrine_orm_choice', array(), 'choice', array(
+            ->add('timeType', 'doctrine_orm_choice', [], 'choice', [
                 'choices' => Condition::getTimeTypeChoices($this->mapBundleEnable),
                 'choices_as_values' => true,
                 'choice_translation_domain' => 'OpenppPushNotificationBundle',
-            ))
+            ])
         ;
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->add('name')
             ->add('application')
-            ->add('enable', null, array('editable' => true))
-            ->add('message', 'html', array('truncate' => array('length' => 10)))
-            ->add('tagExpression', 'html', array('truncate' => array('length' => 10)))
-            ->add('timeType', 'choice', array(
+            ->add('enable', null, ['editable' => true])
+            ->add('message', 'html', ['truncate' => ['length' => 10]])
+            ->add('tagExpression', 'html', ['truncate' => ['length' => 10]])
+            ->add('timeType', 'choice', [
                 'choices' => array_flip(Condition::getTimeTypeChoices($this->mapBundleEnable)),
                 'choice_translation_domain' => 'OpenppPushNotificationBundle',
-            ))
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
+            ])
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
-            ->with('form.group_general', array('class' => 'col-md-6'))
+            ->with('form.group_general', ['class' => 'col-md-6'])
                 ->add('name')
                 ->add('application', 'sonata_type_model_list')
                 ->add('message')
-                ->add('url', 'url', array('required' => false))
+                ->add('url', 'url', ['required' => false])
                 ->add('enable')
                 ->add('tagExpression')
             ->end()
-            ->with('form.group_time', array('class' => 'col-md-6'))
-                ->add('timeType', 'sonata_type_choice_field_mask', array(
+            ->with('form.group_time', ['class' => 'col-md-6'])
+                ->add('timeType', 'sonata_type_choice_field_mask', [
                     'required' => true,
                     'choices' => Condition::getTimeTypeChoices($this->mapBundleEnable),
                     'choices_as_values' => true,
                     'choice_translation_domain' => 'OpenppPushNotificationBundle',
-                    'map' => array(
-                        Condition::TIME_TYPE_SPECIFIC => array('specificDates'),
-                        Condition::TIME_TYPE_PERIODIC => array('startDate', 'endDate', 'IntervalType'),
-                        Condition::TIME_TYPE_CONTINUING => array('startDate', 'endDate'),
-                    ),
-                ))
-                ->add('specificDates', 'sonata_type_native_collection', array(
+                    'map' => [
+                        Condition::TIME_TYPE_SPECIFIC => ['specificDates'],
+                        Condition::TIME_TYPE_PERIODIC => ['startDate', 'endDate', 'IntervalType'],
+                        Condition::TIME_TYPE_CONTINUING => ['startDate', 'endDate'],
+                    ],
+                ])
+                ->add('specificDates', 'sonata_type_native_collection', [
                     'type' => 'sonata_type_datetime_picker',
                     'allow_add' => true,
                     'allow_delete' => true,
                     'by_reference' => false,
                     'required' => false,
-                    'options' => array(
+                    'options' => [
                         'format' => 'yyyy/MM/dd H:mm',
                         'dp_min_date' => 'new Date()',
-                    ),
-                ))
-                ->add('startDate', 'sonata_type_datetime_picker', array(
+                    ],
+                ])
+                ->add('startDate', 'sonata_type_datetime_picker', [
                     'required' => false,
                     'format' => 'yyyy/MM/dd H:mm',
                     'dp_min_date' => 'new Date()',
-                ))
-                ->add('endDate', 'sonata_type_datetime_picker', array(
+                ])
+                ->add('endDate', 'sonata_type_datetime_picker', [
                     'required' => false,
                     'format' => 'yyyy/MM/dd H:mm',
                     'dp_min_date' => 'new Date()',
-                ))
-                ->add('IntervalType', 'choice', array(
+                ])
+                ->add('IntervalType', 'choice', [
                     'expanded' => true,
                     'required' => false,
                     'choices' => Condition::getIntervalTypeChoices(),
@@ -114,24 +127,24 @@ class ConditionAdmin extends Admin
                     'translation_domain' => 'OpenppPushNotificationBundle',
                     'placeholder' => false,
                     'label' => false,
-                ))
+                ])
             ->end()
         ;
 
         if ($this->mapBundleEnable) {
             $formMapper
-                ->with('form.group_location', array('class' => 'col-md-12'))
-                    ->add('areaCircle', 'openpp_type_map_geometry_circle', array(
+                ->with('form.group_location', ['class' => 'col-md-12'])
+                    ->add('areaCircle', 'openpp_type_map_geometry_circle', [
                         'required' => false,
-                        'label' => false
-                ))
+                        'label' => false,
+                ])
                 ->end()
             ;
         }
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
@@ -152,13 +165,11 @@ class ConditionAdmin extends Admin
         ;
     }
 
+    /**
+     * {@inheritdoc}
+     */
     protected function configureRoutes(RouteCollection $collection)
     {
         $collection->remove('show');
-    }
-
-    public function setMapBundleEnable($mapBundleEnable)
-    {
-        $this->mapBundleEnable = $mapBundleEnable;
     }
 }

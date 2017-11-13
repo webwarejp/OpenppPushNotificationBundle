@@ -13,20 +13,27 @@ class TrackConsumer implements ConsumerInterface
     const TYPE_NAME = 'openpp.push_notification.track';
 
     const OPERATION_DELIVERED = 'delivered';
-    const OPERATION_CLICK     = 'click';
+    const OPERATION_CLICK = 'click';
 
+    /**
+     * @var DeviceManagerInterface
+     */
     protected $deviceManager;
+
+    /**
+     * @var HistoryManagerInterface
+     */
     protected $historyManager;
 
     /**
-     * Constructor
+     * Initializes a new TrackConsumer.
      *
-     * @param DeviceManagerInterface $deviceManager
+     * @param DeviceManagerInterface  $deviceManager
      * @param HistoryManagerInterface $historyManager
      */
     public function __construct(DeviceManagerInterface $deviceManager, HistoryManagerInterface $historyManager)
     {
-        $this->deviceManager  = $deviceManager;
+        $this->deviceManager = $deviceManager;
         $this->historyManager = $historyManager;
     }
 
@@ -39,12 +46,12 @@ class TrackConsumer implements ConsumerInterface
         $notificationId = $event->getMessage()->getValue('notificationId');
         $subscriptionId = $event->getMessage()->getValue('subscriptionId');
 
-        $history = $this->historyManager->findHistoryBy(array('notificationId' => $notificationId));
+        $history = $this->historyManager->findHistoryBy(['notificationId' => $notificationId]);
         if (empty($history)) {
             throw new NotFoundHttpException(sprintf('No history(%s) found.', $notificationId));
         }
 
-        $device = $this->deviceManager->findDeviceBy(array('token' => $subscriptionId));
+        $device = $this->deviceManager->findDeviceBy(['token' => $subscriptionId]);
 
         switch ($operation) {
             case self::OPERATION_DELIVERED:

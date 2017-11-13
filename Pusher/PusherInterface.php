@@ -2,30 +2,25 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 interface PusherInterface
 {
     /**
      * Sends the push notification.
      *
-     * @param string|ApplicationInterface $application Application name
-     * @param string $tagExpression       Tag expression
-     * @param string $message             Notificaton message
-     * @param array  $options             Notificaton options
+     * @param string|\Openpp\PushNotificationBundle\Model\ApplicationInterface $application   Application name
+     * @param string                                                           $tagExpression Tag expression
+     * @param string                                                           $message       Notificaton message
+     * @param array                                                            $options       Notificaton options
      */
     public function push($application, $tagExpression, $message, array $options);
 
     /**
      * Sends the push notification to the given diveces.
      *
-     * @param string|ApplicationInterface $application Application name
-     * @param integer[]|DeviceInterface[] $devices     Devices
-     * @param string $message             Notificaton  message
-     * @param array  $options             Notificaton  options
+     * @param string|\Openpp\PushNotificationBundle\Model\ApplicationInterface $application Application name
+     * @param int[]|\Openpp\PushNotificationBundle\Model\DeviceInterface[]     $devices     Devices
+     * @param string                                                           $message     Notificaton  message
+     * @param array                                                            $options     Notificaton  options
      */
     public function pushToDevice($application, $devices, $message, array $options);
 
@@ -52,7 +47,6 @@ interface PusherInterface
     public function removeTagFromUser($applicationName, $uid, $tag);
 
     /**
-     * 
      * @param string $applicationName  Application name
      * @param string $deviceIdentifier Device identifier
      * @param array  $tags             Tags
@@ -62,7 +56,6 @@ interface PusherInterface
     public function createRegistration($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
      * @param string $applicationName  Application name
      * @param string $deviceIdentifier Device identifier
      * @param array  $tags             Tags
@@ -72,11 +65,10 @@ interface PusherInterface
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
-     * @param string  $applicationName Application name
-     * @param integer $type            Device type
-     * @param string  $registrationId  Registration ID related to the push service
-     * @param string  $eTag            ETag related to the push service
+     * @param string $applicationName Application name
+     * @param int    $type            Device type
+     * @param string $registrationId  Registration ID related to the push service
+     * @param string $eTag            ETag related to the push service
      *
      * @throws \Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException
      */

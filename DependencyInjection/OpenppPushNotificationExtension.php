@@ -9,15 +9,10 @@ use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
 use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 
-/**
- * This is the class that loads and manages your bundle configuration
- *
- * To learn more see {@link http://symfony.com/doc/current/cookbook/bundles/extension.html}
- */
 class OpenppPushNotificationExtension extends Extension
 {
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function load(array $configs, ContainerBuilder $container)
     {
@@ -25,7 +20,7 @@ class OpenppPushNotificationExtension extends Extension
         $config = $this->processConfiguration($configuration, $configs);
         $bundles = $container->getParameter('kernel.bundles');
 
-        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__ . '/../Resources/config'));
+        $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('orm_tag.xml');
         $loader->load('push_service_manager.xml');
         $loader->load('orm.xml');
@@ -48,7 +43,7 @@ class OpenppPushNotificationExtension extends Extension
 
         if ($mapBundleEnable) {
             $container->getDefinition('openpp.push_notification.manipurator.register')
-                ->addMethodCall('setPointManager', array(new Reference('openpp.map.manager.point')));
+                ->addMethodCall('setPointManager', [new Reference('openpp.map.manager.point')]);
         }
         $container->getDefinition('openpp.push_notification.manipurator.register')
             ->replaceArgument(4, $config['uid_auto_prefix']);
@@ -63,7 +58,7 @@ class OpenppPushNotificationExtension extends Extension
                     ->replaceArgument(2, $config['report']);
             } else {
                 $container->getDefinition('openpp.push_notification.listener.push_result_email')
-                    ->replaceArgument(2, array());
+                    ->replaceArgument(2, []);
             }
 
             $this->configurePusher($config, $container);
@@ -71,23 +66,27 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
-     * @param boolean          $mapBundleEnable
+     * Configures the admin services.
+     *
+     * @param bool             $mapBundleEnable
      * @param array            $config
      * @param ContainerBuilder $container
      */
     protected function configureAdmin($mapBundleEnable, array $config, ContainerBuilder $container)
     {
         $container->getDefinition('openpp.push_notification.admin.application')
-            ->addMethodCall('setPusherName', array($config['pusher']))
+            ->addMethodCall('setPusherName', [$config['pusher']])
         ;
 
         $container->getDefinition('openpp.push_notification.admin.condition')
-            ->addMethodCall('setMapBundleEnable', array($mapBundleEnable))
+            ->addMethodCall('setMapBundleEnable', [$mapBundleEnable])
         ;
     }
 
     /**
-     * @param boolean          $mapBundleEnable
+     * Configures the ORM Manager.
+     *
+     * @param bool             $mapBundleEnable
      * @param ContainerBuilder $container
      */
     protected function configureORMManager($mapBundleEnable, ContainerBuilder $container)
@@ -101,6 +100,8 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
+     * Configures the Entity classes.
+     *
      * @param array            $config
      * @param ContainerBuilder $container
      */
@@ -123,6 +124,8 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
+     * Configures the Push Service Manager.
+     *
      * @param array            $config
      * @param ContainerBuilder $container
      */
@@ -140,6 +143,8 @@ class OpenppPushNotificationExtension extends Extension
     }
 
     /**
+     * Configures the Pusher.
+     *
      * @param array            $config
      * @param ContainerBuilder $container
      */
@@ -149,241 +154,239 @@ class OpenppPushNotificationExtension extends Extension
             $container->setParameter('openpp.push_notification.web_push.public_key_path', $config['web_push']['public_key_path']);
 
             $container->getDefinition('openpp.push_notification.pusher.own')
-                ->addMethodCall('setKeyPair', array($config['web_push']['public_key_path'], $config['web_push']['private_key_path']))
+                ->addMethodCall('setKeyPair', [$config['web_push']['public_key_path'], $config['web_push']['private_key_path']])
             ;
         } else {
             $container->setParameter('openpp.push_notification.web_push.public_key_path', null);
         }
         if (isset($config['web_push']['ttl'])) {
             $container->getDefinition('openpp.push_notification.pusher.own')
-                ->addMethodCall('setTTL', array($config['web_push']['ttl']))
+                ->addMethodCall('setTTL', [$config['web_push']['ttl']])
             ;
         }
     }
 
     /**
-     * Registers doctrine mapping on concrete push notification entities
+     * Registers doctrine mapping on concrete push notification entities.
      *
-     * @param array   $config
-     * @param boolean $mapBundleEnable
-     *
-     * @return void
+     * @param array $config
+     * @param bool  $mapBundleEnable
      */
     protected function registerDoctrineMapping(array $config, $mapBundleEnable = true)
     {
         $collector = DoctrineCollector::getInstance();
 
         // One-To-Many Bidirectional for Application and User
-        $collector->addAssociation($config['class']['application'], 'mapOneToMany', array(
-            'fieldName'     => 'users',
-            'targetEntity'  => $config['class']['user'],
-            'cascade'       => array(
+        $collector->addAssociation($config['class']['application'], 'mapOneToMany', [
+            'fieldName' => 'users',
+            'targetEntity' => $config['class']['user'],
+            'cascade' => [
                 'remove',
                 'persist',
-            ),
+            ],
             '',
-            'mappedBy'      => 'application',
+            'mappedBy' => 'application',
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-One Unidirectional for Application and Media
-        $collector->addAssociation($config['class']['application'], 'mapManyToOne', array(
-            'fieldName'     => 'icon',
-            'targetEntity'  => $config['class']['media'],
-            'cascade' => array(
+        $collector->addAssociation($config['class']['application'], 'mapManyToOne', [
+            'fieldName' => 'icon',
+            'targetEntity' => $config['class']['media'],
+            'cascade' => [
                 'remove',
                 'persist',
-            ),
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'icon_id',
+            ],
+            'joinColumns' => [
+                [
+                    'name' => 'icon_id',
                     'referencedColumnName' => 'id',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
-        $collector->addAssociation($config['class']['user'], 'mapManyToOne', array(
-            'fieldName'     => 'application',
-            'targetEntity'  => $config['class']['application'],
-            'cascade'       => array(
+        $collector->addAssociation($config['class']['user'], 'mapManyToOne', [
+            'fieldName' => 'application',
+            'targetEntity' => $config['class']['application'],
+            'cascade' => [
                 'persist',
-            ),
-            'inversedBy'    => 'users',
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'application_id',
+           ],
+            'inversedBy' => 'users',
+            'joinColumns' => [
+                [
+                    'name' => 'application_id',
                     'referencedColumnName' => 'id',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // One-To-Many Bidirectional for User and Device
-        $collector->addAssociation($config['class']['user'], 'mapOneToMany', array(
-            'fieldName'     => 'devices',
-            'targetEntity'  => $config['class']['device'],
-            'cascade'       => array(
+        $collector->addAssociation($config['class']['user'], 'mapOneToMany', [
+            'fieldName' => 'devices',
+            'targetEntity' => $config['class']['device'],
+            'cascade' => [
                 'remove',
                 'persist',
-            ),
-            'mappedBy'      => 'user',
+            ],
+            'mappedBy' => 'user',
             'orphanRemoval' => false,
-        ));
+        ]);
 
-        $collector->addAssociation($config['class']['device'], 'mapManyToOne', array(
-            'fieldName'     => 'user',
-            'targetEntity'  => $config['class']['user'],
-            'cascade'       => array(
+        $collector->addAssociation($config['class']['device'], 'mapManyToOne', [
+            'fieldName' => 'user',
+            'targetEntity' => $config['class']['user'],
+            'cascade' => [
                 'persist',
-            ),
-            'inversedBy'    => 'devices',
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'user_id',
+            ],
+            'inversedBy' => 'devices',
+            'joinColumns' => [
+                [
+                    'name' => 'user_id',
                     'referencedColumnName' => 'id',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-One Bidirectional for Application and Device
-        $collector->addAssociation($config['class']['application'], 'mapOneToMany', array(
-            'fieldName'     => 'devices',
-            'targetEntity'  => $config['class']['device'],
-            'cascade'       => array(
+        $collector->addAssociation($config['class']['application'], 'mapOneToMany', [
+            'fieldName' => 'devices',
+            'targetEntity' => $config['class']['device'],
+            'cascade' => [
                 'remove',
                 'persist',
-            ),
-            'mappedBy'      => 'application',
+            ],
+            'mappedBy' => 'application',
             'orphanRemoval' => false,
-        ));
+        ]);
 
-        $collector->addAssociation($config['class']['device'], 'mapManyToOne', array(
+        $collector->addAssociation($config['class']['device'], 'mapManyToOne', [
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],
-            'cascade' => array(
+            'cascade' => [
                 'persist',
-            ),
-            'inversedBy'    => 'devices',
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'application_id',
+            ],
+            'inversedBy' => 'devices',
+            'joinColumns' => [
+                [
+                    'name' => 'application_id',
                     'referencedColumnName' => 'id',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-Many Unidirectional for User and Tag
-        $collector->addAssociation($config['class']['user'], 'mapManyToMany', array(
+        $collector->addAssociation($config['class']['user'], 'mapManyToMany', [
             'fieldName' => 'tags',
             'targetEntity' => $config['class']['tag'],
-            'cascade' => array(
+            'cascade' => [
                 'persist',
-            ),
-            'joinTable' => array(
+            ],
+            'joinTable' => [
                 'name' => 'push__user_tag',
-                'joinColumns' => array(
-                    array(
+                'joinColumns' => [
+                    [
                         'name' => 'user_id',
                         'referencedColumnName' => 'id',
-                    ),
-                ),
-                'inverseJoinColumns' => array(
-                    array(
+                    ],
+                ],
+                'inverseJoinColumns' => [
+                    [
                         'name' => 'tag_id',
                         'referencedColumnName' => 'id',
-                    ),
-                ),
-            ),
+                    ],
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-One Unidirectional for Application and Condition
-        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', array(
+        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', [
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],
-            'cascade' => array(
+            'cascade' => [
                 'persist',
-            ),
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'application_id',
+            ],
+            'joinColumns' => [
+                [
+                    'name' => 'application_id',
                     'referencedColumnName' => 'id',
                     'onDelete' => 'CASCADE',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-One Unidirectional for Condition and Media
-        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', array(
-            'fieldName'     => 'icon',
-            'targetEntity'  => $config['class']['media'],
-            'cascade' => array(
+        $collector->addAssociation($config['class']['condition'], 'mapManyToOne', [
+            'fieldName' => 'icon',
+            'targetEntity' => $config['class']['media'],
+            'cascade' => [
                 'persist',
-            ),
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'icon_id',
+            ],
+            'joinColumns' => [
+                [
+                    'name' => 'icon_id',
                     'referencedColumnName' => 'id',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         // Many-To-One Unidirectional for Application and History
-        $collector->addAssociation($config['class']['history'], 'mapManyToOne', array(
+        $collector->addAssociation($config['class']['history'], 'mapManyToOne', [
             'fieldName' => 'application',
             'targetEntity' => $config['class']['application'],
-            'cascade' => array(
+            'cascade' => [
                 'persist',
-            ),
-            'joinColumns'   =>  array(
-                array(
-                    'name'  => 'application_id',
+            ],
+            'joinColumns' => [
+                [
+                    'name' => 'application_id',
                     'referencedColumnName' => 'id',
                     'onDelete' => 'CASCADE',
-                ),
-            ),
+                ],
+            ],
             'orphanRemoval' => false,
-        ));
+        ]);
 
         if ($mapBundleEnable) {
             // One-To-One, Unidirectional Device and Point
-            $collector->addAssociation($config['class']['device'], 'mapOneToOne', array(
+            $collector->addAssociation($config['class']['device'], 'mapOneToOne', [
                 'fieldName' => 'location',
                 'targetEntity' => $config['class']['location'],
-                'cascade' => array(
+                'cascade' => [
                     'persist',
                     'remove',
-                ),
-                'joinColumns'   =>  array(
-                    array(
-                        'name'  => 'location_id',
+                ],
+                'joinColumns' => [
+                    [
+                        'name' => 'location_id',
                         'referencedColumnName' => 'id',
-                    ),
-                ),
+                    ],
+                ],
                 'orphanRemoval' => false,
-            ));
+            ]);
 
             // One-To-One, Unidirectional Condition and Circle
-            $collector->addAssociation($config['class']['condition'], 'mapOneToOne', array(
+            $collector->addAssociation($config['class']['condition'], 'mapOneToOne', [
                 'fieldName' => 'areaCircle',
                 'targetEntity' => $config['class']['areaCircle'],
-                'cascade' => array(
+                'cascade' => [
                     'persist',
                     'remove',
-                ),
-                'joinColumns'   =>  array(
-                    array(
-                        'name'  => 'area_circle_id',
+                ],
+                'joinColumns' => [
+                    [
+                        'name' => 'area_circle_id',
                         'referencedColumnName' => 'id',
-                    ),
-                ),
+                    ],
+                ],
                 'orphanRemoval' => false,
-            ));
+            ]);
         }
     }
 }

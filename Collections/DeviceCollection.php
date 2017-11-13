@@ -9,7 +9,10 @@ use Openpp\PushNotificationBundle\Model\DeviceInterface;
 class DeviceCollection extends ArrayCollection
 {
     /**
-     * @param integer $type
+     * Returns the specified type devices.
+     *
+     * @param int $type
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function getByType($type)
@@ -20,8 +23,11 @@ class DeviceCollection extends ArrayCollection
     }
 
     /**
-     * @param integer $type
-     * @return integer
+     * Counts the devices of specified type.
+     *
+     * @param int $type
+     *
+     * @return int
      */
     public function countByType($type)
     {
@@ -29,21 +35,27 @@ class DeviceCollection extends ArrayCollection
     }
 
     /**
+     * Returns the array of all devices identifier.
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function toIdArray()
     {
-        return $this->map(function(DeviceInterface $d) {
+        return $this->map(function (DeviceInterface $d) {
             return $d->getId();
         });
     }
 
     /**
+     * Returns the array of devices that sorted by specified field.
+     *
+     * @param string $field
+     *
      * @return \Doctrine\Common\Collections\Collection
      */
     public function sortByField($field)
     {
-        $criteria = Criteria::create()->orderBy(array($field => Criteria::ASC));
+        $criteria = Criteria::create()->orderBy([$field => Criteria::ASC]);
 
         return $this->matching($criteria);
     }

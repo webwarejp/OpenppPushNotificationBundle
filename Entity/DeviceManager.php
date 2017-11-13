@@ -3,26 +3,49 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\ResultSetMapping;
 use Openpp\PushNotificationBundle\Model\DeviceManager as BaseManager;
 use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\MapBundle\Model\CircleInterface;
-use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
-use Doctrine\ORM\Query\ResultSetMapping;
 use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
+use Openpp\MapBundle\Model\CircleInterface;
+use Openpp\MapBundle\Form\DataTransformer\GeometryToStringTransformer;
 
 class DeviceManager extends BaseManager
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected $repository;
+
+    /**
+     * @var string
+     */
     protected $class;
+
+    /**
+     * @var string
+     */
     protected $userClass;
+
+    /**
+     * @var string
+     */
     protected $tagClass;
+
+    /**
+     * @var string
+     */
     protected $pointClass;
 
     /**
-     * Constructor
+     * Initializes a new DeviceManager.
      *
      * @param ManagerRegistry $managerRegistry
      * @param string          $class
@@ -39,12 +62,12 @@ class DeviceManager extends BaseManager
         $this->class = $metadata->getName();
 
         $this->userClass = $userClass;
-        $this->tagClass  = $tagClass;
+        $this->tagClass = $tagClass;
         $this->pointClass = $pointClass;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClass()
     {
@@ -52,7 +75,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function delete(DeviceInterface $device)
     {
@@ -61,7 +84,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function save(DeviceInterface $device, $andFlush = true)
     {
@@ -72,7 +95,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findDeviceBy(array $criteria)
     {
@@ -80,7 +103,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findDevicesBy(array $criteria)
     {
@@ -88,7 +111,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findActiveDevices(ApplicationInterface $application)
     {
@@ -104,7 +127,7 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function countActiveDevices(ApplicationInterface $application)
     {
@@ -121,9 +144,9 @@ class DeviceManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = array())
+    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = [])
     {
         if (!$tagExpression) {
             return $this->findActiveDevices($application);
@@ -173,10 +196,10 @@ WHERE
   %s
 SQL;
 
-        $tagTableName     = $this->objectManager->getClassMetadata($this->tagClass)->getTableName();
+        $tagTableName = $this->objectManager->getClassMetadata($this->tagClass)->getTableName();
         $userTagTableName = 'push__user_tag'; // TODO
-        $deviceTableName  = $this->objectManager->getClassMetadata($this->class)->getTableName();
-        $userTableName    = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
+        $deviceTableName = $this->objectManager->getClassMetadata($this->class)->getTableName();
+        $userTableName = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
 
         $te = new TagExpression($tagExpression);
         $whereClause = $te->toNativeSQLWhereClause();
@@ -189,7 +212,7 @@ SQL;
         $sql = sprintf($sql, $tagTableName, $userTagTableName, $deviceTableName, $userTableName, $deviceWhereClause, $whereClause);
         $query = $this->objectManager->createNativeQuery($sql, $rsm);
 
-        $params = array();
+        $params = [];
         $params[] = $application->getId();
         if (!empty($devices)) {
             $params[] = $devices;
@@ -204,7 +227,7 @@ SQL;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findDevicesInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, CircleInterface $circle)
     {
@@ -243,13 +266,13 @@ FROM
 SQL;
 
         $deviceTableName = $this->objectManager->getClassMetadata($this->class)->getTableName();
-        $pointTableName  = $this->objectManager->getClassMetadata($this->pointClass)->getTableName();
-        $userTableName   = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
+        $pointTableName = $this->objectManager->getClassMetadata($this->pointClass)->getTableName();
+        $userTableName = $this->objectManager->getClassMetadata($this->userClass)->getTableName();
 
         $sql = sprintf($sql, $deviceTableName, $pointTableName, $userTableName);
         $query = $this->objectManager->createNativeQuery($sql, $rsm);
 
-        $params = array();
+        $params = [];
         $params[] = $application->getId();
         $params[] = $transformer->transform($circle->getCenter());
         $params[] = $circle->getRadius();
@@ -266,6 +289,7 @@ SQL;
         }
 
         $devices = new DeviceCollection($result);
+
         return $this->findDevicesByTagExpression($application, $tagExpression, $devices->toIdArray()->toArray());
     }
 }

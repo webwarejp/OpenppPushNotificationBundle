@@ -13,32 +13,30 @@ use Openpp\PushNotificationBundle\Model\Device;
 use Openpp\PushNotificationBundle\Model\UserInterface;
 use Openpp\PushNotificationBundle\Model\TagInterface;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class DeviceRegistrationSubscriber implements EventSubscriber
 {
     /**
      * @var ContainerInterface
      */
     protected $container;
+
     /**
      * @var ArrayCollection
      */
     protected $creates;
+
     /**
      * @var ArrayCollection
      */
     protected $updates;
+
     /**
      * @var ArrayCollection
      */
     protected $deletes;
 
     /**
-     * Constructor
+     * Initializes a new DeviceRegistrationSubscriber.
      *
      * @param ContainerInterface $container
      */
@@ -55,9 +53,9 @@ class DeviceRegistrationSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::onFlush,
-        );
+        ];
     }
 
     /**
@@ -76,7 +74,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     }
 
     /**
-     * @param UnitOfWork    $uow
+     * @param UnitOfWork $uow
      */
     protected function processInsersions(UnitOfWork $uow)
     {
@@ -98,7 +96,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
 
                 if ($original['unregisteredAt'] && !$entity->getUnregisteredAt()) {
                     $this->creates->add($entity);
-                } else if (!$original['unregisteredAt'] && $entity->getUnregisteredAt()) {
+                } elseif (!$original['unregisteredAt'] && $entity->getUnregisteredAt()) {
                     $this->deletes->add($entity);
                 }
 
@@ -127,7 +125,7 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     protected function processCollectionUpdates(UnitOfWork $uow)
     {
         $deletions = $uow->getScheduledCollectionDeletions();
-        $updates   = $uow->getScheduledCollectionUpdates();
+        $updates = $uow->getScheduledCollectionUpdates();
 
         foreach (array_merge($deletions, $updates) as $col) {
             /* @var $col \Doctrine\ORM\PersistentCollection */
@@ -145,9 +143,6 @@ class DeviceRegistrationSubscriber implements EventSubscriber
         }
     }
 
-    /**
-     *
-     */
     protected function executeRegistration()
     {
         foreach ($this->creates as $device) {
@@ -203,14 +198,15 @@ class DeviceRegistrationSubscriber implements EventSubscriber
     /**
      * Removes the different device tags from tag array.
      *
-     * @param integer $type
+     * @param int   $type
      * @param array $tags
+     *
      * @return array
      */
     private function unsetDifferentDeviceTag($type, array $tags)
     {
-        foreach (array_diff(array_keys(Device::getTypeChoices()), array(Device::getTypeName($type))) as $typeName) {
-            if ($key = array_search($typeName, $tags) !== false) {
+        foreach (array_diff(array_keys(Device::getTypeChoices()), [Device::getTypeName($type)]) as $typeName) {
+            if ($key = false !== array_search($typeName, $tags)) {
                 unset($tags[$key]);
             }
         }

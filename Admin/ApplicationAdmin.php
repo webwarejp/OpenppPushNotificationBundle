@@ -10,8 +10,14 @@ use Sonata\AdminBundle\Show\ShowMapper;
 
 class ApplicationAdmin extends Admin
 {
+    /**
+     * @var string
+     */
     protected $pusherName;
 
+    /**
+     * @var string
+     */
     protected $apnsCertificateDir;
 
     /**
@@ -35,7 +41,23 @@ class ApplicationAdmin extends Admin
     }
 
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
+     */
+    public function prePersist($object)
+    {
+        $this->uploadApnsCertificate($object);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function preUpdate($object)
+    {
+        $this->uploadApnsCertificate($object);
+    }
+
+    /**
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -47,7 +69,7 @@ class ApplicationAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -55,39 +77,39 @@ class ApplicationAdmin extends Admin
             ->add('name')
             ->add('packageName')
             ->add('description')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
             ->add('name')
             ->add('packageName')
-            ->add('icon', 'sonata_type_model_list', array('required' => false))
+            ->add('icon', 'sonata_type_model_list', ['required' => false])
             ->add('description')
             ->end();
 
         switch ($this->pusherName) {
-            case "openpp.push_notification.pusher.own":
+            case 'openpp.push_notification.pusher.own':
                 $formMapper->with($this->trans('form.group_own_label'))
-                        ->add('apnsCertificate', null, array('read_only' => true))
-                        ->add('apnsCertificateFile', 'file', array('label' => false, 'required' => false))
+                        ->add('apnsCertificate', null, ['read_only' => true])
+                        ->add('apnsCertificateFile', 'file', ['label' => false, 'required' => false])
                         ->add('gcmApiKey')
                     ->end()
                 ;
                 break;
 
-            case "openpp.push_notification.pusher.azure":
+            case 'openpp.push_notification.pusher.azure':
                 $formMapper->with($this->trans('form.group_azure_label'))
                         ->add('hubName')
                         ->add('connectionString')
@@ -100,7 +122,7 @@ class ApplicationAdmin extends Admin
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {
@@ -121,26 +143,14 @@ class ApplicationAdmin extends Admin
     }
 
     /**
-     * {@inheritDoc}
+     * Sets the uploaded APNS Certification file.
+     *
+     * @param mixed $object
      */
-    public function prePersist($object)
-    {
-        $this->uploadApnsCertificate($object);
-    }
-
-    /**
-     * {@inheritDoc}
-     */
-    public function preUpdate($object)
-    {
-        $this->uploadApnsCertificate($object);
-    }
-
     protected function uploadApnsCertificate($object)
     {
         /* @var $object \Openpp\PushNotificationBundle\Model\ApplicationInterface */
         if ($uploaded = $object->getApnsCertificateFile()) {
-
             if ($object->getApnsCertificate()) {
                 unlink($object->getApnsCertificate());
             }

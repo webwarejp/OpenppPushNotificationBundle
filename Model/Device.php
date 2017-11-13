@@ -2,12 +2,6 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-/**
- * Represents a Device model
- *
- * @author shiroko@webware.co.jp
- *
- */
 class Device implements DeviceInterface
 {
     /**
@@ -16,7 +10,7 @@ class Device implements DeviceInterface
     protected $deviceIdentifier;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $type;
 
@@ -93,11 +87,11 @@ class Device implements DeviceInterface
     /**
      * @var array
      */
-    protected static $typeChoices = array(
+    protected static $typeChoices = [
         self::TYPE_NAME_ANDROID => self::TYPE_ANDROID,
-        self::TYPE_NAME_IOS     => self::TYPE_IOS,
-        self::TYPE_NAME_WEB     => self::TYPE_WEB,
-    );
+        self::TYPE_NAME_IOS => self::TYPE_IOS,
+        self::TYPE_NAME_WEB => self::TYPE_WEB,
+    ];
 
     /**
      * {@inheritdoc}
@@ -136,7 +130,7 @@ class Device implements DeviceInterface
      */
     public function getToken()
     {
-        return $this->token; 
+        return $this->token;
     }
 
     /**
@@ -262,31 +256,31 @@ class Device implements DeviceInterface
     /**
      * Returns whether the device is Android.
      *
-     * @return boolean
+     * @return bool
      */
     public function isAndroid()
     {
-        return $this->type === self::TYPE_ANDROID;
+        return self::TYPE_ANDROID === $this->type;
     }
 
     /**
      * Returns whether the device is iOS.
      *
-     * @return boolean
+     * @return bool
      */
     public function isIOS()
     {
-        return $this->type === self::TYPE_IOS;
+        return self::TYPE_IOS === $this->type;
     }
 
     /**
      * Returns whether the device is active.
      *
-     * @return boolean
+     * @return bool
      */
     public function isActive()
     {
-        return $this->unregisteredAt === null;
+        return null === $this->unregisteredAt;
     }
 
     /**
@@ -354,7 +348,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Returns the creation date
+     * Returns the creation date.
      *
      * @return \DateTime|null
      */
@@ -364,7 +358,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Sets the creation date
+     * Sets the creation date.
      *
      * @param \DateTime|null $createdAt
      */
@@ -374,7 +368,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Returns the last update date
+     * Returns the last update date.
      *
      * @return \DateTime|null
      */
@@ -384,7 +378,7 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Sets the last update date
+     * Sets the last update date.
      *
      * @param \DateTime|null $updatedAt
      */
@@ -415,8 +409,8 @@ class Device implements DeviceInterface
     }
 
     /**
-     * Gets the parameter. (compatible with Sly\NotificationPusher\Model\Device
-     * 
+     * Gets the parameter (compatible with Sly\NotificationPusher\Model\Device).
+     *
      * @param string $key
      * @param mixed  $default
      *
@@ -424,10 +418,11 @@ class Device implements DeviceInterface
      */
     public function getParameter($key, $default = null)
     {
-        if (in_array($key, array('publicKey', 'authToken'))) {
+        if (in_array($key, ['publicKey', 'authToken'])) {
             if (empty($this->$key)) {
                 return $default;
             }
+
             return $this->$key;
         }
 

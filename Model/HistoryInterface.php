@@ -5,7 +5,7 @@ namespace Openpp\PushNotificationBundle\Model;
 interface HistoryInterface
 {
     /**
-     * Set application
+     * Set application.
      *
      * @param ApplicationInterface $application
      *
@@ -14,14 +14,14 @@ interface HistoryInterface
     public function setApplication(ApplicationInterface $application);
 
     /**
-     * Get application
+     * Get application.
      *
      * @return ApplicationInterface
      */
     public function getApplication();
 
     /**
-     * Set notificationId
+     * Set notificationId.
      *
      * @param string $notificationId
      *
@@ -30,14 +30,14 @@ interface HistoryInterface
     public function setNotificationId($notificationId);
 
     /**
-     * Get notificationId
+     * Get notificationId.
      *
      * @return string
      */
     public function getNotificationId();
 
     /**
-     * Set title
+     * Set title.
      *
      * @param string $title
      *
@@ -46,14 +46,14 @@ interface HistoryInterface
     public function setTitle($title);
 
     /**
-     * Get title
+     * Get title.
      *
      * @return string
      */
     public function getTitle();
 
     /**
-     * Set message
+     * Set message.
      *
      * @param string $message
      *
@@ -62,14 +62,14 @@ interface HistoryInterface
     public function setMessage($message);
 
     /**
-     * Get message
+     * Get message.
      *
      * @return string
      */
     public function getMessage();
 
     /**
-     * Set icon url
+     * Set icon url.
      *
      * @param string $iconUrl
      *
@@ -78,14 +78,14 @@ interface HistoryInterface
     public function setIconUrl($iconUrl);
 
     /**
-     * Get icon url
+     * Get icon url.
      *
      * @return string
      */
     public function getIconUrl();
 
     /**
-     * Set url
+     * Set url.
      *
      * @param string $url
      *
@@ -94,14 +94,14 @@ interface HistoryInterface
     public function setUrl($url);
 
     /**
-     * Get url
+     * Get url.
      *
      * @return string
      */
     public function getUrl();
 
     /**
-     * Set pushedAt
+     * Set pushedAt.
      *
      * @param \DateTime $pushedAt
      *
@@ -110,32 +110,32 @@ interface HistoryInterface
     public function setPushedAt($pushedAt);
 
     /**
-     * Get pushedAt
+     * Get pushedAt.
      *
      * @return \DateTime
      */
     public function getPushedAt();
 
     /**
-     * Set sent count
+     * Set sent count.
      *
-     * @param integer $sentCount
+     * @param int $sentCount
      *
      * @return History
      */
     public function setSentCount($sentCount);
 
     /**
-     * Get sent count
+     * Get sent count.
      *
-     * @return integer
+     * @return int
      */
     public function getSentCount();
 
     /**
      * Set delivered count.
      *
-     * @param integer $deliveredCount
+     * @param int $deliveredCount
      *
      * @return History
      */
@@ -144,28 +144,28 @@ interface HistoryInterface
     /**
      * Get delivered count.
      *
-     * @return integer
+     * @return int
      */
     public function getDeliveredCount();
 
     /**
-     * Set click count
+     * Set click count.
      *
-     * @param integer $clickCount
+     * @param int $clickCount
      *
      * @return History
      */
     public function setClickCount($clickCount);
 
     /**
-     * Get sent count
+     * Get sent count.
      *
-     * @return integer
+     * @return int
      */
     public function getClickCount();
 
     /**
-     * Set createdAt
+     * Set createdAt.
      *
      * @param \DateTime $createdAt
      *
@@ -174,14 +174,14 @@ interface HistoryInterface
     public function setCreatedAt($createdAt);
 
     /**
-     * Get createdAt
+     * Get createdAt.
      *
      * @return \DateTime
      */
     public function getCreatedAt();
 
     /**
-     * Set updatedAt
+     * Set updatedAt.
      *
      * @param \DateTime $updatedAt
      *
@@ -190,7 +190,7 @@ interface HistoryInterface
     public function setUpdatedAt($updatedAt);
 
     /**
-     * Get updatedAt
+     * Get updatedAt.
      *
      * @return \DateTime
      */

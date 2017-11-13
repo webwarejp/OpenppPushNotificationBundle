@@ -13,9 +13,9 @@ class NotRegisteredDevicesListener
     protected $deviceManager;
 
     /**
-     * Constructor
+     * Initializes a new NotRegisteredDevicesListener.
      *
-     * @param DeviceManagerInterface     $deviceManager
+     * @param DeviceManagerInterface $deviceManager
      */
     public function __construct(DeviceManagerInterface $deviceManager)
     {

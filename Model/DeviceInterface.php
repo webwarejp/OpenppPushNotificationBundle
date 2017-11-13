@@ -4,20 +4,14 @@ namespace Openpp\PushNotificationBundle\Model;
 
 use Sly\NotificationPusher\Model\DeviceInterface as BaseDeviceInterface;
 
-/**
- * DeviceInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
 interface DeviceInterface extends BaseDeviceInterface
 {
     const TYPE_ANDROID = 1;
-    const TYPE_IOS     = 2;
-    const TYPE_WEB     = 3; // Web Push
+    const TYPE_IOS = 2;
+    const TYPE_WEB = 3; // Web Push
     const TYPE_NAME_ANDROID = 'android';
-    const TYPE_NAME_IOS     = 'ios';
-    const TYPE_NAME_WEB     = 'web';
+    const TYPE_NAME_IOS = 'ios';
+    const TYPE_NAME_WEB = 'web';
 
     /**
      * Returns the device identifier.
@@ -36,14 +30,14 @@ interface DeviceInterface extends BaseDeviceInterface
     /**
      * Returns the type (Android or iOS).
      *
-     * @return integer
+     * @return int
      */
     public function getType();
 
     /**
      * Sets the type (Android or iOS).
      *
-     * @param integer $type
+     * @param int $type
      */
     public function setType($type);
 
@@ -146,7 +140,7 @@ interface DeviceInterface extends BaseDeviceInterface
     public function setUser(UserInterface $user);
 
     /**
-     * Returns the registration date
+     * Returns the registration date.
      *
      * @return \DateTime
      */
@@ -211,7 +205,7 @@ interface DeviceInterface extends BaseDeviceInterface
     /**
      * Returns the type name.
      *
-     * @param integer $type
+     * @param int $type
      *
      * @return string
      */

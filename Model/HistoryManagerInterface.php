@@ -12,7 +12,7 @@ interface HistoryManagerInterface
     public function getClass();
 
     /**
-     * Returns an empty history instance
+     * Returns an empty history instance.
      *
      * @return HistoryInterface
      */
@@ -22,9 +22,7 @@ interface HistoryManagerInterface
      * Saves a history.
      *
      * @param HistoryInterface $history
-     * @param boolean $andFlush
-     *
-     * @return void
+     * @param bool             $andFlush
      */
     public function save(HistoryInterface $history, $andFlush = true);
 

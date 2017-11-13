@@ -11,7 +11,7 @@ use Sonata\AdminBundle\Show\ShowMapper;
 class UserAdmin extends Admin
 {
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
@@ -22,7 +22,7 @@ class UserAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
@@ -30,35 +30,35 @@ class UserAdmin extends Admin
             ->add('application')
             ->add('uid')
             ->add('tags')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
         $formMapper
             ->add('application')
             ->add('uid')
-            ->add('tags', 'sonata_type_model_autocomplete', array(
+            ->add('tags', 'sonata_type_model_autocomplete', [
                 'required' => false,
                 'property' => 'name',
-                'multiple' => 'true'
-            ))
+                'multiple' => 'true',
+            ])
             ->add('badge')
         ;
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {

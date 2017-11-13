@@ -2,12 +2,6 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-/**
- * Represents a Tag model
- *
- * @author shiroko@webware.co.jp
- *
- */
 class Tag implements TagInterface
 {
     /**
@@ -19,6 +13,16 @@ class Tag implements TagInterface
      * @var \DateTime
      */
     protected $createdAt;
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
+    }
 
     /**
      * {@inheritdoc}
@@ -37,7 +41,7 @@ class Tag implements TagInterface
     }
 
     /**
-     * Returns the creation date
+     * Returns the creation date.
      *
      * @return \DateTime|null
      */
@@ -47,22 +51,12 @@ class Tag implements TagInterface
     }
 
     /**
-     * Sets the creation date
+     * Sets the creation date.
      *
      * @param \DateTime|null $createdAt
      */
     public function setCreatedAt(\DateTime $createdAt = null)
     {
         $this->createdAt = $createdAt;
-    }
-
-    /**
-     * Returns a string representation
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName();
     }
 }

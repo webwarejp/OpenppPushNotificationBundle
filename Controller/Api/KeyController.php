@@ -23,7 +23,6 @@ class KeyController extends FOSRestController
     public function getPublicKeyAction()
     {
         if ($path = $this->getParameter('openpp.push_notification.web_push.public_key_path')) {
-
             if (!$key = PublicKeyUtil::getKeyFromPem($path)) {
                 throw new NotFoundHttpException('Invalid key path.');
             }

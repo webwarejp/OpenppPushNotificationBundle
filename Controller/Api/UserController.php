@@ -13,9 +13,6 @@ use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Model\ApplicationInterface;
 use Openpp\PushNotificationBundle\Exception\UserNotFoundException;
 
-/**
- *
- */
 class UserController extends FOSRestController
 {
     /**
@@ -35,20 +32,20 @@ class UserController extends FOSRestController
         $page = $paramFetcher->get('page');
         $limit = $paramFetcher->get('count');
 
-        $pager = $this->getUserManager()->getPager(array('application' => $application), $page, $limit);
+        $pager = $this->getUserManager()->getPager(['application' => $application], $page, $limit);
 
-        $uids = array();
+        $uids = [];
         foreach ($pager->getResults() as $user) {
             $uids[] = $user->getUid();
         }
 
-        return array(
-            'page'      => $pager->getPage(),
+        return [
+            'page' => $pager->getPage(),
             'last_page' => $pager->getLastPage(),
-            'per_page'  => $limit,
-            'total'     => $pager->getNbResults(),
-            'uids'      => $uids,
-        );
+            'per_page' => $limit,
+            'total' => $pager->getNbResults(),
+            'uids' => $uids,
+        ];
     }
 
     /**
@@ -68,24 +65,24 @@ class UserController extends FOSRestController
         $user = $this->getApplicationUser($application, $paramFetcher->get('uid'));
         $tags = $paramFetcher->get('tags');
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
 
         $this->get('openpp.push_notification.push_service_manager')->addTagToUser(
              $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $tags
         );
 
-        $result = array(
+        $result = [
             'application_id' => $application->getSlug(),
-            'uid'            => $user->getUid(),
-        );
+            'uid' => $user->getUid(),
+        ];
         $result['tags'] = array_unique(array_merge($user->getTagNames()->toArray(), $tags));
 
         return $result;
     }
 
     /**
-     * @ApiDoc(
+     * @ApiDoc(array
      *  description="Remove tags from user",
      *  section="Openpp Push Notifications (Common)"
      * )
@@ -101,33 +98,35 @@ class UserController extends FOSRestController
         $user = $this->getApplicationUser($application, $paramFetcher->get('uid'));
         $tags = $paramFetcher->get('tags');
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
 
         $this->get('openpp.push_notification.push_service_manager')->removeTagFromUser(
              $paramFetcher->get('application_id'), $paramFetcher->get('uid'), $tags
         );
 
-        $result = array(
+        $result = [
             'application_id' => $application->getSlug(),
-            'uid'            => $user->getUid(),
-        );
+            'uid' => $user->getUid(),
+        ];
         $result['tags'] = array_diff($user->getTagNames()->toArray(), $tags);
 
         return $result;
     }
 
     /**
-     * Get application
+     * Get an application.
      *
      * @param string $aid
+     *
      * @throws ApplicationNotFoundException
+     *
      * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
     protected function getApplication($aid)
     {
         $applicationManager = $this->get('openpp.push_notification.manager.application');
-        $application = $applicationManager->findApplicationBy(array('slug' => $aid));
+        $application = $applicationManager->findApplicationBy(['slug' => $aid]);
         if (empty($application)) {
             throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $aid));
         }
@@ -136,12 +135,13 @@ class UserController extends FOSRestController
     }
 
     /**
-     * Get applicaiton user
+     * Get a applicaiton user.
      *
      * @param ApplicationInterface $application
-     * @param string $uid
+     * @param string               $uid
      *
      * @throws UserNotFoundException
+     *
      * @return \Openpp\PushNotificationBundle\Model\UserInterface
      */
     protected function getApplicationUser(ApplicationInterface $application, $uid)
@@ -155,7 +155,7 @@ class UserController extends FOSRestController
     }
 
     /**
-     * Get user manager
+     * Get the user manager.
      *
      * @return \Openpp\PushNotificationBundle\Model\UserManagerInterface
      */

@@ -4,25 +4,21 @@ namespace Openpp\PushNotificationBundle\Model;
 
 use Openpp\MapBundle\Model\CircleInterface;
 use Openpp\PushNotificationBundle\TagExpression\TagExpression;
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
+
 class Condition implements ConditionInterface
 {
-    protected static $intervalTypeChoices = array(
-        'condition.interval.hourly'  => self::INTERVAL_TYPE_HOURLY,
-        'condition.interval.daily'   => self::INTERVAL_TYPE_DAILY,
-        'condition.interval.weekly'  => self::INTERVAL_TYPE_WEEKLY,
+    protected static $intervalTypeChoices = [
+        'condition.interval.hourly' => self::INTERVAL_TYPE_HOURLY,
+        'condition.interval.daily' => self::INTERVAL_TYPE_DAILY,
+        'condition.interval.weekly' => self::INTERVAL_TYPE_WEEKLY,
         'condition.interval.monthly' => self::INTERVAL_TYPE_MONTHLY,
-    );
+    ];
 
-    protected static $timeTypeChoices = array(
-        'condition.time.specific'   => self::TIME_TYPE_SPECIFIC,
-        'condition.time.periodic'   => self::TIME_TYPE_PERIODIC,
+    protected static $timeTypeChoices = [
+        'condition.time.specific' => self::TIME_TYPE_SPECIFIC,
+        'condition.time.periodic' => self::TIME_TYPE_PERIODIC,
         'condition.time.continuing' => self::TIME_TYPE_CONTINUING,
-    );
+    ];
 
     /**
      * @var string
@@ -30,7 +26,7 @@ class Condition implements ConditionInterface
     protected $name;
 
     /**
-     * @var boolean
+     * @var bool
      */
     protected $enable;
 
@@ -60,7 +56,7 @@ class Condition implements ConditionInterface
     protected $tagExpression;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $timeType;
 
@@ -80,12 +76,12 @@ class Condition implements ConditionInterface
     protected $endDate;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $intervalType;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $intervalTime;
 
@@ -110,11 +106,21 @@ class Condition implements ConditionInterface
     protected $updatedAt;
 
     /**
-     * Constructor
+     * Constructor.
      */
     public function __construct()
     {
         $this->setEnable(true);
+    }
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->name;
     }
 
     /**
@@ -358,7 +364,7 @@ class Condition implements ConditionInterface
     }
 
     /**
-     * Returns the creation date
+     * Returns the creation date.
      *
      * @return \DateTime|null
      */
@@ -368,7 +374,7 @@ class Condition implements ConditionInterface
     }
 
     /**
-     * Sets the creation date
+     * Sets the creation date.
      *
      * @param \DateTime|null $createdAt
      */
@@ -378,7 +384,7 @@ class Condition implements ConditionInterface
     }
 
     /**
-     * Returns the last update date
+     * Returns the last update date.
      *
      * @return \DateTime|null
      */
@@ -388,7 +394,7 @@ class Condition implements ConditionInterface
     }
 
     /**
-     * Sets the last update date
+     * Sets the last update date.
      *
      * @param \DateTime|null $updatedAt
      */
@@ -398,19 +404,9 @@ class Condition implements ConditionInterface
     }
 
     /**
-     * Returns a string representation
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->name;
-    }
-
-    /**
      * Returns the interval type choices.
      *
-     * @param boolean $mapBundleEnable
+     * @param bool $mapBundleEnable
      *
      * @return array
      */
@@ -465,11 +461,11 @@ class Condition implements ConditionInterface
     /**
      * Returns whether the specific setting is valid.
      *
-     * @return boolean
+     * @return bool
      */
     public function isSpecificSettingValid()
     {
-        if ($this->getTimeType() === self::TIME_TYPE_SPECIFIC) {
+        if (self::TIME_TYPE_SPECIFIC === $this->getTimeType()) {
             if (empty($this->specificDates)) {
                 return false;
             }
@@ -490,11 +486,11 @@ class Condition implements ConditionInterface
     /**
      * Returns whether the periodic setting is valid.
      *
-     * @return boolean
+     * @return bool
      */
     public function isPeriodicSettingValid()
     {
-        if ($this->getTimeType() === self::TIME_TYPE_PERIODIC) {
+        if (self::TIME_TYPE_PERIODIC === $this->getTimeType()) {
             if (!$this->getStartDate()) {
                 return false;
             }
@@ -509,11 +505,11 @@ class Condition implements ConditionInterface
     /**
      * Returns whether the continuing setting is valid.
      *
-     * @return boolean
+     * @return bool
      */
     public function isContinuingSettingValid()
     {
-        if ($this->getTimeType() === self::TIME_TYPE_CONTINUING) {
+        if (self::TIME_TYPE_CONTINUING === $this->getTimeType()) {
             if (!$this->getStartDate()) {
                 return false;
             }
@@ -525,11 +521,11 @@ class Condition implements ConditionInterface
     /**
      * Returns whether the endDate is valid.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEndDateValid()
     {
-        if (in_array($this->getTimeType(), array(self::TIME_TYPE_PERIODIC, self::TIME_TYPE_CONTINUING))) {
+        if (in_array($this->getTimeType(), [self::TIME_TYPE_PERIODIC, self::TIME_TYPE_CONTINUING])) {
             if ($this->getStartDate() && $this->getEndDate() && $this->getStartDate() > $this->getEndDate()) {
                 return false;
             }
@@ -541,12 +537,13 @@ class Condition implements ConditionInterface
     /**
      * Returns whether the tagExpression is valid.
      *
-     * @return boolean
+     * @return bool
      */
     public function isTagExpressionValid()
     {
         if ($this->getTagExpression()) {
             $te = new TagExpression($this->getTagExpression());
+
             return $te->validate(false);
         }
 

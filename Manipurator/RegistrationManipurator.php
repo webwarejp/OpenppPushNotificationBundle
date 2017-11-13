@@ -44,13 +44,13 @@ class RegistrationManipurator
     protected $pointManager;
 
     /**
-     * Constructor
+     * Initializes a new RegistrationManipurator.
      *
      * @param ApplicationManagerInterface $applicationManager
-     * @param DeviceManagerInterface $deviceManager
-     * @param UserManagerInterface $userManager
-     * @param TagManagerInterface $tagManager
-     * @param string $uidAutoPrefix
+     * @param DeviceManagerInterface      $deviceManager
+     * @param UserManagerInterface        $userManager
+     * @param TagManagerInterface         $tagManager
+     * @param string                      $uidAutoPrefix
      */
     public function __construct(
         ApplicationManagerInterface $applicationManager,
@@ -60,10 +60,10 @@ class RegistrationManipurator
         $uidAutoPrefix = 'op_'
     ) {
         $this->applicationManager = $applicationManager;
-        $this->deviceManager      = $deviceManager;
-        $this->userManager        = $userManager;
-        $this->tagManager         = $tagManager;
-        $this->uidAutoPrefix      = $uidAutoPrefix;
+        $this->deviceManager = $deviceManager;
+        $this->userManager = $userManager;
+        $this->tagManager = $tagManager;
+        $this->uidAutoPrefix = $uidAutoPrefix;
     }
 
     /**
@@ -77,16 +77,16 @@ class RegistrationManipurator
     /**
      * Registers a device to the application.
      *
-     * @param string  $applicationId
-     * @param string  $deviceIdentifier
-     * @param string  $token
-     * @param string  $uid
-     * @param float   $locationLatitude
-     * @param float   $locationLongitude
-     * @param string  $userAgent
-     * @param integer $type
-     * @param string  $key
-     * @param string  $auth
+     * @param string $applicationId
+     * @param string $deviceIdentifier
+     * @param string $token
+     * @param string $uid
+     * @param float  $locationLatitude
+     * @param float  $locationLongitude
+     * @param string $userAgent
+     * @param int    $type
+     * @param string $key
+     * @param string $auth
      *
      * @throws ApplicationNotFoundException
      *
@@ -170,10 +170,10 @@ class RegistrationManipurator
 
         $application->addUser($user);
 
-        $tags = $this->tagManager->getTagObjects(array(
+        $tags = $this->tagManager->getTagObjects([
             Device::getTypeName($device->getType()),
-            $device->getUser()->getUidTag()
-        ));
+            $device->getUser()->getUidTag(),
+        ]);
 
         foreach ($tags as $tag) {
             $user->addTag($tag);
@@ -181,12 +181,12 @@ class RegistrationManipurator
 
         $this->deviceManager->save($device);
 
-        return array(
+        return [
             'deviceIdentifier' => $deviceIdentifier,
             'uid' => $uid,
             'tags' => $user->getTagNames()->toArray(),
             'registrationDate' => $device->getRegisteredAt(),
-        );
+        ];
     }
 
     /**
@@ -194,7 +194,7 @@ class RegistrationManipurator
      *
      * @param string $applicationId
      * @param string $deviceIdentifier
-     * @param boolean $deletion
+     * @param bool   $deletion
      *
      * @throws ApplicationNotFoundException
      *
@@ -207,10 +207,10 @@ class RegistrationManipurator
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
         if (!is_null($device)) {
-            $result = array(
+            $result = [
                 'deviceIdentifier' => $deviceIdentifier,
                 'uid' => $device->getUser()->getUid(),
-            );
+            ];
             if ($deletion) {
                 $this->deviceManager->delete($device);
 
@@ -226,7 +226,7 @@ class RegistrationManipurator
             return $result;
         }
 
-        return array('message' => 'No device.');
+        return ['message' => 'No device.'];
     }
 
     /**
@@ -247,12 +247,12 @@ class RegistrationManipurator
         $device = $this->deviceManager->findDeviceByIdentifier($application, $deviceIdentifier);
 
         if (!is_null($device)) {
-            return array(
+            return [
                 'deviceIdentifier' => $deviceIdentifier,
                 'uid' => $device->getUser()->getUid(),
                 'tags' => $device->getUser()->getTagNames()->toArray(),
                 'registrationDate' => $device->getRegisteredAt(),
-            );
+            ];
         }
 
         throw new DeviceNotFoundException(sprintf('Device %s is not found.', $deviceIdentifier));
@@ -260,12 +260,14 @@ class RegistrationManipurator
 
     /**
      * @param string $applicationId
+     *
      * @throws ApplicationNotFoundException
+     *
      * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
     protected function getApplicaiton($applicationId)
     {
-        $application = $this->applicationManager->findApplicationBy(array('slug' => $applicationId));
+        $application = $this->applicationManager->findApplicationBy(['slug' => $applicationId]);
 
         if (is_null($application)) {
             throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));

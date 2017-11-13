@@ -2,12 +2,6 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-/**
- * ApplicationManagerInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
 interface ApplicationManagerInterface
 {
     /**

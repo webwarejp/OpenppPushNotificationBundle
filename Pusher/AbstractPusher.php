@@ -38,13 +38,13 @@ abstract class AbstractPusher implements PusherInterface
     protected $dispatcher;
 
     /**
-     * Constructor
+     * Initializes a new pusher base.
      *
-     * @param ApplicationManagerInterface  $applicationManager
-     * @param TagManagerInterface          $tagManager
-     * @param UserManagerInterface         $userManager
-     * @param DeviceManagerInterface       $deviceManager
-     * @param EventDispatcherInterface     $dispatcher
+     * @param ApplicationManagerInterface $applicationManager
+     * @param TagManagerInterface         $tagManager
+     * @param UserManagerInterface        $userManager
+     * @param DeviceManagerInterface      $deviceManager
+     * @param EventDispatcherInterface    $dispatcher
      */
     public function __construct(
         ApplicationManagerInterface $applicationManager,
@@ -54,10 +54,10 @@ abstract class AbstractPusher implements PusherInterface
         EventDispatcherInterface    $dispatcher
     ) {
         $this->applicationManager = $applicationManager;
-        $this->tagManager         = $tagManager;
-        $this->userManager        = $userManager;
-        $this->deviceManager      = $deviceManager;
-        $this->dispatcher         = $dispatcher;
+        $this->tagManager = $tagManager;
+        $this->userManager = $userManager;
+        $this->deviceManager = $deviceManager;
+        $this->dispatcher = $dispatcher;
     }
 
     /**
@@ -111,6 +111,7 @@ abstract class AbstractPusher implements PusherInterface
      * @param string|ApplicationInterface $application
      *
      * @throws ApplicationNotFoundException
+     *
      * @return \Openpp\PushNotificationBundle\Model\ApplicationInterface
      */
     protected function getApplication($application)
@@ -122,9 +123,9 @@ abstract class AbstractPusher implements PusherInterface
         $name = $application;
         $application = $this->applicationManager->findApplicationByPackageName($name);
         if (empty($application)) {
-            $application = $this->applicationManager->findApplicationBy(array('slug' => $name));
+            $application = $this->applicationManager->findApplicationBy(['slug' => $name]);
             if (empty($application)) {
-                throw new ApplicationNotFoundException($name . ' is not found.');
+                throw new ApplicationNotFoundException($name.' is not found.');
             }
         }
 

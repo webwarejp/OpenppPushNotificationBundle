@@ -2,12 +2,6 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-/**
- * ApplicationInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
 interface ApplicationInterface
 {
     /**
@@ -209,7 +203,7 @@ interface ApplicationInterface
     /**
      * Returns the count of active devices.
      *
-     * @return integer
+     * @return int
      */
     public function countActiveDevices();
 

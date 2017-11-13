@@ -47,7 +47,7 @@ class PostPushEvent extends Event
     protected $notRegisteredDevices;
 
     /**
-     * Constructor
+     * Initializes a new PostPushEvent.
      *
      * @param ApplicationInterface $application
      * @param string               $notificationId
@@ -57,14 +57,14 @@ class PostPushEvent extends Event
      * @param mixed                $devices
      * @param mixed                $notRegisteredDevices
      */
-    public function __construct(ApplicationInterface $application, $notificationId, $message, array $options, \DateTime $timestamp, $devices, $notRegisteredDevices = array())
+    public function __construct(ApplicationInterface $application, $notificationId, $message, array $options, \DateTime $timestamp, $devices, $notRegisteredDevices = [])
     {
-        $this->application          = $application;
-        $this->notificationId       = $notificationId;
-        $this->message              = $message;
-        $this->options              = $options;
-        $this->timestamp            = $timestamp;
-        $this->devices              = $devices;
+        $this->application = $application;
+        $this->notificationId = $notificationId;
+        $this->message = $message;
+        $this->options = $options;
+        $this->timestamp = $timestamp;
+        $this->devices = $devices;
         $this->notRegisteredDevices = $notRegisteredDevices;
     }
 
@@ -129,7 +129,7 @@ class PostPushEvent extends Event
      */
     public function getCounts()
     {
-        $result = array();
+        $result = [];
 
         if ($this->devices instanceof DeviceCollection) {
             foreach (array_values(Device::getTypeChoices()) as $type) {

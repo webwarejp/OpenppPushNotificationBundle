@@ -30,7 +30,7 @@ interface TagManagerInterface
     public function findTagBy(array $criteria);
 
     /**
-     * Returns an empty tag instance
+     * Returns an empty tag instance.
      *
      * @return TagInterface
      */
@@ -41,7 +41,7 @@ interface TagManagerInterface
      *
      * @param string $tag
      *
-     * @return boolean
+     * @return bool
      */
     public function isReservedTag($tag);
 
@@ -55,8 +55,8 @@ interface TagManagerInterface
     /**
      * Converts the array of tag names to the array of tag objects.
      *
-     * @param string|array  $tags
-     * @param boolean $creation create if it does not exist
+     * @param string|array $tags
+     * @param bool         $creation create if it does not exist
      *
      * @return array array of TagInterface
      */
@@ -65,9 +65,9 @@ interface TagManagerInterface
     /**
      * Converts a tag name to the tag object.
      *
-     * @param string  $tag
-     * @param boolean $creation create if it does not exist
-     * 
+     * @param string $tag
+     * @param bool   $creation create if it does not exist
+     *
      * @return TagInterface|null
      */
     public function getTagObject($tag, $creation);

@@ -2,18 +2,12 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-/**
- * PushServiceManagerInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
 interface PushServiceManagerInterface
 {
-    const OPERATION_PUSH                = 'push';
-    const OPERATION_PUSH_TO_DEVICES     = 'pushToDevices';
-    const OPERATION_ADDTAGTOUSER        = 'addTag';
-    const OPERATION_REMOVETAGFROMUSER   = 'removeTag';
+    const OPERATION_PUSH = 'push';
+    const OPERATION_PUSH_TO_DEVICES = 'pushToDevices';
+    const OPERATION_ADDTAGTOUSER = 'addTag';
+    const OPERATION_REMOVETAGFROMUSER = 'removeTag';
     const OPERATION_CREATE_REGISTRATION = 'createRegistration';
     const OPERATION_UPDATE_REGISTRATION = 'updateRegistration';
     const OPERATION_DELETE_REGISTRATION = 'deleteRegistration';
@@ -26,7 +20,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function push($applicationName, $tagExpression, $message, array $options = array());
+    public function push($applicationName, $tagExpression, $message, array $options = []);
 
     /**
      * Executes to send the push notification.
@@ -36,7 +30,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushExecute($applicationName, $tagExpression, $message, array $options = array());
+    public function pushExecute($applicationName, $tagExpression, $message, array $options = []);
 
     /**
      * Creates the job message to send the push notification to the given devices.
@@ -46,7 +40,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushToDevices($applicationName, $devices, $message, array $options = array());
+    public function pushToDevices($applicationName, $devices, $message, array $options = []);
 
     /**
      * Executes to send the push notification to the given devices.
@@ -56,7 +50,7 @@ interface PushServiceManagerInterface
      * @param string $message
      * @param array  $options
      */
-    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = array());
+    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = []);
 
     /**
      * Creates the job message to add the tags to the user.
@@ -95,52 +89,46 @@ interface PushServiceManagerInterface
     public function removeTagFromUserExecute($applicationName, $uid, $tag);
 
     /**
-     * 
-     * @param string  $applicationName  Application name
-     * @param string  $deviceIdentifier Device identifier
-     * @param array   $tags             Tags
+     * @param string $applicationName  Application name
+     * @param string $deviceIdentifier Device identifier
+     * @param array  $tags             Tags
      */
     public function createRegistration($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
-     * @param string  $applicationName  Application name
-     * @param string  $deviceIdentifier Device identifier
-     * @param array   $tags             Tags
+     * @param string $applicationName  Application name
+     * @param string $deviceIdentifier Device identifier
+     * @param array  $tags             Tags
      */
     public function createRegistrationExecute($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
-     * @param string  $applicationName  Application name
-     * @param string  $deviceIdentifier Device identifier
-     * @param array   $tags             Tags
+     * @param string $applicationName  Application name
+     * @param string $deviceIdentifier Device identifier
+     * @param array  $tags             Tags
      */
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
-     * @param string  $applicationName  Application name
-     * @param string  $deviceIdentifier Device identifier
-     * @param array   $tags             Tags
+     * @param string $applicationName  Application name
+     * @param string $deviceIdentifier Device identifier
+     * @param array  $tags             Tags
      */
     public function updateRegistrationExecute($applicationName, $deviceIdentifier, array $tags);
 
     /**
-     * 
-     * @param string  $applicationName Application name
-     * @param integer $type            Device type
-     * @param string  $registrationId  Registration ID related to the push service
-     * @param string  $eTag            ETag related to the push service
+     * @param string $applicationName Application name
+     * @param int    $type            Device type
+     * @param string $registrationId  Registration ID related to the push service
+     * @param string $eTag            ETag related to the push service
      */
     public function deleteRegistration($applicationName, $type, $registrationId, $eTag);
 
     /**
-     * 
-     * @param string  $applicationName Application name
-     * @param integer $type            Device type
-     * @param string  $registrationId  Registration ID related to the push service
-     * @param string  $eTag            ETag related to the push service
+     * @param string $applicationName Application name
+     * @param int    $type            Device type
+     * @param string $registrationId  Registration ID related to the push service
+     * @param string $eTag            ETag related to the push service
      */
     public function deleteRegistrationExecute($applicationName, $type, $registrationId, $eTag);
 

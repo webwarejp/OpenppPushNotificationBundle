@@ -12,16 +12,16 @@ use Openpp\PushNotificationBundle\Model\Device;
 class DeviceAdmin extends Admin
 {
     /**
-     * @param DatagridMapper $datagridMapper
+     * {@inheritdoc}
      */
     protected function configureDatagridFilters(DatagridMapper $datagridMapper)
     {
         $datagridMapper
             ->add('application')
-            ->add('type', 'doctrine_orm_choice', array(), 'choice', array(
+            ->add('type', 'doctrine_orm_choice', [], 'choice', [
                 'choices' => Device::getTypeChoices(),
                 'choices_as_values' => true,
-            ))
+            ])
             ->add('deviceIdentifier')
             ->add('token')
             ->add('registeredAt')
@@ -30,33 +30,33 @@ class DeviceAdmin extends Admin
     }
 
     /**
-     * @param ListMapper $listMapper
+     * {@inheritdoc}
      */
     protected function configureListFields(ListMapper $listMapper)
     {
         $listMapper
             ->add('application')
-            ->add('type', 'choice', array(
+            ->add('type', 'choice', [
                 'choices' => array_flip(Device::getTypeChoices()),
-            ))
+            ])
             ->add('user')
             ->add('deviceIdentifier')
             ->add('active', 'boolean')
             ->add('token')
             ->add('registeredAt')
             ->add('unregisteredAt')
-            ->add('_action', 'actions', array(
-                'actions' => array(
-                    'show' => array(),
-                    'edit' => array(),
-                    'delete' => array(),
-                )
-            ))
+            ->add('_action', 'actions', [
+                'actions' => [
+                    'show' => [],
+                    'edit' => [],
+                    'delete' => [],
+                ],
+            ])
         ;
     }
 
     /**
-     * @param FormMapper $formMapper
+     * {@inheritdoc}
      */
     protected function configureFormFields(FormMapper $formMapper)
     {
@@ -64,18 +64,18 @@ class DeviceAdmin extends Admin
             ->add('application', 'sonata_type_model_list')
             ->add('user', 'sonata_type_model_list')
             ->add('deviceIdentifier')
-            ->add('type', 'choice', array(
+            ->add('type', 'choice', [
                 'choices' => Device::getTypeChoices(),
                 'choices_as_values' => true,
-            ))
+            ])
             ->add('token')
-            ->add('registeredAt', 'sonata_type_datetime_picker', array('dp_use_current' => true))
-            ->add('unregisteredAt', 'sonata_type_datetime_picker', array('required' => false))
+            ->add('registeredAt', 'sonata_type_datetime_picker', ['dp_use_current' => true])
+            ->add('unregisteredAt', 'sonata_type_datetime_picker', ['required' => false])
         ;
     }
 
     /**
-     * @param ShowMapper $showMapper
+     * {@inheritdoc}
      */
     protected function configureShowFields(ShowMapper $showMapper)
     {

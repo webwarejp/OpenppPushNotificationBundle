@@ -6,12 +6,6 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Criteria;
 
-/**
- * Represents a Application model
- *
- * @author shiroko@webware.co.jp
- *
- */
 class Application implements ApplicationInterface
 {
     /**
@@ -95,12 +89,22 @@ class Application implements ApplicationInterface
     protected $apnsCertificateFile;
 
     /**
-     * Constructor
+     * Initializes a new Application.
      */
     public function __construct()
     {
-        $this->users   = new ArrayCollection();
+        $this->users = new ArrayCollection();
         $this->devices = new ArrayCollection();
+    }
+
+    /**
+     * Returns a string representation.
+     *
+     * @return string
+     */
+    public function __toString()
+    {
+        return $this->getName();
     }
 
     /**
@@ -328,7 +332,7 @@ class Application implements ApplicationInterface
      */
     public function removeDevice(DeviceInterface $device)
     {
-         $this->devices->removeElement($device);
+        $this->devices->removeElement($device);
     }
 
     /**
@@ -380,16 +384,6 @@ class Application implements ApplicationInterface
     public function setUpdatedAt(\DateTime $updatedAt = null)
     {
         $this->updatedAt = $updatedAt;
-    }
-
-    /**
-     * Returns a string representation
-     *
-     * @return string
-     */
-    public function __toString()
-    {
-        return $this->getName();
     }
 
     /**

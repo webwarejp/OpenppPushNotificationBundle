@@ -12,15 +12,26 @@ use Doctrine\ORM\Query\Expr;
 
 class UserManager extends BaseManager
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected $repository;
+
+    /**
+     * @var string
+     */
     protected $class;
 
     /**
-     * Constructor
+     * Initializes a new UserManager.
      *
      * @param ManagerRegistry $managerRegistry
-     * @param string $class
+     * @param string          $class
      */
     public function __construct(ManagerRegistry $managerRegistry, $class)
     {
@@ -32,7 +43,7 @@ class UserManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClass()
     {
@@ -40,7 +51,7 @@ class UserManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function save(UserInterface $user, $andFlush = true)
     {
@@ -51,7 +62,7 @@ class UserManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findUserBy(array $criteria)
     {
@@ -59,14 +70,16 @@ class UserManager extends BaseManager
     }
 
     /**
+     * Returns a pager for users.
+     *
      * @param array $criteria
      * @param int   $page
      * @param int   $limit
      * @param array $sort
      *
-     * @return PagerInterface
+     * @return Pager
      */
-    public function getPager(array $criteria, $page, $limit = 10, array $sort = array())
+    public function getPager(array $criteria, $page, $limit = 10, array $sort = [])
     {
         $query = $this->repository
             ->createQueryBuilder('u')
@@ -79,8 +92,8 @@ class UserManager extends BaseManager
             }
         }
 
-        if (count($sort) == 0) {
-            $sort = array('uid' => 'ASC');
+        if (0 == count($sort)) {
+            $sort = ['uid' => 'ASC'];
         }
 
         foreach ($sort as $field => $direction) {
@@ -104,7 +117,7 @@ class UserManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addTagToUser(ApplicationInterface $application, $uid, $tags, $andFlush = true)
     {
@@ -117,7 +130,7 @@ class UserManager extends BaseManager
         }
 
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
 
         foreach ($tags as $tag) {
@@ -131,7 +144,7 @@ class UserManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTagFromUser(ApplicationInterface $application, $uid, $tags, $andFlush = true)
     {
@@ -142,7 +155,7 @@ class UserManager extends BaseManager
         }
 
         if (!is_array($tags)) {
-            $tags = array($tags);
+            $tags = [$tags];
         }
 
         foreach ($tags as $tag) {

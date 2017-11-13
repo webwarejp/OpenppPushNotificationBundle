@@ -9,9 +9,6 @@ use FOS\RestBundle\Request\ParamFetcherInterface;
 use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 
-/**
- *
- */
 class NotificationController extends FOSRestController
 {
     /**
@@ -32,11 +29,11 @@ class NotificationController extends FOSRestController
     {
         $applicationId = $paramFetcher->get('application_id');
         $applicationManager = $this->get('openpp.push_notification.manager.application');
-        if (!$applicationManager->findApplicationBy(array('slug' => $applicationId))) {
+        if (!$applicationManager->findApplicationBy(['slug' => $applicationId])) {
             throw new ApplicationNotFoundException(sprintf('Application %s is not found.', $applicationId));
         }
 
-        $options = array();
+        $options = [];
         if ($title = $paramFetcher->get('title')) {
             $options['title'] = $title;
         }
@@ -51,6 +48,6 @@ class NotificationController extends FOSRestController
              $applicationId, $paramFetcher->get('tag_exp'), $paramFetcher->get('message'), $options
         );
 
-        return array('result' => true);
+        return ['result' => true];
     }
 }

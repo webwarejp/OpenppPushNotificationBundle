@@ -8,11 +8,6 @@ use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
 use Sonata\MediaBundle\Twig\Extension\MediaExtension;
 
-/**
- * 
- * @author shiroko@webware.co.jp
- *
- */
 class ConditionTask
 {
     protected $conditionManager;
@@ -21,7 +16,7 @@ class ConditionTask
     protected $mediaExtension;
 
     /**
-     * Constructor
+     * Initializes a new ConditionTask.
      *
      * @param ConditionManagerInterface   $conditionManager
      * @param PushServiceManagerInterface $pushServiceManager
@@ -29,14 +24,13 @@ class ConditionTask
      */
     public function __construct(ConditionManagerInterface $conditionManager, PushServiceManagerInterface $pushServiceManager, DeviceManagerInterface $deviceManager, MediaExtension $mediaExtension)
     {
-        $this->conditionManager   = $conditionManager;
+        $this->conditionManager = $conditionManager;
         $this->pushServiceManager = $pushServiceManager;
-        $this->deviceManager      = $deviceManager;
-        $this->mediaExtension     = $mediaExtension;
+        $this->deviceManager = $deviceManager;
+        $this->mediaExtension = $mediaExtension;
     }
 
     /**
-     * 
      * @param string $time
      * @param string $margin
      */
@@ -44,13 +38,12 @@ class ConditionTask
     {
         $conditions = $this->conditionManager->matchConditionByTime(
             $time ? new \DateTime($time) : new \DateTime(),
-            $margin ? new \DateInterval('PT'. $margin . 'M') : null
+            $margin ? new \DateInterval('PT'.$margin.'M') : null
         );
 
         foreach ($conditions as $condition) {
-            $options = array();
-            if (!empty($condition->getTitle()))
-            {
+            $options = [];
+            if (!empty($condition->getTitle())) {
                 $options['title'] = $condition->getTitle();
             }
             if (!empty($condition->getUrl())) {

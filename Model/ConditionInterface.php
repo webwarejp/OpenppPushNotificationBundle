@@ -3,21 +3,16 @@
 namespace Openpp\PushNotificationBundle\Model;
 
 use Openpp\MapBundle\Model\CircleInterface;
-/**
- * ConditionInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
+
 interface ConditionInterface
 {
-    const INTERVAL_TYPE_HOURLY  = 1;
-    const INTERVAL_TYPE_DAILY   = 2;
-    const INTERVAL_TYPE_WEEKLY  = 3;
+    const INTERVAL_TYPE_HOURLY = 1;
+    const INTERVAL_TYPE_DAILY = 2;
+    const INTERVAL_TYPE_WEEKLY = 3;
     const INTERVAL_TYPE_MONTHLY = 4;
 
-    const TIME_TYPE_SPECIFIC   = 1;
-    const TIME_TYPE_PERIODIC   = 2;
+    const TIME_TYPE_SPECIFIC = 1;
+    const TIME_TYPE_PERIODIC = 2;
     const TIME_TYPE_CONTINUING = 3;
 
     /**
@@ -37,15 +32,15 @@ interface ConditionInterface
     /**
      * Returns whether this condition is enabled.
      *
-     * @return boolean
+     * @return bool
      */
     public function isEnable();
 
     /**
      * Sets whether this condition is enabled.
      *
-     * @param boolean $enable
-    */
+     * @param bool $enable
+     */
     public function setEnable($enable);
 
     /**
@@ -59,7 +54,7 @@ interface ConditionInterface
      * Sets the application.
      *
      * @param ApplicationInterface $application
-    */
+     */
     public function setApplication(ApplicationInterface $application);
 
     /**
@@ -121,14 +116,14 @@ interface ConditionInterface
     /**
      * Returns the time type.
      *
-     * @return integer
+     * @return int
      */
     public function getTimeType();
 
     /**
      * Sets the time type.
      *
-     * @param integer $timeType
+     * @param int $timeType
      */
     public function setTimeType($timeType);
 
@@ -163,28 +158,28 @@ interface ConditionInterface
     /**
      * Returns the interval type.
      *
-     * @return integer
+     * @return int
      */
     public function getIntervalType();
 
     /**
      * Sets the interval type.
      *
-     * @param integer
-    */
+     * @param int
+     */
     public function setIntervalType($intervalType);
 
     /**
      * Returns the interval.
      *
-     * @return integer
+     * @return int
      */
     public function getIntervalTime();
 
     /**
      * Sets the interval.
      *
-     * @param integer
+     * @param int
      */
     public function setIntervalTime($intervalTime);
 
@@ -203,7 +198,7 @@ interface ConditionInterface
     public function setSpecificDates(array $specificDates);
 
     /**
-     * Returns the periodic interval
+     * Returns the periodic interval.
      *
      * @return \DateInterval
      */
@@ -234,6 +229,6 @@ interface ConditionInterface
      * Sets the circle area.
      *
      * @param CircleInterface $areaCircle
-    */
+     */
     public function setAreaCircle(CircleInterface $areaCircle = null);
 }

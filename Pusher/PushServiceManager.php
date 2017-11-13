@@ -9,7 +9,6 @@ use Openpp\PushNotificationBundle\TagExpression\TagExpression;
 use Openpp\PushNotificationBundle\Consumer\PushNotificationConsumer;
 use Openpp\PushNotificationBundle\Event\PrePushEvent;
 
-
 class PushServiceManager implements PushServiceManagerInterface
 {
     protected $dispatcher;
@@ -18,7 +17,7 @@ class PushServiceManager implements PushServiceManagerInterface
     protected $pusher;
 
     /**
-     * Constructor
+     * Initializes a new PushServiceManager.
      *
      * @param EventDispatcherInterface $dispatcher
      * @param BackendInterface         $backend
@@ -32,15 +31,15 @@ class PushServiceManager implements PushServiceManagerInterface
         PusherInterface          $pusher = null
     ) {
         $this->dispatcher = $dispatcher;
-        $this->backend    = $backend;
+        $this->backend = $backend;
         $this->tagManager = $tagManager;
-        $this->pusher     = $pusher;
+        $this->pusher = $pusher;
     }
 
     /**
      * {@inheritdoc}
      */
-    public function push($applicationName, $tagExpression, $message, array $options = array())
+    public function push($applicationName, $tagExpression, $message, array $options = [])
     {
         if (!empty($tagExpression)) {
             $te = new TagExpression($tagExpression);
@@ -51,30 +50,29 @@ class PushServiceManager implements PushServiceManagerInterface
             $applicationName,
             $tagExpression,
             $message,
-            $options,
-        ) = $this->dispatchPrePushEvent($applicationName, $tagExpression, $message, $options);
+            $options) = $this->dispatchPrePushEvent($applicationName, $tagExpression, $message, $options);
 
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
-            'application'   => $applicationName,
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
+            'application' => $applicationName,
             'tagExpression' => $tagExpression,
-            'message'       => $message,
-            'options'       => $options,
-            'operation'     => self::OPERATION_PUSH,
-        ));
+            'message' => $message,
+            'options' => $options,
+            'operation' => self::OPERATION_PUSH,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function pushExecute($applicationName, $tagExpression, $message, array $options = array())
+    public function pushExecute($applicationName, $tagExpression, $message, array $options = [])
     {
         $this->getPusher()->push($applicationName, $tagExpression, $message, $options);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function pushToDevices($applicationName, $devices, $message, array $options = array())
+    public function pushToDevices($applicationName, $devices, $message, array $options = [])
     {
         list(
             $applicationName,
@@ -84,19 +82,19 @@ class PushServiceManager implements PushServiceManagerInterface
             $devices
         ) = $this->dispatchPrePushEvent($applicationName, null, $message, $options, $devices);
 
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
             'application' => $applicationName,
-            'devices'     => $devices,
-            'message'     => $message,
-            'options'     => $options,
-            'operation'   => self::OPERATION_PUSH_TO_DEVICES,
-        ));
+            'devices' => $devices,
+            'message' => $message,
+            'options' => $options,
+            'operation' => self::OPERATION_PUSH_TO_DEVICES,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
-    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = array())
+    public function pushToDevicesExecute($applicationName, $devices, $message, array $options = [])
     {
         $this->getPusher()->pushToDevice($applicationName, $devices, $message, $options);
     }
@@ -107,11 +105,10 @@ class PushServiceManager implements PushServiceManagerInterface
     public function addTagToUser($applicationName, $uid, $tag)
     {
         if (!is_array($tag)) {
-            $tag = array($tag);
+            $tag = [$tag];
         }
 
         foreach ($tag as $idx => $one) {
-
             TagExpression::validateSingleTag($one);
 
             if ($this->tagManager->isReservedTag($one)) {
@@ -122,16 +119,16 @@ class PushServiceManager implements PushServiceManagerInterface
             return;
         }
 
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
             'application' => $applicationName,
-            'uid'         => $uid,
-            'tag'         => $tag,
-            'operation'   => self::OPERATION_ADDTAGTOUSER,
-        ));
+            'uid' => $uid,
+            'tag' => $tag,
+            'operation' => self::OPERATION_ADDTAGTOUSER,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function addTagToUserExecute($applicationName, $uid, $tag)
     {
@@ -144,11 +141,10 @@ class PushServiceManager implements PushServiceManagerInterface
     public function removeTagFromUser($applicationName, $uid, $tag)
     {
         if (!is_array($tag)) {
-            $tag = array($tag);
+            $tag = [$tag];
         }
 
         foreach ($tag as $idx => $one) {
-
             TagExpression::validateSingleTag($one);
 
             if ($this->tagManager->isReservedTag($one)) {
@@ -159,16 +155,16 @@ class PushServiceManager implements PushServiceManagerInterface
             return;
         }
 
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
             'application' => $applicationName,
-            'uid'         => $uid,
-            'tag'         => $tag,
-            'operation'   => self::OPERATION_REMOVETAGFROMUSER,
-        ));
+            'uid' => $uid,
+            'tag' => $tag,
+            'operation' => self::OPERATION_REMOVETAGFROMUSER,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function removeTagFromUserExecute($applicationName, $uid, $tag)
     {
@@ -176,20 +172,20 @@ class PushServiceManager implements PushServiceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
-            'application'      => $applicationName,
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
+            'application' => $applicationName,
             'deviceIdentifier' => $deviceIdentifier,
-            'tags'             => $tags,
-            'operation'        => self::OPERATION_CREATE_REGISTRATION,
-        ));
+            'tags' => $tags,
+            'operation' => self::OPERATION_CREATE_REGISTRATION,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function createRegistrationExecute($applicationName, $deviceIdentifier, array $tags)
     {
@@ -197,20 +193,20 @@ class PushServiceManager implements PushServiceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateRegistration($applicationName, $deviceIdentifier, array $tags)
     {
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
-            'application'      => $applicationName,
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
+            'application' => $applicationName,
             'deviceIdentifier' => $deviceIdentifier,
-            'tags'             => $tags,
-            'operation'   => self::OPERATION_UPDATE_REGISTRATION,
-        ));
+            'tags' => $tags,
+            'operation' => self::OPERATION_UPDATE_REGISTRATION,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function updateRegistrationExecute($applicationName, $deviceIdentifier, array $tags)
     {
@@ -218,21 +214,21 @@ class PushServiceManager implements PushServiceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deleteRegistration($applicationName, $type, $registrationId, $eTag)
     {
-        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, array(
-            'application'    => $applicationName,
-            'type'           => $type,
+        $this->backend->createAndPublish(PushNotificationConsumer::TYPE_NAME, [
+            'application' => $applicationName,
+            'type' => $type,
             'registrationId' => $registrationId,
-            'eTag'           => $eTag,
-            'operation'      => self::OPERATION_DELETE_REGISTRATION,
-        ));
+            'eTag' => $eTag,
+            'operation' => self::OPERATION_DELETE_REGISTRATION,
+        ]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function deleteRegistrationExecute($applicationName, $type, $registrationId, $eTag)
     {
@@ -240,7 +236,7 @@ class PushServiceManager implements PushServiceManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getPusher()
     {
@@ -251,22 +247,22 @@ class PushServiceManager implements PushServiceManagerInterface
      * @param string $applicationName
      * @param string $tagExpression
      * @param string $message
-     * @param array $options
-     * @param array $devices
+     * @param array  $options
+     * @param array  $devices
      *
      * @return array
      */
-    protected function dispatchPrePushEvent($applicationName, $tagExpression, $message, array $options = array(), $devices = array())
+    protected function dispatchPrePushEvent($applicationName, $tagExpression, $message, array $options = [], $devices = [])
     {
         $event = new PrePushEvent($applicationName, $tagExpression, $message, $options, $devices);
         $event = $this->dispatcher->dispatch(PrePushEvent::EVENT_NAME, $event);
 
-        return array(
+        return [
             $event->getApplicationName(),
             $event->getTagExpression(),
             $event->getMessage(),
             $event->getOptions(),
             $event->getDevices(),
-        );
+        ];
     }
 }

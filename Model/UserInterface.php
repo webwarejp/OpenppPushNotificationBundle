@@ -2,79 +2,73 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-/**
- * UserInterface
- *
- * @author shiroko@webware.co.jp
- *
- */
 interface UserInterface
 {
     /**
-     * Returns the application
+     * Returns the application.
      *
      * @return ApplicationInterface
      */
     public function getApplication();
 
     /**
-     * Sets the application
+     * Sets the application.
      *
      * @param ApplicationInterface $application
      */
     public function setApplication(ApplicationInterface $application);
 
     /**
-     * Returns the user id
+     * Returns the user id.
      *
      * @return string
      */
     public function getUid();
 
     /**
-     * Sets the user id
+     * Sets the user id.
      *
      * @param string $uid
      */
     public function setUid($uid);
 
     /**
-     * Returns the devices
+     * Returns the devices.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */
     public function getDevices();
 
     /**
-     * Adds the device
+     * Adds the device.
      *
      * @param DeviceInterface $device
      */
     public function addDevice(DeviceInterface $device);
 
     /**
-     * Removes the device
+     * Removes the device.
      *
      * @param DeviceInterface $device
      */
     public function removeDevice(DeviceInterface $device);
 
     /**
-     * Returns the badge
+     * Returns the badge.
      *
-     * @return integer
+     * @return int
      */
     public function getBadge();
 
     /**
-     * Sets the badge
+     * Sets the badge.
      *
-     * @param integer $badge
+     * @param int $badge
      */
     public function setBadge($badge);
 
     /**
-     * Returns the tags
+     * Returns the tags.
      *
      * @return \Doctrine\Common\Collections\ArrayCollection
      */

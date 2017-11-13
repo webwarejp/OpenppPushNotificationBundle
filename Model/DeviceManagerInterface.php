@@ -14,7 +14,7 @@ interface DeviceManagerInterface
     public function getClass();
 
     /**
-     * Returns an empty device instance
+     * Returns an empty device instance.
      *
      * @return DeviceInterface
      */
@@ -24,8 +24,6 @@ interface DeviceManagerInterface
      * Deletes a device.
      *
      * @param DeviceInterface $device
-     *
-     * @return void
      */
     public function delete(DeviceInterface $device);
 
@@ -33,9 +31,7 @@ interface DeviceManagerInterface
      * Saves a device.
      *
      * @param DeviceInterface $device
-     * @param boolean $andFlush
-     *
-     * @return void
+     * @param bool            $andFlush
      */
     public function save(DeviceInterface $device, $andFlush = true);
 
@@ -43,7 +39,7 @@ interface DeviceManagerInterface
      * Finds one device by its identifier and application.
      *
      * @param ApplicationInterface $application
-     * @param string $deviceIdentifier
+     * @param string               $deviceIdentifier
      *
      * @return DeviceInterface or null
      */
@@ -53,7 +49,7 @@ interface DeviceManagerInterface
      * Finds one device by its token and application.
      *
      * @param ApplicationInterface $application
-     * @param string $token
+     * @param string               $token
      *
      * @return DeviceInterface or null
      */
@@ -99,19 +95,19 @@ interface DeviceManagerInterface
      * Finds the devices which match the given tag expression.
      *
      * @param ApplicationInterface $application
-     * @param string $tagExpression
-     * @param array  $devices
+     * @param string               $tagExpression
+     * @param array                $devices
      *
      * @return array
      */
-    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = array());
+    public function findDevicesByTagExpression(ApplicationInterface $application, $tagExpression, array $devices = []);
 
     /**
      * Finds the devices in specified circle area and match the given tag expression.
      *
      * @param ApplicationInterface $application
-     * @param string $tagExpression
-     * @param CircleInterface $circle
+     * @param string               $tagExpression
+     * @param CircleInterface      $circle
      */
     public function findDevicesInAreaCircleWithTag(ApplicationInterface $application, $tagExpression, CircleInterface $circle);
 }

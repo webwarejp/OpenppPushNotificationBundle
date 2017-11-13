@@ -22,7 +22,7 @@ class PushResultEmailListener
     protected $config;
 
     /**
-     * Constructor
+     * Initializes a new PushResultEmailListener.
      *
      * @param \Swift_Mailer     $mailer
      * @param \Twig_Environment $twig
@@ -31,7 +31,7 @@ class PushResultEmailListener
     public function __construct(\Swift_Mailer $mailer, \Twig_Environment $twig, array $config)
     {
         $this->mailer = $mailer;
-        $this->twig   = $twig;
+        $this->twig = $twig;
         $this->config = $config;
     }
 
@@ -43,12 +43,12 @@ class PushResultEmailListener
     public function onPushed(PostPushEvent $event)
     {
         if (isset($this->config['email'])) {
-            $context = array(
+            $context = [
                 'application' => $event->getApplication(),
-                'message'     => $event->getMessage(),
-                'timestamp'   => $event->getTimestamp(),
-                'counts'      => $event->getCounts(),
-            );
+                'message' => $event->getMessage(),
+                'timestamp' => $event->getTimestamp(),
+                'counts' => $event->getCounts(),
+            ];
             $this->sendEmail(
                 $this->config['email']['template'],
                 $context,
@@ -59,6 +59,8 @@ class PushResultEmailListener
     }
 
     /**
+     * Sends an email.
+     *
      * @param string $templateName
      * @param array  $context
      * @param string $from
@@ -67,7 +69,7 @@ class PushResultEmailListener
     protected function sendEmail($templateName, $context, $from, $to)
     {
         $template = $this->twig->loadTemplate($templateName);
-        $subject = $template->renderBlock('subject', array('subject' => $this->config['email']['subject']));
+        $subject = $template->renderBlock('subject', ['subject' => $this->config['email']['subject']]);
         $textBody = $template->renderBlock('body_text', $context);
 
         $message = \Swift_Message::newInstance()

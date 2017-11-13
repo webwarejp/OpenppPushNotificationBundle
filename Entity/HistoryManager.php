@@ -8,15 +8,26 @@ use Openpp\PushNotificationBundle\Model\HistoryInterface;
 
 class HistoryManager implements HistoryManagerInterface
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected $repository;
+
+    /**
+     * @var string
+     */
     protected $class;
 
     /**
-     * Constructor
+     * Initializes a new HistoryManager.
      *
      * @param ManagerRegistry $managerRegistry
-     * @param string $class
+     * @param string          $class
      */
     public function __construct(ManagerRegistry $managerRegistry, $class)
     {
@@ -28,7 +39,7 @@ class HistoryManager implements HistoryManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClass()
     {
@@ -36,28 +47,18 @@ class HistoryManager implements HistoryManagerInterface
     }
 
     /**
-     * Returns the related Object Repository.
-     *
-     * @return ObjectRepository
-     */
-    protected function getRepository()
-    {
-        return $this->repository;
-    }
-
-    /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create()
     {
         $class = $this->getClass();
-        $tag = new $class;
+        $tag = new $class();
 
         return $tag;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function save(HistoryInterface $history, $andFlush = true)
     {
@@ -68,7 +69,7 @@ class HistoryManager implements HistoryManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findHistoryBy(array $criteria)
     {
@@ -76,10 +77,20 @@ class HistoryManager implements HistoryManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findHistoriesBy(array $criteria)
     {
         return $this->repository->findBy($criteria);
+    }
+
+    /**
+     * Returns the related Object Repository.
+     *
+     * @return \Doctrine\Common\Persistence\ObjectRepository
+     */
+    protected function getRepository()
+    {
+        return $this->repository;
     }
 }

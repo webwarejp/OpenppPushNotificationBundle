@@ -14,11 +14,6 @@ use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
 use Openpp\MapBundle\Querier\ORM\GeometryQuerier;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
 
-/**
- *
- * @author shiroko@webware.co.jp
- *
- */
 class DeviceLocationSubscriber implements EventSubscriber
 {
     /**
@@ -27,7 +22,7 @@ class DeviceLocationSubscriber implements EventSubscriber
     protected $container;
 
     /**
-     * Constructor
+     * Initializes a new DeviceLocationSubscriber.
      *
      * @param ContainerInterface $container
      */
@@ -41,9 +36,9 @@ class DeviceLocationSubscriber implements EventSubscriber
      */
     public function getSubscribedEvents()
     {
-        return array(
+        return [
             Events::onFlush,
-        );
+        ];
     }
 
     /**
@@ -62,7 +57,7 @@ class DeviceLocationSubscriber implements EventSubscriber
         }
         foreach ($uow->getScheduledEntityUpdates() as $entity) {
             if ($entity instanceof PointInterface) {
-                $device = $this->getDeviceManager()->findDeviceBy(array('location' => $entity));
+                $device = $this->getDeviceManager()->findDeviceBy(['location' => $entity]);
                 if ($device) {
                     $original = $uow->getOriginalEntityData($entity);
                     $this->judgeLocation($device, $entity->getPoint(), $original['point']);
@@ -72,10 +67,9 @@ class DeviceLocationSubscriber implements EventSubscriber
     }
 
     /**
-     *
      * @param DeviceInterface $device
-     * @param Point $prevPoint
-     * @param Point $currentPoint
+     * @param Point           $prevPoint
+     * @param Point           $currentPoint
      */
     protected function judgeLocation(DeviceInterface $device, Point $currentPoint, Point $prevPoint = null)
     {
@@ -92,7 +86,7 @@ class DeviceLocationSubscriber implements EventSubscriber
                 // TODO: tag expression check
                 $this->getPushServiceManager()->pushToDevices(
                     $condition->getApplication()->getName(),
-                    array($device->getId()),
+                    [$device->getId()],
                     $condition->getMessage()
                 );
             }

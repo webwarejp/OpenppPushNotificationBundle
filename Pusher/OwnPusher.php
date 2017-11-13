@@ -28,7 +28,7 @@ class OwnPusher extends AbstractPusher
     protected $privateKey;
 
     /**
-     * @var integer
+     * @var int
      */
     protected $ttl;
 
@@ -51,9 +51,9 @@ class OwnPusher extends AbstractPusher
     }
 
     /**
-     * Sets the default TTL for Web Push
+     * Sets the default TTL for Web Push.
      *
-     * @param integer $ttl
+     * @param int $ttl
      */
     public function setTTL($ttl)
     {
@@ -61,7 +61,7 @@ class OwnPusher extends AbstractPusher
     }
 
     /**
-     * Sets the media extension
+     * Sets the media extension.
      *
      * @param \Sonata\MediaBundle\Twig\Extension\MediaExtension $mediaExtension
      */
@@ -73,7 +73,7 @@ class OwnPusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function push($application, $tagExpression, $message, array $options = array())
+    public function push($application, $tagExpression, $message, array $options = [])
     {
         $application = $this->getApplication($application);
 
@@ -86,28 +86,28 @@ class OwnPusher extends AbstractPusher
     /**
      * {@inheritdoc}
      */
-    public function pushToDevice($application, $devices, $message, array $options = array())
+    public function pushToDevice($application, $devices, $message, array $options = [])
     {
         $application = $this->getApplication($application);
 
         if (is_integer($devices[0])) {
-            $devices = $this->deviceManager->findDevicesBy(array('id' => $devices));
+            $devices = $this->deviceManager->findDevicesBy(['id' => $devices]);
         }
         $devices = new Devices($devices);
 
         $pushManager = new PushManager(PushManager::ENVIRONMENT_PROD);
-        $timestamp   = new \DateTime();
+        $timestamp = new \DateTime();
         $notificationId = $this->generateNotificationId($options);
         $options['tag'] = $notificationId;
         $optionsResult = $options;
-        $notRegisteredDevices = array();
+        $notRegisteredDevices = [];
 
         foreach (array_values(Device::getTypeChoices()) as $type) {
             $targetDevices = $devices->getByType($type);
             if (!$targetDevices->count()) {
                 continue;
             }
-            if ($type == DeviceInterface::TYPE_WEB) {
+            if (DeviceInterface::TYPE_WEB == $type) {
                 // sort by endpoint.
                 $collection = new Devices($targetDevices->toArray());
                 $targetDevices = $collection->sortByField('token');
@@ -129,7 +129,7 @@ class OwnPusher extends AbstractPusher
      * Get the adapter.
      *
      * @param ApplicationInterface $application
-     * @param integer $deviceType
+     * @param int                  $deviceType
      *
      * @return \Sly\NotificationPusher\Adapter\AdapterInterface
      */
@@ -137,25 +137,25 @@ class OwnPusher extends AbstractPusher
     {
         switch ($deviceType) {
             case DeviceInterface::TYPE_ANDROID:
-                $adapter = new Gcm(array(
-                    'apiKey' => $application->getGcmApiKey()
-                ));
+                $adapter = new Gcm([
+                    'apiKey' => $application->getGcmApiKey(),
+                ]);
                 break;
 
             case DeviceInterface::TYPE_IOS:
-                $adapter = new Apns(array(
-                    'certificate' => $application->getApnsCertificate()
-                ));
+                $adapter = new Apns([
+                    'certificate' => $application->getApnsCertificate(),
+                ]);
                 break;
 
             case DeviceInterface::TYPE_WEB:
                 if (empty($this->publicKey) || empty($this->privateKey)) {
                     throw new \RuntimeException('Need to configure a key pair for Web Push.');
                 }
-                $parameters = array(
-                    'publicKey'  => $this->publicKey,
+                $parameters = [
+                    'publicKey' => $this->publicKey,
                     'privateKey' => $this->privateKey,
-                );
+                ];
                 if ($this->ttl) {
                     $parameters['ttl'] = $this->ttl;
                 }
@@ -163,7 +163,7 @@ class OwnPusher extends AbstractPusher
                 break;
 
             default:
-                throw new \RuntimeException('Unsupported device type: ' . $deviceType);
+                throw new \RuntimeException('Unsupported device type: '.$deviceType);
         }
 
         return $adapter;
@@ -173,17 +173,17 @@ class OwnPusher extends AbstractPusher
      * Creates the message according to the device type.
      *
      * @param ApplicationInterface $application
-     * @param integer $deviceType
-     * @param string $message
-     * @param array $options
+     * @param int                  $deviceType
+     * @param string               $message
+     * @param array                $options
      *
      * @return \Sly\NotificationPusher\Model\Message
      */
-    protected function createMessage(ApplicationInterface $application, $deviceType, $message, array $options = array())
+    protected function createMessage(ApplicationInterface $application, $deviceType, $message, array $options = [])
     {
-        $defaultOptions = array(
+        $defaultOptions = [
             'title' => $application->getName(),
-        );
+        ];
         switch ($deviceType) {
             case DeviceInterface::TYPE_WEB:
                 if (!empty($application->getIcon())) {
@@ -203,11 +203,12 @@ class OwnPusher extends AbstractPusher
      * Get 'NotRegistered' devices.
      *
      * @param PushCollection $pushCollection
+     *
      * @return \Openpp\PushNotificationBundle\Model\DeviceInterface[]
      */
     protected function getNotRegisteredDevices(PushCollection $pushCollection)
     {
-        $result = array();
+        $result = [];
         foreach ($pushCollection as $push) {
             $adapter = $push->getAdapter();
             if (method_exists($adapter, 'getNotRegisteredDevices')) {

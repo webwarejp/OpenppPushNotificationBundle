@@ -7,15 +7,26 @@ use Openpp\PushNotificationBundle\Model\TagManager as BaseManager;
 
 class TagManager extends BaseManager
 {
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectManager
+     */
     protected $objectManager;
+
+    /**
+     * @var \Doctrine\Common\Persistence\ObjectRepository
+     */
     protected $repository;
+
+    /**
+     * @var string
+     */
     protected $class;
 
     /**
-     * Constructor
+     * Initializes a new TagManager.
      *
      * @param ManagerRegistry $managerRegistry
-     * @param string $class
+     * @param string          $class
      */
     public function __construct(ManagerRegistry $managerRegistry, $class)
     {
@@ -29,7 +40,7 @@ class TagManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getClass()
     {
@@ -37,7 +48,7 @@ class TagManager extends BaseManager
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findTagBy(array $criteria)
     {

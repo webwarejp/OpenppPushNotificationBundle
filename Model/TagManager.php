@@ -2,60 +2,64 @@
 
 namespace Openpp\PushNotificationBundle\Model;
 
-
 abstract class TagManager implements TagManagerInterface
 {
-    protected $reservedTags = array(
+    /**
+     * @var array
+     */
+    protected $reservedTags = [
         TagInterface::UID_TAG_PREFIX,
         DeviceInterface::TYPE_NAME_ANDROID,
         DeviceInterface::TYPE_NAME_IOS,
         DeviceInterface::TYPE_NAME_WEB,
-    );
+    ];
 
+    /**
+     * @var array
+     */
     protected $reservedTagPatterns;
 
     /**
-     * Constructor
+     * Initializes a new TagManager.
      */
     public function __construct()
     {
-        $this->reservedTagPatterns = array();
+        $this->reservedTagPatterns = [];
         foreach ($this->reservedTags as $tag) {
             if (preg_match('/_$/', $tag)) {
-                $this->reservedTagPatterns[] = '/^' . $tag . '/';
+                $this->reservedTagPatterns[] = '/^'.$tag.'/';
             } else {
-                $this->reservedTagPatterns[] = '/^' . $tag . '$/';
+                $this->reservedTagPatterns[] = '/^'.$tag.'$/';
             }
         }
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create()
     {
         $class = $this->getClass();
-        $tag = new $class;
+        $tag = new $class();
 
         return $tag;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function findTagByName($name)
     {
-        return $this->findTagBy(array('name' => $name));
+        return $this->findTagBy(['name' => $name]);
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function isReservedTag($tag)
     {
         foreach ($this->reservedTagPatterns as $pattern) {
             if (preg_match($pattern, $tag)) {
-
                 return true;
             }
         }
@@ -64,7 +68,7 @@ abstract class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getReservedTags()
     {
@@ -72,14 +76,14 @@ abstract class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTagObjects($tags, $creation = true)
     {
-        $objects = array();
+        $objects = [];
 
         if (!is_array($tags)) {
-            $tags = array($tags); 
+            $tags = [$tags];
         }
 
         foreach ($tags as $tag) {
@@ -93,7 +97,7 @@ abstract class TagManager implements TagManagerInterface
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function getTagObject($tag, $creation = true)
     {
