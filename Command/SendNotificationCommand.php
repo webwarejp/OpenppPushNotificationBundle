@@ -17,7 +17,7 @@ class SendNotificationCommand extends ContainerAwareCommand
         $this
             ->setName('openpp:push:send')
             ->setDescription('Send the push notification.')
-            ->setHelp(<<<EOF
+            ->setHelp(<<<'EOF'
 The <info>%command.name%</info> command sends the push notification.
 EOF
             )

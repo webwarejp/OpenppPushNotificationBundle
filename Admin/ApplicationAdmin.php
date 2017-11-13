@@ -107,6 +107,7 @@ class ApplicationAdmin extends Admin
                         ->add('gcmApiKey')
                     ->end()
                 ;
+
                 break;
 
             case 'openpp.push_notification.pusher.azure':
@@ -117,6 +118,7 @@ class ApplicationAdmin extends Admin
                         ->add('gcmTemplate')
                     ->end()
                 ;
+
                 break;
         }
     }

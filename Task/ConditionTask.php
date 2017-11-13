@@ -2,10 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Task;
 
-use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
-use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Collections\DeviceCollection;
+use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
+use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
 use Sonata\MediaBundle\Twig\Extension\MediaExtension;
 
 class ConditionTask

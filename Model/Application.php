@@ -3,8 +3,8 @@
 namespace Openpp\PushNotificationBundle\Model;
 
 use Doctrine\Common\Collections\ArrayCollection;
-use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\Criteria;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class Application implements ApplicationInterface
 {

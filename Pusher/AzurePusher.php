@@ -2,16 +2,16 @@
 
 namespace Openpp\PushNotificationBundle\Pusher;
 
-use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
-use Openpp\PushNotificationBundle\Model\TagManagerInterface;
-use Openpp\PushNotificationBundle\Model\UserManagerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
-use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Openpp\NotificationHubsRest\NotificationHub\NotificationHub;
 use Openpp\NotificationHubsRest\Notification\NotificationFactory;
+use Openpp\NotificationHubsRest\NotificationHub\NotificationHub;
 use Openpp\NotificationHubsRest\Registration\RegistrationFactory;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
+use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
+use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 class AzurePusher extends AbstractPusher
@@ -80,7 +80,7 @@ class AzurePusher extends AbstractPusher
     {
         $application = $this->getApplication($application);
 
-        if (is_integer($devices[0])) {
+        if (is_int($devices[0])) {
             $devices = $this->deviceManager->findDevicesBy(['id' => $devices]);
         }
 

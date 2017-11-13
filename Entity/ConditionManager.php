@@ -3,8 +3,8 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
-use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 use Openpp\PushNotificationBundle\Model\ConditionInterface;
+use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
 
 class ConditionManager implements ConditionManagerInterface
 {
@@ -117,9 +117,11 @@ class ConditionManager implements ConditionManagerInterface
                     foreach ($condition->getSpecificDates() as $date) {
                         if ($preTime < $date && $now >= $date) {
                             $result[] = $condition;
+
                             break;
                         }
                     }
+
                     break;
 
                 case ConditionInterface::TIME_TYPE_PERIODIC:
@@ -131,10 +133,12 @@ class ConditionManager implements ConditionManagerInterface
                         }
                         if ($preTime < $t && $now >= $t) {
                             $result[] = $condition;
+
                             break;
                         }
                         $t->add($interval);
                     }
+
                     break;
 
                 default:

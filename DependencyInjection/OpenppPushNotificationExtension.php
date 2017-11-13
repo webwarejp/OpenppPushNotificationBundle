@@ -2,12 +2,12 @@
 
 namespace Openpp\PushNotificationBundle\DependencyInjection;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
+use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
 use Symfony\Component\Config\FileLocator;
-use Symfony\Component\HttpKernel\DependencyInjection\Extension;
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\DependencyInjection\Loader;
 use Symfony\Component\DependencyInjection\Reference;
-use Sonata\EasyExtendsBundle\Mapper\DoctrineCollector;
+use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 
 class OpenppPushNotificationExtension extends Extension
 {
