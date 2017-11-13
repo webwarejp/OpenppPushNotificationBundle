@@ -2,17 +2,17 @@
 
 namespace Openpp\PushNotificationBundle\Listener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\OnFlushEventArgs;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceInterface;
-use Openpp\MapBundle\Model\PointInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
-use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
-use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
-use Openpp\MapBundle\Querier\ORM\GeometryQuerier;
 use CrEOF\Spatial\PHP\Types\Geometry\Point;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
+use Openpp\MapBundle\Model\PointInterface;
+use Openpp\MapBundle\Querier\ORM\GeometryQuerier;
+use Openpp\PushNotificationBundle\Model\ConditionManagerInterface;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
+use Openpp\PushNotificationBundle\Pusher\PushServiceManagerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DeviceLocationSubscriber implements EventSubscriber
 {

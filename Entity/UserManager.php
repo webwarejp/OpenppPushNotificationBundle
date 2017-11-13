@@ -3,12 +3,12 @@
 namespace Openpp\PushNotificationBundle\Entity;
 
 use Doctrine\Common\Persistence\ManagerRegistry;
+use Doctrine\ORM\Query\Expr;
+use Openpp\PushNotificationBundle\Model\ApplicationInterface;
+use Openpp\PushNotificationBundle\Model\UserInterface;
+use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
 use Sonata\DatagridBundle\Pager\Doctrine\Pager;
 use Sonata\DatagridBundle\ProxyQuery\Doctrine\ProxyQuery;
-use Openpp\PushNotificationBundle\Model\UserManager as BaseManager;
-use Openpp\PushNotificationBundle\Model\UserInterface;
-use Openpp\PushNotificationBundle\Model\ApplicationInterface;
-use Doctrine\ORM\Query\Expr;
 
 class UserManager extends BaseManager
 {

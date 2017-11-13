@@ -2,16 +2,16 @@
 
 namespace Openpp\PushNotificationBundle\Listener;
 
-use Doctrine\Common\EventSubscriber;
-use Doctrine\ORM\Events;
-use Doctrine\ORM\Event\OnFlushEventArgs;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\EventSubscriber;
+use Doctrine\ORM\Event\OnFlushEventArgs;
+use Doctrine\ORM\Events;
 use Doctrine\ORM\UnitOfWork;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\Device;
-use Openpp\PushNotificationBundle\Model\UserInterface;
+use Openpp\PushNotificationBundle\Model\DeviceInterface;
 use Openpp\PushNotificationBundle\Model\TagInterface;
+use Openpp\PushNotificationBundle\Model\UserInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 class DeviceRegistrationSubscriber implements EventSubscriber
 {

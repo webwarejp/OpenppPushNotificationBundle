@@ -440,18 +440,23 @@ class Condition implements ConditionInterface
         switch ($this->getIntervalType()) {
             case self::INTERVAL_TYPE_HOURLY:
                 $interval = new \DateInterval('PT1H');
+
                 break;
             case self::INTERVAL_TYPE_DAILY:
                 $interval = new \DateInterval('P1D');
+
                 break;
             case self::INTERVAL_TYPE_WEEKLY:
                 $interval = new \DateInterval('P1W');
+
                 break;
             case self::INTERVAL_TYPE_MONTHLY:
                 $interval = new \DateInterval('P1M');
+
                 break;
             default:
                 $interval = null;
+
                 break;
         }
 

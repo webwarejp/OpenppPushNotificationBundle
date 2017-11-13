@@ -2,10 +2,10 @@
 
 namespace Openpp\PushNotificationBundle\Controller\Api;
 
-use FOS\RestBundle\Controller\FOSRestController;
-use FOS\RestBundle\Controller\Annotations\Get;
-use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Base64Url\Base64Url;
+use FOS\RestBundle\Controller\Annotations\Get;
+use FOS\RestBundle\Controller\FOSRestController;
+use Nelmio\ApiDocBundle\Annotation\ApiDoc;
 use Openpp\WebPushAdapter\Util\PublicKeyUtil;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;

@@ -2,14 +2,14 @@
 
 namespace Openpp\PushNotificationBundle\Manipurator;
 
-use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
-use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
-use Openpp\PushNotificationBundle\Model\UserManagerInterface;
-use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\MapBundle\Model\PointManagerInterface;
+use Openpp\PushNotificationBundle\Exception\ApplicationNotFoundException;
 use Openpp\PushNotificationBundle\Exception\DeviceNotFoundException;
+use Openpp\PushNotificationBundle\Model\ApplicationManagerInterface;
 use Openpp\PushNotificationBundle\Model\Device;
+use Openpp\PushNotificationBundle\Model\DeviceManagerInterface;
 use Openpp\PushNotificationBundle\Model\TagManagerInterface;
+use Openpp\PushNotificationBundle\Model\UserManagerInterface;
 
 class RegistrationManipurator
 {
