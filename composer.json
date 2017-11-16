@@ -23,17 +23,16 @@
 		"sonata-project/media-bundle": "^3.0",
 		"sonata-project/datagrid-bundle": "^2.2",
 		"friendsofsymfony/rest-bundle": "^2.1",
-		"spomky-labs/base64url": "^1.0"
+		"spomky-labs/base64url": "^1.0",
+		"sly/notification-pusher" : "^2.2"
 	},
 	"require-dev" : {
 		"nelmio/api-doc-bundle" : "^2.4",
-		"sly/notification-pusher" : "^2.2",
 		"openpp/web-push-adapter" : "^0.1",
 		"openpp/notificationhubs-rest-php" : "~0.5",
 		"openpp/map-bundle" : "~0.4"
 	},
 	"suggest" : {
-		"sly/notification-pusher" : "Allow sending notifications without external push service.",
 		"openpp/web-push-adapter" : "Allow sending the vapid web push notifications.",
 		"openpp/notificationhubs-rest-php" : "Allow sending notificaions via Azure Notification Hubs.",			
 		"openpp/map-bundle" : "Allow sending notifications to the devices in specific area."
