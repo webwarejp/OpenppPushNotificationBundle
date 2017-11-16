@@ -101,7 +101,7 @@ class ApplicationAdmin extends Admin
 
         switch ($this->pusherName) {
             case 'openpp.push_notification.pusher.own':
-                $formMapper->with($this->trans('form.group_own_label'))
+                $formMapper->with('form.group_own_label')
                         ->add('apnsCertificate', null, ['read_only' => true])
                         ->add('apnsCertificateFile', 'file', ['label' => false, 'required' => false])
                         ->add('gcmApiKey')
@@ -111,7 +111,7 @@ class ApplicationAdmin extends Admin
                 break;
 
             case 'openpp.push_notification.pusher.azure':
-                $formMapper->with($this->trans('form.group_azure_label'))
+                $formMapper->with('form.group_azure_label')
                         ->add('hubName')
                         ->add('connectionString')
                         ->add('apnsTemplate')

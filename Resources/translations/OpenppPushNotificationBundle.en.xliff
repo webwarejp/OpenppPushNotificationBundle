@@ -390,6 +390,10 @@
         <source>filter.label_enable</source>
         <target>Enable</target>
       </trans-unit>
+        <trans-unit id="filter.label_time_type">
+        <source>filter.label_time_type</source>
+        <target>Time Type</target>
+      </trans-unit>
       <trans-unit id="form.group_general">
         <source>form.group_general</source>
         <target>General</target>
