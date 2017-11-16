@@ -104,7 +104,7 @@ class Application implements ApplicationInterface
      */
     public function __toString()
     {
-        return $this->getName();
+        return $this->getName() ?: '';
     }
 
     /**

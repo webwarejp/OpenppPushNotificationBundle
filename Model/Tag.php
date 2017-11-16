@@ -21,7 +21,7 @@ class Tag implements TagInterface
      */
     public function __toString()
     {
-        return $this->getName();
+        return $this->getName() ?: '';
     }
 
     /**

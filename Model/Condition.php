@@ -120,7 +120,7 @@ class Condition implements ConditionInterface
      */
     public function __toString()
     {
-        return $this->name;
+        return $this->getName() ?: '';
     }
 
     /**
